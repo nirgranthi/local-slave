@@ -13,5 +13,5 @@ Run small LLMs directly on your device, no cloud computing needed.
   font-family:system-ui,sans-serif;
 " onmouseover="this.style.background='#0b5ed7'"
   onmouseout="this.style.background='#0d6efd'">
-  ▶ Play it!
+  ▶ Visit!
 </a>
