@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI (Auto-List)</title>
+    <title>Local AI (No-Repeat Fix)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -52,10 +52,10 @@
                 </label>
             </div>
             
-            <!-- Download Progress (Global for Sidebar) -->
+            <!-- Download Progress -->
             <div id="dl-progress-container" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700">
                 <div class="flex justify-between text-[10px] mb-1">
-                    <span class="text-blue-300">Downloading Model...</span>
+                    <span class="text-blue-300">Downloading...</span>
                     <span id="dl-percent" class="text-white font-mono">0%</span>
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-1.5">
@@ -65,7 +65,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Safe Chat Mode)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Anti-Loop Fix)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -85,9 +85,7 @@
 
         <!-- Chat Area -->
         <div id="chat-box" class="flex-1 overflow-y-auto p-4 pb-40 space-y-4">
-            <div id="console-logs" class="font-mono text-xs text-gray-400 space-y-1 p-2 border-l-2 border-gray-700 pl-4 bg-black/20 rounded hidden">
-                <!-- Logs hidden by default to look cleaner -->
-            </div>
+            <div id="console-logs" class="font-mono text-xs text-gray-400 space-y-1 p-2 border-l-2 border-gray-700 pl-4 bg-black/20 rounded hidden"></div>
             
             <div id="welcome-message" class="flex flex-col items-center justify-center h-full text-gray-500 space-y-4">
                 <div class="p-4 bg-gray-800 rounded-full">
@@ -116,9 +114,7 @@
 
         let wllama;
         let isReady = false;
-        let currentModelName = "";
 
-        // UI References
         const ui = {
             header: document.getElementById('header-status'),
             logs: document.getElementById('console-logs'),
@@ -133,15 +129,6 @@
             dlDetails: document.getElementById('dl-details')
         };
 
-        function log(msg, type='info') {
-            const div = document.createElement('div');
-            div.textContent = `> ${msg}`;
-            if (type === 'error') div.className = 'text-red-400 font-bold';
-            ui.logs.appendChild(div);
-            // Auto scroll (optional, logs are hidden now)
-        }
-
-        // --- 1. Initialize Engine ---
         async function init() {
             try {
                 ui.engineState.textContent = "INITIALIZING...";
@@ -152,10 +139,7 @@
                 ui.engineState.textContent = "READY";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-green-900/50 text-green-400 font-mono";
                 isReady = true;
-                
-                // Load CSV list automatically
                 loadModelList();
-
             } catch (e) {
                 ui.engineState.textContent = "ERROR";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-red-900/50 text-red-400 font-mono";
@@ -163,118 +147,69 @@
             }
         }
 
-        // --- 2. Load Model List from CSV ---
         window.loadModelList = async () => {
             ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center animate-pulse">Fetching models.csv...</div>';
-            
             try {
                 const response = await fetch('models.csv');
                 if (!response.ok) throw new Error("Missing models.csv");
                 const text = await response.text();
-                
                 const lines = text.split('\n').filter(line => line.trim() !== '');
-                ui.csvList.innerHTML = ''; // Clear loading
+                ui.csvList.innerHTML = ''; 
 
                 lines.forEach(line => {
-                    // Expect format: Link, Size
                     const parts = line.split(',');
                     if (parts.length < 2) return;
-
                     const url = parts[0].trim();
                     const size = parts[1].trim();
-                    
-                    // Extract name from URL (last part after /)
-                    let name = url.split('/').pop();
-                    if(name.endsWith('.gguf')) name = name.replace('.gguf', '');
-                    // Shorten name if too long
+                    let name = url.split('/').pop().replace('.gguf', '');
                     if(name.length > 25) name = name.substring(0, 22) + '...';
 
-                    // Create Button
                     const btn = document.createElement('button');
                     btn.className = "w-full text-left p-3 bg-gray-700/30 hover:bg-gray-700 rounded-lg border border-gray-700/50 hover:border-blue-500 transition-all group relative";
                     btn.onclick = () => loadModelFromUrl(url, name);
-                    
-                    btn.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-xs text-gray-300 group-hover:text-white truncate pr-2">${name}</span>
-                            <span class="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">${size} MB</span>
-                        </div>
-                    `;
+                    btn.innerHTML = `<div class="flex justify-between items-center"><span class="font-medium text-xs text-gray-300 group-hover:text-white truncate pr-2">${name}</span><span class="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">${size} MB</span></div>`;
                     ui.csvList.appendChild(btn);
                 });
-
-                if (lines.length === 0) {
-                    ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center">CSV file is empty.</div>';
-                }
-
+                if (lines.length === 0) ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center">CSV file is empty.</div>';
             } catch (e) {
-                ui.csvList.innerHTML = `
-                    <div class="text-[10px] text-red-400 bg-red-900/20 p-2 rounded text-center">
-                        Could not load 'models.csv'.<br>
-                        (Ensure file exists in same folder)
-                    </div>
-                `;
+                ui.csvList.innerHTML = `<div class="text-[10px] text-red-400 bg-red-900/20 p-2 rounded text-center">Could not load 'models.csv'.<br>(Ensure file exists in same folder)</div>`;
             }
         };
 
-        // --- 3. Load Model Logic ---
-        
-        // From CSV URL
         async function loadModelFromUrl(url, name) {
             if (!isReady) return alert("Engine not ready.");
             if (window.innerWidth < 768) closeSidebar();
-
             startLoadingUI(name);
-            
             try {
-                const loadConfig = {
-                    n_ctx: 2048,   // Standard Context
-                    n_threads: 1,  // Safe Threading
-                    useCache: true, // IMPORTANT: Enables caching
+                await wllama.loadModelFromUrl(url, {
+                    n_ctx: 2048, n_threads: 1, useCache: true,
                     progressCallback: ({ loaded, total }) => updateProgressBar(loaded, total)
-                };
-
-                await wllama.loadModelFromUrl(url, loadConfig);
+                });
                 finishLoadingUI(name);
-
-            } catch (e) {
-                errorLoadingUI(e.message);
-            }
+            } catch (e) { errorLoadingUI(e.message); }
         }
 
-        // From Manual File
         document.getElementById('file-upload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
             if (!isReady) return alert("Engine not ready.");
             if (window.innerWidth < 768) closeSidebar();
-
             startLoadingUI(file.name);
-
             try {
-                const loadConfig = {
-                    n_ctx: 2048,
-                    n_threads: 1,
+                await wllama.loadModel([file], {
+                    n_ctx: 2048, n_threads: 1,
                     progressCallback: ({ loaded, total }) => updateProgressBar(loaded, total)
-                };
-
-                await wllama.loadModel([file], loadConfig);
+                });
                 finishLoadingUI(file.name);
-
-            } catch (e) {
-                errorLoadingUI(e.message);
-            }
+            } catch (e) { errorLoadingUI(e.message); }
         });
 
-        // --- 4. Loading UI Helpers ---
         function startLoadingUI(name) {
             ui.dlContainer.classList.remove('hidden');
             ui.header.textContent = `Loading ${name}...`;
             ui.input.disabled = true;
             ui.btn.disabled = true;
             ui.welcome.classList.add('hidden');
-            currentModelName = name;
-            // Reset Chat History
             document.getElementById('chat-box').innerHTML = ''; 
         }
 
@@ -282,14 +217,9 @@
             const pct = Math.round((loaded / total) * 100);
             const loadedMB = (loaded / 1024 / 1024).toFixed(1);
             const totalMB = (total / 1024 / 1024).toFixed(1);
-            
             ui.dlPercent.innerText = `${pct}%`;
             ui.dlBar.style.width = `${pct}%`;
             ui.dlDetails.innerText = `${loadedMB}MB / ${totalMB}MB`;
-            
-            if (pct === 100) {
-                ui.dlDetails.innerText = "Processing...";
-            }
         }
 
         function finishLoadingUI(name) {
@@ -299,8 +229,6 @@
             ui.btn.disabled = false;
             ui.input.placeholder = `Message ${name}...`;
             ui.input.focus();
-            
-            // Add System Start Message
             addMessage('system', 'Model Loaded Successfully.');
         }
 
@@ -310,7 +238,6 @@
             alert("Error: " + msg);
         }
 
-        // --- 5. Chat Logic (With Template Fix) ---
         window.sendMessage = async () => {
             const text = ui.input.value.trim();
             if (!text) return;
@@ -318,17 +245,23 @@
             addMessage('user', text);
             ui.input.value = '';
             ui.btn.disabled = true;
-
             const aiMsg = addMessage('ai', '...');
             let currentText = "";
 
             try {
-                // Apply ChatML Template to prevent hallucination
+                // FIXED: Added Repetition Penalty (1.1) and Stop Tokens
                 const prompt = `<|im_start|>system\nYou are a helpful AI assistant.<|im_end|>\n<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
 
                 await wllama.createCompletion(prompt, {
                     nPredict: 512,
-                    sampling: { temp: 0.3, top_k: 40, top_p: 0.9 }, // Lower temp for more stable answers
+                    sampling: { 
+                        temp: 0.5, 
+                        top_k: 40, 
+                        top_p: 0.9,
+                        penalty_repeat: 1.1, // PUNISHES REPETITION
+                        penalty_last_n: 64
+                    },
+                    stop: ["<|im_end|>", "<|endoftext|>"], // STOPS GENERATION EXPLICITLY
                     onNewToken: (token, piece, text) => {
                         currentText = text;
                         aiMsg.innerHTML = formatText(currentText);
@@ -343,18 +276,11 @@
             ui.input.focus();
         };
 
-        // --- Helpers ---
         function addMessage(role, text) {
             const div = document.createElement('div');
             div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
-            
             const bubble = document.createElement('div');
-            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${
-                role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 
-                role === 'system' ? 'bg-transparent text-gray-500 text-xs w-full text-center shadow-none' :
-                'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'
-            }`;
-            
+            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : role === 'system' ? 'bg-transparent text-gray-500 text-xs w-full text-center shadow-none' : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'}`;
             bubble.innerHTML = role === 'system' ? text : formatText(text);
             div.appendChild(bubble);
             document.getElementById('chat-box').appendChild(div);
@@ -363,11 +289,7 @@
         }
 
         function formatText(text) {
-            return text
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\n/g, "<br>")
-                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+            return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
         }
 
         function scrollToBottom() {
