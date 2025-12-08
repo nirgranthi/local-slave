@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI (Persistent Chat)</title>
+    <title>Local AI (Gemini Style)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -12,6 +12,8 @@
         .blink { animation: blinker 1.5s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
         .progress-bar { transition: width 0.3s ease; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-gray-900 text-white h-[100dvh] flex overflow-hidden">
@@ -21,46 +23,53 @@
 
     <!-- SIDEBAR -->
     <div id="sidebar" class="fixed inset-y-0 left-0 w-80 bg-gray-800 border-r border-gray-700 z-50 transform -translate-x-full md:translate-x-0 md:relative sidebar-transition flex flex-col shadow-2xl shrink-0">
-        <div class="p-4 border-b border-gray-700 bg-gray-800 flex justify-between items-center">
-            <h2 class="font-bold text-lg text-blue-400">⚡ Available Models</h2>
-            <button onclick="closeSidebar()" class="md:hidden text-gray-400 hover:text-white p-2">✕</button>
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-700">
+            <button onclick="switchTab('models')" id="tab-models" class="flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50">MODELS</button>
+            <button onclick="switchTab('history')" id="tab-history" class="flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300">HISTORY</button>
         </div>
 
-        <div class="p-4 flex-1 overflow-y-auto space-y-6">
+        <div class="p-4 flex-1 overflow-y-auto space-y-6 no-scrollbar">
             
-            <!-- CSV Models Section -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <div class="text-xs text-gray-400 uppercase font-bold">From models.csv</div>
-                    <button onclick="loadModelList()" class="text-[10px] text-blue-400 hover:underline">Refresh</button>
-                </div>
-                <div id="csv-model-list" class="space-y-2">
-                    <div class="text-xs text-gray-600 italic text-center py-4">Loading list...</div>
-                </div>
-            </div>
-
-            <!-- Manual Upload -->
-            <div class="border-t border-gray-700 pt-4">
-                <div class="text-xs text-gray-400 uppercase font-bold mb-2">Manual Upload</div>
-                <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:border-blue-500 transition-colors bg-gray-800/50">
-                    <div class="flex flex-col items-center justify-center pt-2 pb-3">
-                        <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        <p class="text-[10px] text-gray-400">Tap to Select .gguf</p>
+            <!-- MODELS TAB -->
+            <div id="view-models" class="space-y-6">
+                <!-- CSV Models Section -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-xs text-gray-400 uppercase font-bold">Available Models</div>
+                        <button onclick="loadModelList()" class="text-[10px] text-blue-400 hover:underline">Refresh</button>
                     </div>
-                    <input type="file" id="file-upload" accept=".gguf" class="hidden" />
-                </label>
+                    <div id="csv-model-list" class="space-y-2">
+                        <div class="text-xs text-gray-600 italic text-center py-4">Loading list...</div>
+                    </div>
+                </div>
+
+                <!-- Manual Upload -->
+                <div class="border-t border-gray-700 pt-4">
+                    <div class="text-xs text-gray-400 uppercase font-bold mb-2">Manual Upload</div>
+                    <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:border-blue-500 transition-colors bg-gray-800/50">
+                        <div class="flex flex-col items-center justify-center pt-2 pb-3">
+                            <svg class="w-6 h-6 mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <p class="text-[10px] text-gray-400">Tap to Select .gguf</p>
+                        </div>
+                        <input type="file" id="file-upload" accept=".gguf" class="hidden" />
+                    </label>
+                </div>
             </div>
 
-            <!-- Actions -->
-            <div class="border-t border-gray-700 pt-4">
-                <button onclick="clearHistory()" class="w-full py-2 px-3 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-xs rounded border border-red-900/50 transition-colors flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    Clear Chat History
-                </button>
+            <!-- HISTORY TAB -->
+            <div id="view-history" class="hidden space-y-2">
+                <div class="flex justify-between items-center mb-2">
+                    <div class="text-xs text-gray-400 uppercase font-bold">Recent Chats</div>
+                    <button onclick="clearAllHistory()" class="text-[10px] text-red-400 hover:underline">Clear All</button>
+                </div>
+                <div id="history-list" class="space-y-1">
+                    <!-- History Items Injected Here -->
+                </div>
             </div>
             
             <!-- Download Progress -->
-            <div id="dl-progress-container" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700">
+            <div id="dl-progress-container" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700 mt-auto">
                 <div class="flex justify-between text-[10px] mb-1">
                     <span class="text-blue-300">Downloading...</span>
                     <span id="dl-percent" class="text-white font-mono">0%</span>
@@ -72,7 +81,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Auto-Save)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.17.0 (Sessions)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -83,29 +92,38 @@
                 <button onclick="openSidebar()" class="md:hidden text-gray-400 p-1 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div>
-                    <span id="header-status" class="font-bold text-sm text-gray-200">Waiting for model...</span>
+                <div class="flex flex-col">
+                    <span id="header-status" class="font-bold text-sm text-gray-200">Local AI</span>
+                    <span id="active-model-name" class="text-[10px] text-gray-500 truncate max-w-[150px]">No Model Loaded</span>
                 </div>
             </div>
-            <div id="engine-state" class="text-[10px] px-2 py-1 rounded bg-black/40 text-gray-400 font-mono">OFFLINE</div>
+            
+            <div class="flex items-center gap-2">
+                <div id="engine-state" class="text-[10px] px-2 py-1 rounded bg-black/40 text-gray-400 font-mono hidden md:block">OFFLINE</div>
+                <button onclick="startNewChat()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    New Chat
+                </button>
+            </div>
         </div>
 
         <!-- Chat Area -->
         <div id="chat-box" class="flex-1 overflow-y-auto p-4 pb-40 space-y-4">
-            <div id="console-logs" class="hidden"></div>
-            
             <div id="welcome-message" class="flex flex-col items-center justify-center h-full text-gray-500 space-y-4">
-                <div class="p-4 bg-gray-800 rounded-full">
-                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <div class="p-4 bg-gray-800 rounded-full animate-bounce">
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <p class="text-sm">Select a model from the sidebar to start.</p>
+                <div class="text-center">
+                    <h3 class="text-lg font-medium text-white">How can I help you today?</h3>
+                    <p class="text-xs mt-1">Checking for downloaded models...</p>
+                </div>
             </div>
         </div>
 
         <!-- Input -->
         <div class="absolute bottom-0 w-full bg-gray-900 pt-4 pb-4 px-4 border-t border-gray-800">
             <div class="max-w-3xl mx-auto relative flex gap-2">
-                <input id="user-input" type="text" class="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:outline-none focus:border-blue-500 transition-all" placeholder="Chat not ready..." disabled>
+                <input id="user-input" type="text" class="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:outline-none focus:border-blue-500 transition-all" placeholder="Load a model to start..." disabled>
                 <button id="send-btn" onclick="sendMessage()" class="bg-blue-600 px-6 rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors" disabled>Send</button>
             </div>
         </div>
@@ -119,84 +137,133 @@
             'single-thread/wllama.wasm': 'https://cdn.jsdelivr.net/npm/@wllama/wllama@1.16.2/esm/single-thread/wllama.wasm',
         };
 
+        // --- State ---
         let wllama;
         let isReady = false;
-        let chatHistory = []; // Stores conversation history
+        let sessions = JSON.parse(localStorage.getItem('lai_sessions') || '{}');
+        let currentSessionId = null;
+        let downloadedModels = JSON.parse(localStorage.getItem('lai_downloaded_models') || '[]');
+        let activeModelUrl = null;
 
         const ui = {
             header: document.getElementById('header-status'),
+            modelName: document.getElementById('active-model-name'),
             input: document.getElementById('user-input'),
             btn: document.getElementById('send-btn'),
             engineState: document.getElementById('engine-state'),
             welcome: document.getElementById('welcome-message'),
             csvList: document.getElementById('csv-model-list'),
+            historyList: document.getElementById('history-list'),
             dlContainer: document.getElementById('dl-progress-container'),
             dlPercent: document.getElementById('dl-percent'),
             dlBar: document.getElementById('dl-bar'),
-            dlDetails: document.getElementById('dl-details')
+            dlDetails: document.getElementById('dl-details'),
+            chatBox: document.getElementById('chat-box')
         };
 
+        // --- Initialization ---
         async function init() {
             try {
-                ui.engineState.textContent = "INITIALIZING...";
-                ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-yellow-900/50 text-yellow-200 font-mono blink";
-                
+                ui.engineState.textContent = "BOOTING";
                 wllama = new Wllama(CONFIG);
                 
                 ui.engineState.textContent = "READY";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-green-900/50 text-green-400 font-mono";
                 isReady = true;
                 
-                // Load things
-                loadModelList();
-                loadHistoryFromStorage(); // Restore chat on refresh
+                startNewChat(); // Always start fresh on refresh
+                renderHistoryList();
+                await loadModelList(); // This also handles auto-loading default model
 
             } catch (e) {
                 ui.engineState.textContent = "ERROR";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-red-900/50 text-red-400 font-mono";
-                alert("Engine Init Failed: " + e.message);
+                console.error(e);
             }
         }
 
-        // --- Persistent Storage Logic ---
-        function saveChat() {
-            localStorage.setItem('local_ai_history', JSON.stringify(chatHistory));
-        }
-
-        function loadHistoryFromStorage() {
-            const stored = localStorage.getItem('local_ai_history');
-            if (stored) {
-                try {
-                    chatHistory = JSON.parse(stored);
-                    if (chatHistory.length > 0) {
-                        ui.welcome.classList.add('hidden');
-                        chatHistory.forEach(msg => addMessage(msg.role, msg.content, false)); // false = don't animate old msgs
-                    }
-                } catch (e) {
-                    console.error("Failed to parse history", e);
-                }
-            }
-        }
-
-        window.clearHistory = () => {
-            if(confirm("Delete all chat history?")) {
-                chatHistory = [];
-                localStorage.removeItem('local_ai_history');
-                document.getElementById('chat-box').innerHTML = '';
-                document.getElementById('chat-box').appendChild(ui.welcome);
-                ui.welcome.classList.remove('hidden');
+        // --- Session Management ---
+        window.startNewChat = () => {
+            currentSessionId = Date.now().toString();
+            sessions[currentSessionId] = { title: "New Chat", timestamp: Date.now(), messages: [] };
+            saveSessions();
+            
+            // UI Reset
+            ui.chatBox.innerHTML = '';
+            ui.chatBox.appendChild(ui.welcome);
+            ui.welcome.classList.remove('hidden');
+            renderHistoryList();
+            
+            // If model is already loaded, enable input
+            if(activeModelUrl) {
+                ui.input.disabled = false;
+                ui.btn.disabled = false;
+                ui.input.placeholder = "Type a message...";
+                ui.input.focus();
             }
         };
 
-        // --- Model Loading ---
+        window.loadSession = (id) => {
+            if (!sessions[id]) return;
+            currentSessionId = id;
+            const session = sessions[id];
+            
+            // UI Render
+            ui.chatBox.innerHTML = '';
+            ui.welcome.classList.add('hidden');
+            
+            session.messages.forEach(msg => {
+                addMessage(msg.role, msg.content, false);
+            });
+            
+            // Close sidebar on mobile
+            if (window.innerWidth < 768) closeSidebar();
+            
+            // Enable input if model ready
+            if(activeModelUrl) {
+                ui.input.disabled = false;
+                ui.btn.disabled = false;
+            }
+        };
+
+        function saveSessions() {
+            localStorage.setItem('lai_sessions', JSON.stringify(sessions));
+            renderHistoryList();
+        }
+
+        function renderHistoryList() {
+            ui.historyList.innerHTML = '';
+            const sortedIds = Object.keys(sessions).sort((a, b) => sessions[b].timestamp - sessions[a].timestamp);
+            
+            sortedIds.forEach(id => {
+                const session = sessions[id];
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-3 rounded-lg text-xs truncate transition-colors ${id === currentSessionId ? 'bg-gray-700 text-white' : 'bg-transparent text-gray-400 hover:bg-gray-800'}`;
+                btn.innerText = session.title || "Untitled Chat";
+                btn.onclick = () => loadSession(id);
+                ui.historyList.appendChild(btn);
+            });
+        }
+
+        window.clearAllHistory = () => {
+            if(confirm("Delete ALL chat history?")) {
+                sessions = {};
+                saveSessions();
+                startNewChat();
+            }
+        }
+
+        // --- Model Management ---
         window.loadModelList = async () => {
-            ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center animate-pulse">Fetching models.csv...</div>';
             try {
                 const response = await fetch('models.csv');
                 if (!response.ok) throw new Error("Missing models.csv");
                 const text = await response.text();
                 const lines = text.split('\n').filter(line => line.trim() !== '');
-                ui.csvList.innerHTML = ''; 
+                
+                ui.csvList.innerHTML = '';
+                let firstDownloaded = null;
+                const preferred = localStorage.getItem('lai_preferred_model');
 
                 lines.forEach(line => {
                     const parts = line.split(',');
@@ -204,133 +271,168 @@
                     const url = parts[0].trim();
                     const size = parts[1].trim();
                     let name = url.split('/').pop().replace('.gguf', '');
-                    if(name.length > 25) name = name.substring(0, 22) + '...';
+                    if(name.length > 20) name = name.substring(0, 18) + '...';
+
+                    // Check if downloaded
+                    const isDownloaded = downloadedModels.includes(url);
+                    if (isDownloaded && !firstDownloaded) firstDownloaded = url;
 
                     const btn = document.createElement('button');
-                    btn.className = "w-full text-left p-3 bg-gray-700/30 hover:bg-gray-700 rounded-lg border border-gray-700/50 hover:border-blue-500 transition-all group relative";
-                    btn.onclick = () => loadModelFromUrl(url, name);
-                    btn.innerHTML = `<div class="flex justify-between items-center"><span class="font-medium text-xs text-gray-300 group-hover:text-white truncate pr-2">${name}</span><span class="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">${size} MB</span></div>`;
+                    btn.className = `w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
+                        ${isDownloaded ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40' : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`;
+                    
+                    btn.onclick = () => {
+                        localStorage.setItem('lai_preferred_model', url); // Save choice
+                        loadModelFromUrl(url, name);
+                    };
+                    
+                    btn.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="font-medium text-xs text-gray-300 group-hover:text-white">${name}</span>
+                                ${isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''}
+                            </div>
+                            <span class="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">${size} MB</span>
+                        </div>
+                    `;
                     ui.csvList.appendChild(btn);
                 });
+
+                // Auto-load Logic
+                if (preferred && downloadedModels.includes(preferred)) {
+                    console.log("Auto-loading preferred model...");
+                    // Need name for UI, simplistic extract
+                    let name = preferred.split('/').pop();
+                    loadModelFromUrl(preferred, name);
+                } else if (firstDownloaded) {
+                    console.log("Auto-loading first available model...");
+                    let name = firstDownloaded.split('/').pop();
+                    loadModelFromUrl(firstDownloaded, name);
+                }
+
             } catch (e) {
-                ui.csvList.innerHTML = `<div class="text-[10px] text-red-400 bg-red-900/20 p-2 rounded text-center">Could not load 'models.csv'.</div>`;
+                ui.csvList.innerHTML = `<div class="text-[10px] text-red-400 p-2 text-center">No models.csv found</div>`;
             }
         };
 
         async function loadModelFromUrl(url, name) {
             if (!isReady) return alert("Engine not ready.");
             if (window.innerWidth < 768) closeSidebar();
-            startLoadingUI(name);
+            
+            ui.dlContainer.classList.remove('hidden');
+            ui.header.textContent = "Loading...";
+            
             try {
                 await wllama.loadModelFromUrl(url, {
                     n_ctx: 2048, n_threads: 1, useCache: true,
-                    progressCallback: ({ loaded, total }) => updateProgressBar(loaded, total)
+                    progressCallback: ({ loaded, total }) => {
+                        const pct = Math.round((loaded / total) * 100);
+                        ui.dlPercent.innerText = `${pct}%`;
+                        ui.dlBar.style.width = `${pct}%`;
+                        ui.dlDetails.innerText = `${(loaded/1024/1024).toFixed(1)}MB / ${(total/1024/1024).toFixed(1)}MB`;
+                    }
                 });
-                finishLoadingUI(name);
-            } catch (e) { errorLoadingUI(e.message); }
+                
+                // Mark as downloaded
+                if (!downloadedModels.includes(url)) {
+                    downloadedModels.push(url);
+                    localStorage.setItem('lai_downloaded_models', JSON.stringify(downloadedModels));
+                    loadModelList(); // Refresh list to show green badge
+                }
+
+                activeModelUrl = url;
+                ui.dlContainer.classList.add('hidden');
+                ui.header.textContent = "Active";
+                ui.modelName.textContent = name;
+                
+                // Enable Input
+                ui.input.disabled = false;
+                ui.btn.disabled = false;
+                ui.input.placeholder = `Message ${name}...`;
+                
+                // If this is a fresh session, hide welcome automatically if desired or keep until chat
+                // We keep welcome until first message
+
+            } catch (e) {
+                ui.dlContainer.classList.add('hidden');
+                alert("Load Failed: " + e.message);
+            }
         }
 
         document.getElementById('file-upload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
             if (!isReady) return alert("Engine not ready.");
-            if (window.innerWidth < 768) closeSidebar();
-            startLoadingUI(file.name);
+            
+            ui.dlContainer.classList.remove('hidden');
+            
             try {
                 await wllama.loadModel([file], {
                     n_ctx: 2048, n_threads: 1,
-                    progressCallback: ({ loaded, total }) => updateProgressBar(loaded, total)
+                    progressCallback: ({ loaded, total }) => {
+                        const pct = Math.round((loaded / total) * 100);
+                        ui.dlBar.style.width = `${pct}%`;
+                    }
                 });
-                finishLoadingUI(file.name);
-            } catch (e) { errorLoadingUI(e.message); }
-        });
-
-        function startLoadingUI(name) {
-            ui.dlContainer.classList.remove('hidden');
-            ui.header.textContent = `Loading ${name}...`;
-            ui.input.disabled = true;
-            ui.btn.disabled = true;
-        }
-
-        function updateProgressBar(loaded, total) {
-            const pct = Math.round((loaded / total) * 100);
-            const loadedMB = (loaded / 1024 / 1024).toFixed(1);
-            const totalMB = (total / 1024 / 1024).toFixed(1);
-            ui.dlPercent.innerText = `${pct}%`;
-            ui.dlBar.style.width = `${pct}%`;
-            ui.dlDetails.innerText = `${loadedMB}MB / ${totalMB}MB`;
-        }
-
-        function finishLoadingUI(name) {
-            ui.dlContainer.classList.add('hidden');
-            ui.header.textContent = `Active: ${name}`;
-            ui.input.disabled = false;
-            ui.btn.disabled = false;
-            ui.input.placeholder = `Message ${name}...`;
-            ui.input.focus();
-            if(chatHistory.length === 0) {
-                // Only show system loaded msg if chat is empty
-                addMessage('system', 'Model Loaded Successfully.', true);
+                
+                activeModelUrl = "local_file";
+                ui.dlContainer.classList.add('hidden');
+                ui.header.textContent = "Active";
+                ui.modelName.textContent = file.name;
+                ui.input.disabled = false;
+                ui.btn.disabled = false;
+                
+            } catch (e) {
+                ui.dlContainer.classList.add('hidden');
+                alert(e.message);
             }
-        }
-
-        function errorLoadingUI(msg) {
-            ui.dlContainer.classList.add('hidden');
-            ui.header.textContent = "Load Failed";
-            alert("Error: " + msg);
-        }
+        });
 
         // --- Chat Logic ---
         window.sendMessage = async () => {
             const text = ui.input.value.trim();
             if (!text) return;
 
-            addMessage('user', text);
+            ui.welcome.classList.add('hidden');
             ui.input.value = '';
             ui.btn.disabled = true;
+
+            // 1. Add User Message
+            addMessage('user', text);
+            sessions[currentSessionId].messages.push({ role: 'user', content: text });
             
-            // 1. Update History & Save
-            chatHistory.push({ role: "user", content: text });
-            saveChat();
+            // Set title if first message
+            if (sessions[currentSessionId].messages.length === 1) {
+                sessions[currentSessionId].title = text.substring(0, 30) + (text.length > 30 ? '...' : '');
+            }
+            saveSessions();
 
             const aiMsg = addMessage('ai', '...');
             let currentText = "";
 
             try {
-                // 2. Prepare Context (Only last 10 messages to save memory)
-                const contextMsgs = chatHistory.slice(-10);
-                
+                // Prepare context (Last 10 messages)
+                const history = sessions[currentSessionId].messages.slice(-10);
                 let fullPrompt = `<|im_start|>system\nYou are a helpful AI assistant.<|im_end|>\n`;
-                for (const msg of contextMsgs) {
-                    if (msg.role !== 'system') { // Skip legacy system msgs if any
-                        fullPrompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
-                    }
-                }
+                
+                history.forEach(msg => {
+                    fullPrompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
+                });
                 fullPrompt += `<|im_start|>assistant\n`;
 
-                // 3. Generate
                 await wllama.createCompletion(fullPrompt, {
                     nPredict: 512,
-                    sampling: { 
-                        temp: 0.4, 
-                        top_k: 40, 
-                        top_p: 0.9,
-                        penalty_repeat: 1.3, 
-                        penalty_last_n: 128,
-                        penalty_freq: 0.5,
-                        penalty_present: 0.5
-                    },
-                    stop: ["<|im_end|>", "<|endoftext|>"], 
+                    sampling: { temp: 0.4, top_k: 40, top_p: 0.9, penalty_repeat: 1.2 },
+                    stop: ["<|im_end|>", "<|endoftext|>"],
                     onNewToken: (token, piece, text) => {
                         currentText = text;
                         aiMsg.innerHTML = formatText(currentText);
                         scrollToBottom();
                     }
                 });
-                
-                // 4. Update History with AI Reply & Save
-                chatHistory.push({ role: "assistant", content: currentText });
-                saveChat();
+
+                sessions[currentSessionId].messages.push({ role: 'assistant', content: currentText });
+                saveSessions();
 
             } catch (e) {
                 aiMsg.innerHTML = `<span class="text-red-400">Error: ${e.message}</span>`;
@@ -340,39 +442,33 @@
             ui.input.focus();
         };
 
+        // --- Helpers ---
         function addMessage(role, text, animate = true) {
             const div = document.createElement('div');
-            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'animate-fade-in' : ''}`;
-            
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'fade-in' : ''}`;
             const bubble = document.createElement('div');
-            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${
-                role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 
-                role === 'system' ? 'bg-transparent text-gray-500 text-xs w-full text-center shadow-none' :
-                'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'
-            }`;
-            
-            bubble.innerHTML = role === 'system' ? text : formatText(text);
+            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'}`;
+            bubble.innerHTML = formatText(text);
             div.appendChild(bubble);
-            document.getElementById('chat-box').appendChild(div);
-            
-            ui.welcome.classList.add('hidden'); // Hide welcome if message exists
+            ui.chatBox.appendChild(div);
             scrollToBottom();
             return bubble;
         }
 
         function formatText(text) {
-            return text
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\n/g, "<br>")
-                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-                .replace(/`(.*?)`/g, "<code class='bg-black/30 px-1 rounded'>$1</code>");
+            return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/`(.*?)`/g, "<code class='bg-black/30 px-1 rounded'>$1</code>");
         }
 
-        function scrollToBottom() {
-            const box = document.getElementById('chat-box');
-            box.scrollTop = box.scrollHeight;
-        }
+        function scrollToBottom() { ui.chatBox.scrollTop = ui.chatBox.scrollHeight; }
+        
+        // Sidebar Tabs
+        window.switchTab = (tab) => {
+            document.getElementById('view-models').classList.toggle('hidden', tab !== 'models');
+            document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
+            
+            document.getElementById('tab-models').className = tab === 'models' ? 'flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50' : 'flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300';
+            document.getElementById('tab-history').className = tab === 'history' ? 'flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50' : 'flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300';
+        };
 
         window.openSidebar = () => { document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('backdrop').classList.remove('hidden'); }
         window.closeSidebar = () => { document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('backdrop').classList.add('hidden'); }
