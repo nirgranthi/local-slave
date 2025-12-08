@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI (Memory Fix)</title>
+    <title>Local AI (Persistent Chat)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -34,7 +34,6 @@
                     <div class="text-xs text-gray-400 uppercase font-bold">From models.csv</div>
                     <button onclick="loadModelList()" class="text-[10px] text-blue-400 hover:underline">Refresh</button>
                 </div>
-                
                 <div id="csv-model-list" class="space-y-2">
                     <div class="text-xs text-gray-600 italic text-center py-4">Loading list...</div>
                 </div>
@@ -51,6 +50,14 @@
                     <input type="file" id="file-upload" accept=".gguf" class="hidden" />
                 </label>
             </div>
+
+            <!-- Actions -->
+            <div class="border-t border-gray-700 pt-4">
+                <button onclick="clearHistory()" class="w-full py-2 px-3 bg-red-900/30 hover:bg-red-900/50 text-red-300 text-xs rounded border border-red-900/50 transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Clear Chat History
+                </button>
+            </div>
             
             <!-- Download Progress -->
             <div id="dl-progress-container" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700">
@@ -65,7 +72,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Memory Enabled)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Auto-Save)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -85,7 +92,7 @@
 
         <!-- Chat Area -->
         <div id="chat-box" class="flex-1 overflow-y-auto p-4 pb-40 space-y-4">
-            <div id="console-logs" class="font-mono text-xs text-gray-400 space-y-1 p-2 border-l-2 border-gray-700 pl-4 bg-black/20 rounded hidden"></div>
+            <div id="console-logs" class="hidden"></div>
             
             <div id="welcome-message" class="flex flex-col items-center justify-center h-full text-gray-500 space-y-4">
                 <div class="p-4 bg-gray-800 rounded-full">
@@ -118,7 +125,6 @@
 
         const ui = {
             header: document.getElementById('header-status'),
-            logs: document.getElementById('console-logs'),
             input: document.getElementById('user-input'),
             btn: document.getElementById('send-btn'),
             engineState: document.getElementById('engine-state'),
@@ -140,7 +146,11 @@
                 ui.engineState.textContent = "READY";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-green-900/50 text-green-400 font-mono";
                 isReady = true;
+                
+                // Load things
                 loadModelList();
+                loadHistoryFromStorage(); // Restore chat on refresh
+
             } catch (e) {
                 ui.engineState.textContent = "ERROR";
                 ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-red-900/50 text-red-400 font-mono";
@@ -148,6 +158,37 @@
             }
         }
 
+        // --- Persistent Storage Logic ---
+        function saveChat() {
+            localStorage.setItem('local_ai_history', JSON.stringify(chatHistory));
+        }
+
+        function loadHistoryFromStorage() {
+            const stored = localStorage.getItem('local_ai_history');
+            if (stored) {
+                try {
+                    chatHistory = JSON.parse(stored);
+                    if (chatHistory.length > 0) {
+                        ui.welcome.classList.add('hidden');
+                        chatHistory.forEach(msg => addMessage(msg.role, msg.content, false)); // false = don't animate old msgs
+                    }
+                } catch (e) {
+                    console.error("Failed to parse history", e);
+                }
+            }
+        }
+
+        window.clearHistory = () => {
+            if(confirm("Delete all chat history?")) {
+                chatHistory = [];
+                localStorage.removeItem('local_ai_history');
+                document.getElementById('chat-box').innerHTML = '';
+                document.getElementById('chat-box').appendChild(ui.welcome);
+                ui.welcome.classList.remove('hidden');
+            }
+        };
+
+        // --- Model Loading ---
         window.loadModelList = async () => {
             ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center animate-pulse">Fetching models.csv...</div>';
             try {
@@ -171,9 +212,8 @@
                     btn.innerHTML = `<div class="flex justify-between items-center"><span class="font-medium text-xs text-gray-300 group-hover:text-white truncate pr-2">${name}</span><span class="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">${size} MB</span></div>`;
                     ui.csvList.appendChild(btn);
                 });
-                if (lines.length === 0) ui.csvList.innerHTML = '<div class="text-xs text-gray-500 text-center">CSV file is empty.</div>';
             } catch (e) {
-                ui.csvList.innerHTML = `<div class="text-[10px] text-red-400 bg-red-900/20 p-2 rounded text-center">Could not load 'models.csv'.<br>(Ensure file exists in same folder)</div>`;
+                ui.csvList.innerHTML = `<div class="text-[10px] text-red-400 bg-red-900/20 p-2 rounded text-center">Could not load 'models.csv'.</div>`;
             }
         };
 
@@ -210,9 +250,6 @@
             ui.header.textContent = `Loading ${name}...`;
             ui.input.disabled = true;
             ui.btn.disabled = true;
-            ui.welcome.classList.add('hidden');
-            document.getElementById('chat-box').innerHTML = ''; 
-            chatHistory = []; // Reset history on new model load
         }
 
         function updateProgressBar(loaded, total) {
@@ -231,7 +268,10 @@
             ui.btn.disabled = false;
             ui.input.placeholder = `Message ${name}...`;
             ui.input.focus();
-            addMessage('system', 'Model Loaded Successfully.');
+            if(chatHistory.length === 0) {
+                // Only show system loaded msg if chat is empty
+                addMessage('system', 'Model Loaded Successfully.', true);
+            }
         }
 
         function errorLoadingUI(msg) {
@@ -240,6 +280,7 @@
             alert("Error: " + msg);
         }
 
+        // --- Chat Logic ---
         window.sendMessage = async () => {
             const text = ui.input.value.trim();
             if (!text) return;
@@ -248,23 +289,26 @@
             ui.input.value = '';
             ui.btn.disabled = true;
             
-            // Add user msg to history
+            // 1. Update History & Save
             chatHistory.push({ role: "user", content: text });
-            
-            // Keep history short (last 10 turns) to prevent context overflow on small models
-            if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+            saveChat();
 
             const aiMsg = addMessage('ai', '...');
             let currentText = "";
 
             try {
-                // Build Full Prompt from History
+                // 2. Prepare Context (Only last 10 messages to save memory)
+                const contextMsgs = chatHistory.slice(-10);
+                
                 let fullPrompt = `<|im_start|>system\nYou are a helpful AI assistant.<|im_end|>\n`;
-                for (const msg of chatHistory) {
-                    fullPrompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
+                for (const msg of contextMsgs) {
+                    if (msg.role !== 'system') { // Skip legacy system msgs if any
+                        fullPrompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
+                    }
                 }
                 fullPrompt += `<|im_start|>assistant\n`;
 
+                // 3. Generate
                 await wllama.createCompletion(fullPrompt, {
                     nPredict: 512,
                     sampling: { 
@@ -284,8 +328,9 @@
                     }
                 });
                 
-                // Add AI response to history
+                // 4. Update History with AI Reply & Save
                 chatHistory.push({ role: "assistant", content: currentText });
+                saveChat();
 
             } catch (e) {
                 aiMsg.innerHTML = `<span class="text-red-400">Error: ${e.message}</span>`;
@@ -295,20 +340,33 @@
             ui.input.focus();
         };
 
-        function addMessage(role, text) {
+        function addMessage(role, text, animate = true) {
             const div = document.createElement('div');
-            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+            div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'animate-fade-in' : ''}`;
+            
             const bubble = document.createElement('div');
-            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : role === 'system' ? 'bg-transparent text-gray-500 text-xs w-full text-center shadow-none' : 'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'}`;
+            bubble.className = `max-w-[85%] px-4 py-2 rounded-2xl text-sm shadow-md ${
+                role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 
+                role === 'system' ? 'bg-transparent text-gray-500 text-xs w-full text-center shadow-none' :
+                'bg-gray-800 text-gray-200 rounded-bl-none border border-gray-700'
+            }`;
+            
             bubble.innerHTML = role === 'system' ? text : formatText(text);
             div.appendChild(bubble);
             document.getElementById('chat-box').appendChild(div);
+            
+            ui.welcome.classList.add('hidden'); // Hide welcome if message exists
             scrollToBottom();
             return bubble;
         }
 
         function formatText(text) {
-            return text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+            return text
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\n/g, "<br>")
+                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+                .replace(/`(.*?)`/g, "<code class='bg-black/30 px-1 rounded'>$1</code>");
         }
 
         function scrollToBottom() {
