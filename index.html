@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI (No-Repeat Fix)</title>
+    <title>Local AI (Anti-Loop Pro)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -65,7 +65,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Anti-Loop Fix)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.16.2 (Aggressive Anti-Loop)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -249,19 +249,21 @@
             let currentText = "";
 
             try {
-                // FIXED: Added Repetition Penalty (1.1) and Stop Tokens
+                // FIXED: Stronger Penalties to stop looping
                 const prompt = `<|im_start|>system\nYou are a helpful AI assistant.<|im_end|>\n<|im_start|>user\n${text}<|im_end|>\n<|im_start|>assistant\n`;
 
                 await wllama.createCompletion(prompt, {
                     nPredict: 512,
                     sampling: { 
-                        temp: 0.5, 
+                        temp: 0.4, 
                         top_k: 40, 
                         top_p: 0.9,
-                        penalty_repeat: 1.1, // PUNISHES REPETITION
-                        penalty_last_n: 64
+                        penalty_repeat: 1.3, // Stronger Penalty (1.3)
+                        penalty_last_n: 128, // Check last 128 tokens
+                        penalty_freq: 0.5,   // Punish frequent words
+                        penalty_present: 0.5 // Punish repeat words
                     },
-                    stop: ["<|im_end|>", "<|endoftext|>"], // STOPS GENERATION EXPLICITLY
+                    stop: ["<|im_end|>", "<|endoftext|>"], 
                     onNewToken: (token, piece, text) => {
                         currentText = text;
                         aiMsg.innerHTML = formatText(currentText);
