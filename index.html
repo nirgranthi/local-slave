@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI (Gemini Style)</title>
+    <title>Your Local AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -81,7 +81,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.17.0 (Sessions)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.17.1 (Switch Fix)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -301,7 +301,6 @@
                 // Auto-load Logic
                 if (preferred && downloadedModels.includes(preferred)) {
                     console.log("Auto-loading preferred model...");
-                    // Need name for UI, simplistic extract
                     let name = preferred.split('/').pop();
                     loadModelFromUrl(preferred, name);
                 } else if (firstDownloaded) {
@@ -319,6 +318,16 @@
             if (!isReady) return alert("Engine not ready.");
             if (window.innerWidth < 768) closeSidebar();
             
+            // FIX: Restart engine if switching models to prevent memory leaks
+            if (activeModelUrl && activeModelUrl !== url) {
+                console.log("Switching models - Restarting engine...");
+                ui.header.textContent = "Unloading...";
+                try {
+                     if (wllama.exit) await wllama.exit();
+                } catch(e) { console.warn(e); }
+                wllama = new Wllama(CONFIG);
+            }
+
             ui.dlContainer.classList.remove('hidden');
             ui.header.textContent = "Loading...";
             
@@ -349,13 +358,12 @@
                 ui.input.disabled = false;
                 ui.btn.disabled = false;
                 ui.input.placeholder = `Message ${name}...`;
-                
-                // If this is a fresh session, hide welcome automatically if desired or keep until chat
-                // We keep welcome until first message
 
             } catch (e) {
                 ui.dlContainer.classList.add('hidden');
-                alert("Load Failed: " + e.message);
+                alert(e.message);
+                // Recover engine if crash
+                wllama = new Wllama(CONFIG);
             }
         }
 
@@ -364,6 +372,12 @@
             if (!file) return;
             if (!isReady) return alert("Engine not ready.");
             
+            // FIX: Restart engine for manual upload too
+            if (activeModelUrl) {
+                try { if (wllama.exit) await wllama.exit(); } catch(e){}
+                wllama = new Wllama(CONFIG);
+            }
+
             ui.dlContainer.classList.remove('hidden');
             
             try {
@@ -385,6 +399,7 @@
             } catch (e) {
                 ui.dlContainer.classList.add('hidden');
                 alert(e.message);
+                wllama = new Wllama(CONFIG);
             }
         });
 
