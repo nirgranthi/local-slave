@@ -44,6 +44,13 @@ async function init() {
         renderHistoryList();
         await loadModelList(); 
 
+        ui.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
     } catch (e) {
         ui.engineState.textContent = "ERROR";
         ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-red-900/50 text-red-400 font-mono";
@@ -283,6 +290,7 @@ document.getElementById('file-upload').addEventListener('change', async (e) => {
         ui.modelName.textContent = file.name;
         ui.input.disabled = false;
         ui.btn.disabled = false;
+        ui.input.placeholder = `Message ${file.name}...`;
         
     } catch (e) {
         ui.dlContainer.classList.add('hidden');
