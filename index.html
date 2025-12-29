@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Local AI</title>
+    <title>Your Local AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -63,7 +63,9 @@
                     <div class="text-xs text-gray-400 uppercase font-bold">Recent Chats</div>
                     <button onclick="clearAllHistory()" class="text-[10px] text-red-400 hover:underline">Clear All</button>
                 </div>
-                <div id="history-list" class="space-y-1"></div>
+                <div id="history-list" class="space-y-1">
+                    <!-- History Items Injected Here -->
+                </div>
             </div>
             
             <!-- Download Progress -->
@@ -79,7 +81,7 @@
             </div>
         </div>
         
-        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.17.2 (Stable Fix)</div>
+        <div class="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">v1.17.3 (Input Fixes)</div>
     </div>
 
     <!-- MAIN CHAT -->
@@ -127,10 +129,7 @@
         </div>
     </div>
 
-    <script 
-        type="module"
-        src="index.js"
-    >
+    <script type="module" src="index.js">
     </script>
 </body>
 </html>
