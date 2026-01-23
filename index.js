@@ -35,14 +35,14 @@ async function init() {
     try {
         ui.engineState.textContent = "BOOTING";
         wllama = new Wllama(CONFIG);
-        
+
         ui.engineState.textContent = "READY";
         ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-green-900/50 text-green-400 font-mono";
         isReady = true;
-        
-        startNewChat(); 
+
+        startNewChat();
         renderHistoryList();
-        await loadModelList(); 
+        await loadModelList();
 
         ui.input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -63,13 +63,13 @@ window.startNewChat = () => {
     currentSessionId = Date.now().toString();
     sessions[currentSessionId] = { title: "New Chat", timestamp: Date.now(), messages: [] };
     saveSessions();
-    
+
     ui.chatBox.innerHTML = '';
     ui.chatBox.appendChild(ui.welcome);
     ui.welcome.classList.remove('hidden');
     renderHistoryList();
-    
-    if(activeModelUrl) {
+
+    if (activeModelUrl) {
         ui.input.disabled = false;
         ui.btn.disabled = false;
         ui.input.placeholder = "Type a message...";
@@ -81,17 +81,17 @@ window.loadSession = (id) => {
     if (!sessions[id]) return;
     currentSessionId = id;
     const session = sessions[id];
-    
+
     ui.chatBox.innerHTML = '';
     ui.welcome.classList.add('hidden');
-    
+
     session.messages.forEach(msg => {
         addMessage(msg.role, msg.content, false);
     });
-    
+
     if (window.innerWidth < 768) closeSidebar();
-    
-    if(activeModelUrl) {
+
+    if (activeModelUrl) {
         ui.input.disabled = false;
         ui.btn.disabled = false;
     }
@@ -105,7 +105,7 @@ function saveSessions() {
 function renderHistoryList() {
     ui.historyList.innerHTML = '';
     const sortedIds = Object.keys(sessions).sort((a, b) => sessions[b].timestamp - sessions[a].timestamp);
-    
+
     sortedIds.forEach(id => {
         const session = sessions[id];
         const btn = document.createElement('button');
@@ -117,7 +117,7 @@ function renderHistoryList() {
 }
 
 window.clearAllHistory = () => {
-    if(confirm("Delete ALL chat history?")) {
+    if (confirm("Delete ALL chat history?")) {
         sessions = {};
         saveSessions();
         startNewChat();
@@ -131,7 +131,7 @@ window.loadModelList = async () => {
         if (!response.ok) throw new Error("Missing models.csv");
         const text = await response.text();
         const lines = text.split('\n').filter(line => line.trim() !== '');
-        
+
         ui.csvList.innerHTML = '';
         let firstDownloaded = null;
         const preferred = localStorage.getItem('lai_preferred_model');
@@ -142,7 +142,7 @@ window.loadModelList = async () => {
             const url = parts[0].trim();
             const size = parts[1].trim();
             let name = url.split('/').pop().replace('.gguf', '');
-            if(name.length > 20) name = name.substring(0, 18) + '...';
+            if (name.length > 20) name = name.substring(0, 18) + '...';
 
             const isDownloaded = downloadedModels.includes(url);
             if (isDownloaded && !firstDownloaded) firstDownloaded = url;
@@ -150,12 +150,12 @@ window.loadModelList = async () => {
             const btn = document.createElement('button');
             btn.className = `w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
                 ${isDownloaded ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40' : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`;
-            
+
             btn.onclick = () => {
                 localStorage.setItem('lai_preferred_model', url);
                 loadModelFromUrl(url, name);
             };
-            
+
             btn.innerHTML = `
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col">
@@ -185,11 +185,11 @@ window.loadModelList = async () => {
 async function loadModelFromUrl(url, name) {
     if (!isReady) return alert("Engine not ready.");
     if (window.innerWidth < 768) closeSidebar();
-    
+
     // LOCK: Prevent double loading / race conditions
     if (isModelLoading) return;
     if (activeModelUrl === url) return; // Already active
-    
+
     isModelLoading = true;
 
     // RESTART ENGINE if switching models
@@ -197,14 +197,14 @@ async function loadModelFromUrl(url, name) {
         console.log("Switching models - Restarting engine...");
         ui.header.textContent = "Unloading...";
         try {
-                if (wllama.exit) await wllama.exit();
-        } catch(e) { console.warn(e); }
+            if (wllama.exit) await wllama.exit();
+        } catch (e) { console.warn(e); }
         wllama = new Wllama(CONFIG);
     }
 
     ui.dlContainer.classList.remove('hidden');
     ui.header.textContent = "Loading...";
-    
+
     try {
         await wllama.loadModelFromUrl(url, {
             n_ctx: 2048, n_threads: 1, useCache: true,
@@ -212,32 +212,32 @@ async function loadModelFromUrl(url, name) {
                 const pct = Math.round((loaded / total) * 100);
                 ui.dlPercent.innerText = `${pct}%`;
                 ui.dlBar.style.width = `${pct}%`;
-                ui.dlDetails.innerText = `${(loaded/1024/1024).toFixed(1)}MB / ${(total/1024/1024).toFixed(1)}MB`;
+                ui.dlDetails.innerText = `${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`;
             }
         });
-        
+
         if (!downloadedModels.includes(url)) {
             downloadedModels.push(url);
             localStorage.setItem('lai_downloaded_models', JSON.stringify(downloadedModels));
-            loadModelList(); 
+            loadModelList();
         }
 
         activeModelUrl = url;
         ui.dlContainer.classList.add('hidden');
         ui.header.textContent = "Active";
         ui.modelName.textContent = name;
-        
+
         ui.input.disabled = false;
         ui.btn.disabled = false;
         ui.input.placeholder = `Message ${name}...`;
 
     } catch (e) {
         // AUTO-RECOVERY: If "initialized" error, hard restart and try again
-        if(e.message.includes("initialized")) {
+        if (e.message.includes("initialized")) {
             console.warn("Caught init error, forcing hard restart...");
             try {
                 if (wllama.exit) await wllama.exit();
-            } catch(err){}
+            } catch (err) { }
             wllama = new Wllama(CONFIG);
             // Retry once
             try {
@@ -249,7 +249,7 @@ async function loadModelFromUrl(url, name) {
                 ui.modelName.textContent = name;
                 ui.input.disabled = false;
                 ui.btn.disabled = false;
-            } catch(retryErr) {
+            } catch (retryErr) {
                 alert("Recovery Failed: " + retryErr.message);
             }
         } else {
@@ -267,14 +267,14 @@ document.getElementById('file-upload').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!isReady) return alert("Engine not ready.");
-    
+
     if (activeModelUrl) {
-        try { if (wllama.exit) await wllama.exit(); } catch(e){}
+        try { if (wllama.exit) await wllama.exit(); } catch (e) { }
         wllama = new Wllama(CONFIG);
     }
 
     ui.dlContainer.classList.remove('hidden');
-    
+
     try {
         await wllama.loadModel([file], {
             n_ctx: 2048, n_threads: 1,
@@ -283,7 +283,7 @@ document.getElementById('file-upload').addEventListener('change', async (e) => {
                 ui.dlBar.style.width = `${pct}%`;
             }
         });
-        
+
         activeModelUrl = "local_file";
         ui.dlContainer.classList.add('hidden');
         ui.header.textContent = "Active";
@@ -291,7 +291,7 @@ document.getElementById('file-upload').addEventListener('change', async (e) => {
         ui.input.disabled = false;
         ui.btn.disabled = false;
         ui.input.placeholder = `Message ${file.name}...`;
-        
+
     } catch (e) {
         ui.dlContainer.classList.add('hidden');
         alert(e.message);
@@ -310,7 +310,7 @@ window.sendMessage = async () => {
 
     addMessage('user', text);
     sessions[currentSessionId].messages.push({ role: 'user', content: text });
-    
+
     if (sessions[currentSessionId].messages.length === 1) {
         sessions[currentSessionId].title = text.substring(0, 30) + (text.length > 30 ? '...' : '');
     }
@@ -322,7 +322,7 @@ window.sendMessage = async () => {
     try {
         const history = sessions[currentSessionId].messages.slice(-10);
         let fullPrompt = `<|im_start|>system\nYou are a helpful AI assistant.<|im_end|>\n`;
-        
+
         history.forEach(msg => {
             fullPrompt += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
         });
@@ -371,7 +371,7 @@ function scrollToBottom() { ui.chatBox.scrollTop = ui.chatBox.scrollHeight; }
 window.switchTab = (tab) => {
     document.getElementById('view-models').classList.toggle('hidden', tab !== 'models');
     document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
-    
+
     document.getElementById('tab-models').className = tab === 'models' ? 'flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50' : 'flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300';
     document.getElementById('tab-history').className = tab === 'history' ? 'flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50' : 'flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300';
 };
