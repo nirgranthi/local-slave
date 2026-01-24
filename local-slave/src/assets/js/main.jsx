@@ -11,7 +11,7 @@ export function MainJS() {
     // --- State ---
     const [wllama, setWllama] = useState();
     const [isReady, setIsReady] = useState(false);
-    let sessions = JSON.parse(localStorage.getItem('lai_sessions') || '{}');
+    
     let currentSessionId = null;
     let downloadedModels = JSON.parse(localStorage.getItem('lai_downloaded_models') || '[]');
     let activeModelUrl = null;
@@ -81,52 +81,13 @@ export function MainJS() {
         }
     };
 
-    window.loadSession = (id) => {
-        if (!sessions[id]) return;
-        currentSessionId = id;
-        const session = sessions[id];
+    
 
-        ui.chatBox.innerHTML = '';
-        ui.welcome.classList.add('hidden');
+    
 
-        session.messages.forEach(msg => {
-            addMessage(msg.role, msg.content, false);
-        });
+    
 
-        if (window.innerWidth < 768) closeSidebar();
-
-        if (activeModelUrl) {
-            ui.input.disabled = false;
-            ui.btn.disabled = false;
-        }
-    };
-
-    function saveSessions() {
-        localStorage.setItem('lai_sessions', JSON.stringify(sessions));
-        renderHistoryList();
-    }
-
-    function renderHistoryList() {
-        ui.historyList.innerHTML = '';
-        const sortedIds = Object.keys(sessions).sort((a, b) => sessions[b].timestamp - sessions[a].timestamp);
-
-        sortedIds.forEach(id => {
-            const session = sessions[id];
-            const btn = document.createElement('button');
-            btn.className = `w-full text-left p-3 rounded-lg text-xs truncate transition-colors ${id === currentSessionId ? 'bg-gray-700 text-white' : 'bg-transparent text-gray-400 hover:bg-gray-800'}`;
-            btn.innerText = session.title || "Untitled Chat";
-            btn.onclick = () => loadSession(id);
-            ui.historyList.appendChild(btn);
-        });
-    }
-
-    window.clearAllHistory = () => {
-        if (confirm("Delete ALL chat history?")) {
-            sessions = {};
-            saveSessions();
-            startNewChat();
-        }
-    }
+    
 
     // --- Model Management ---
     window.loadModelList = async () => {
