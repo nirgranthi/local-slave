@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { clearAllHistory } from './../../../assets/js/clearAllHistory'
 
 export function HistoryTab() {
   const [session, setSession] = useState({})
