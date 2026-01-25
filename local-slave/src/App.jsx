@@ -19,6 +19,7 @@ function App() {
         <Header />
 
         {/* Chat Area */}
+        <ChatArea />
 
         {/* Input */}
         
