@@ -22,6 +22,7 @@ function App() {
         <ChatArea />
 
         {/* Input */}
+        <InputArea />
         
       </div>
     </>
