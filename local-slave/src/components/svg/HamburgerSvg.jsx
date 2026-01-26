@@ -1,4 +1,4 @@
-export function Hamburger() {
+export function HamburgerSvg () {
     return (
         <svg
             className="w-6 h-6"
