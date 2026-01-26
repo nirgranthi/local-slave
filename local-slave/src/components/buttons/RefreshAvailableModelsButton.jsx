@@ -1,4 +1,4 @@
-export function RefreshAvailableModels() {
+export function RefreshAvailableModelsButton () {
     return (
         <button onClick={console.log("loadModelList")}
             className="text-[10px] text-blue-400 hover:underline">

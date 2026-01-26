@@ -1,7 +1,9 @@
-export function TabModelsButton() {
+export function TabModelsButton({ setSelectedTab, className }) {
     return (
-        <button onClick={console.log('models switched')}
-            id="tab-models" className="flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50" >
+        <button
+            onClick={() => { setSelectedTab('models') }}
+            className={className}
+        >
             MODELS
         </button >
     )

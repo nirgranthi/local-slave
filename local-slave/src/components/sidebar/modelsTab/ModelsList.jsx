@@ -1,11 +1,13 @@
-import { RefreshAvailableModels } from "../../buttons/RefreshAvailableModels"
+import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton"
 
 export function ModelsList() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <div className="text-xs text-gray-400 uppercase font-bold">Available Models</div>
-        <RefreshAvailableModels />
+        <div className="text-xs text-gray-400 uppercase font-bold">
+          Available Models
+        </div>
+        <RefreshAvailableModelsButton />
       </div>
       <div id="csv-model-list" className="space-y-2">
         <div className="text-xs text-gray-600 italic text-center py-4">
