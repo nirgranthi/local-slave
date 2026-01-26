@@ -1,12 +1,12 @@
 import { SidebarToggleButton } from "./buttons/SidebarToggleButton";
 import { NewChatButton } from "./buttons/NewChatButton";
 
-export function Header() {
+export function Header({ isSidebarOpen, setIsSidebarOpen}) {
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
       <div className="flex items-center gap-3">
-        <SidebarToggleButton />
+        <SidebarToggleButton isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
         <div className="flex flex-col">
           <span id="header-status" className="font-bold text-sm text-gray-200">
             Local AI

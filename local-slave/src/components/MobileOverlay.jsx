@@ -1,9 +1,9 @@
-import { useState } from "react";
-
-export function MobileOverlay() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+export function MobileOverlay({ setIsSidebarOpen }) {
     return (
-        <div id="backdrop" onClick={setIsSidebarOpen(true)}
-            className="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm md:hidden"></div>
+        <div
+            id="backdrop"
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-black/20 z-40 backdrop-blur-md md:hidden">
+        </div>
     );
 }
