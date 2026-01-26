@@ -1,4 +1,4 @@
-export function Plus() {
+export function PlusSvg() {
     return (
         <svg
             className="w-3 h-3"

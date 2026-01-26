@@ -1,16 +1,12 @@
-import { useState } from "react";
-import { HamburgerSvg } from "./svg/HamburgerSvg";
-import { PlusSvg } from "./svg/PlusSvg";
+import { SidebarToggleButton } from "./buttons/SidebarToggleButton";
+import { NewChatButton } from "./buttons/NewChatButton";
 
 export function Header() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
       <div className="flex items-center gap-3">
-        <button onClick={() => setIsSidebarOpen(true)} className="md:hidden text-gray-400 p-1 hover:text-white">
-          <HamburgerSvg />
-        </button>
+        <SidebarToggleButton />
         <div className="flex flex-col">
           <span id="header-status" className="font-bold text-sm text-gray-200">
             Local AI
@@ -22,16 +18,11 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-2">
-        <div id="engine-state"
-          className="text-[10px] px-2 py-1 rounded bg-black/40 text-gray-400 font-mono hidden md:block">OFFLINE
+        <div id="engine-state" className="text-[10px] px-2 py-1 rounded bg-black/40 text-gray-400 font-mono hidden md:block">
+            OFFLINE
         </div>
         {/*onClick={startNewChat}*/}
-        <button
-          className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
-        >
-          <PlusSvg />
-          New Chat
-        </button>
+        <NewChatButton /> 
       </div>
     </div>
   )
