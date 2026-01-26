@@ -6,7 +6,7 @@ import { InputArea } from './components/InputArea'
 function App() {
   
   return (
-    <>
+    <div className='flex h-screen w-full'>
       {/* Mobile Overlay */}
       
 
@@ -14,7 +14,7 @@ function App() {
       
 
       {/* MAIN CHAT */}
-      <div className="flex-1 flex flex-col relative w-full bg-gray-900 min-w-0">
+      <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">
         {/* Header */}
         <Header />
 
@@ -25,7 +25,7 @@ function App() {
         <InputArea />
         
       </div>
-    </>
+    </div>
   )
 }
 
