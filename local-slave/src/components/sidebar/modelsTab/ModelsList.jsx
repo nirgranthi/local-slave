@@ -2,6 +2,29 @@ import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableMode
 import { useState, useEffect } from "react"
 import axios from "axios"
 
+const getModelName = (url) => {
+  return url.split('/').pop()
+}
+
+const LoadingList = () =>
+(<div className="text-xs text-gray-600 italic text-center py-4">
+  Loading list...
+</div>)
+
+const LoadedList = ({ csvData }) => {
+  return (
+    csvData.map((model, index) => (
+      <div key={index} className="flex justify-between items-center">
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
+          {/* {isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''} */}
+        </div>
+        <span className="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded whitespace-nowrap">{model[1]} MB</span>
+      </div>
+    ))
+  )
+}
+
 export function ModelsList() {
   const [isloadingCsv, setIsLoadingCsv] = useState(true)
   const [csvData, setCsvData] = useState([])
@@ -26,16 +49,6 @@ export function ModelsList() {
     }
     fetchData();
   }, [])
-
-  const LoadingList = () => 
-    (<div className="text-xs text-gray-600 italic text-center py-4">
-      Loading list...
-    </div>)
-  
-
-  const LoadedList = () => {
-
-  }
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -46,16 +59,8 @@ export function ModelsList() {
       </div>
       <div id="csv-model-list" className="space-y-2">
         {isloadingCsv && <LoadingList />}
-        {!isloadingCsv && 
-          csvData.map((model) => (
-             <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
-                        <span className="font-medium text-xs text-gray-300 group-hover:text-white">{model[0]}</span>
-                        {/* {isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''} */}
-                    </div>
-                    <span className="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded">{model[1]} MB</span>
-                </div>
-          ))
+        {!isloadingCsv &&
+          <LoadedList csvData={csvData} />
         }
       </div>
     </div>
