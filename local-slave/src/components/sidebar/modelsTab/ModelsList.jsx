@@ -28,12 +28,12 @@ const LoadedList = ({ csvData }) => {
 export function ModelsList() {
   const [isloadingCsv, setIsLoadingCsv] = useState(true)
   const [csvData, setCsvData] = useState([])
+  const [refresh, setRefresh] = useState('refreshed')
   //const [csvError, setCsvError] = useState(null)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/models.csv');
-
         const parsedData = response.data
           .split('\n')
           .map(row => row.split(','))
@@ -41,21 +41,21 @@ export function ModelsList() {
 
         setIsLoadingCsv(false)
         setCsvData(parsedData)
-
+        console.log(refresh)
+        setRefresh('refreshed')
       } catch (error) {
         console.log(error)
-      }
-
-    }
+      }}
     fetchData();
-  }, [])
+  }, [refresh])
+
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
         <div className="text-xs text-gray-400 uppercase font-bold">
           Available Models
         </div>
-        <RefreshAvailableModelsButton />
+        <RefreshAvailableModelsButton setRefresh={setRefresh} />
       </div>
       <div id="csv-model-list" className="space-y-2">
         {isloadingCsv && <LoadingList />}
