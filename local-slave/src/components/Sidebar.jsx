@@ -28,13 +28,18 @@ export function Sidebar() {
       </div>
 
       <div className="p-4 flex-1 overflow-y-auto space-y-6 no-scrollbar">
-        {selectedTab === 'models' && <ModelsList />}
-        <div id="view-models" className="space-y-6">
-          {/* CSV Models Section */}
+        {
+          selectedTab === 'models' &&
+          <>
+            <ModelsList />
+            <div id="view-models" className="space-y-6">
+              {/* CSV Models Section */}
 
-          {/* Manual Upload */}
-          {selectedTab === 'models' && <ManualUpload />}
-        </div>
+              {selectedTab === 'models' && <ManualUpload />}
+            </div>
+          </>
+        }
+
 
         {/* HISTORY TAB */}
         {selectedTab === 'history' && <HistoryTab />}
