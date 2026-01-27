@@ -126,37 +126,37 @@ window.clearAllHistory = () => {
 
 // --- Model Management ---
 window.loadModelList = async () => {
-    try {
+    try {/* 
         const response = await fetch('models.csv');
         if (!response.ok) throw new Error("Missing models.csv");
         const text = await response.text();
         const lines = text.split('\n').filter(line => line.trim() !== '');
-
+ */
         ui.csvList.innerHTML = '';
         let firstDownloaded = null;
         const preferred = localStorage.getItem('lai_preferred_model');
-
+/* 
         lines.forEach(line => {
             const parts = line.split(',');
             if (parts.length < 2) return;
             const url = parts[0].trim();
             const size = parts[1].trim();
             let name = url.split('/').pop().replace('.gguf', '');
-            if (name.length > 20) name = name.substring(0, 18) + '...';
+            if (name.length > 20) name = name.substring(0, 18) + '...'; */
 
             const isDownloaded = downloadedModels.includes(url);
             if (isDownloaded && !firstDownloaded) firstDownloaded = url;
 
-            const btn = document.createElement('button');
+            /* const btn = document.createElement('button');
             btn.className = `w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
                 ${isDownloaded ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40' : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`;
-
+ */
             btn.onclick = () => {
                 localStorage.setItem('lai_preferred_model', url);
                 loadModelFromUrl(url, name);
             };
 
-            btn.innerHTML = `
+            /* btn.innerHTML = `
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col">
                         <span class="font-medium text-xs text-gray-300 group-hover:text-white">${name}</span>
@@ -166,7 +166,7 @@ window.loadModelList = async () => {
                 </div>
             `;
             ui.csvList.appendChild(btn);
-        });
+        }); */
 
         // Auto-load Logic
         if (preferred && downloadedModels.includes(preferred)) {
@@ -368,7 +368,7 @@ function formatText(text) {
 
 function scrollToBottom() { ui.chatBox.scrollTop = ui.chatBox.scrollHeight; }
 
-window.switchTab = (tab) => {
+/* window.switchTab = (tab) => {
     document.getElementById('view-models').classList.toggle('hidden', tab !== 'models');
     document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
 
@@ -378,5 +378,5 @@ window.switchTab = (tab) => {
 
 window.openSidebar = () => { document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('backdrop').classList.remove('hidden'); }
 window.closeSidebar = () => { document.getElementById('sidebar').classList.add('-translate-x-full'); document.getElementById('backdrop').classList.add('hidden'); }
-
+ */
 init();
