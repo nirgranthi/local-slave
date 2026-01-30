@@ -1,26 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat() {
+export function WllamaChat({ uploadedModel }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+  const config = {
+    'single-thread/wllama.js': '/wllama/single-thread/wllama.js',
+    'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
+    'multi-thread/wllama.js': '/wllama/multi-thread/wllama.js',
+    'multi-thread/wllama.wasm': '/wllama/multi-thread/wllama.wasm',
+    'multi-thread/wllama.worker.mjs': '/wllama/multi-thread/wllama.worker.mjs'
+  };
 
-    setLoading(true);
-    const config = {
-      'single-thread/wllama.js': '/wllama/single-thread/wllama.js',
-      'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
-      'multi-thread/wllama.js': '/wllama/multi-thread/wllama.js',
-      'multi-thread/wllama.wasm': '/wllama/multi-thread/wllama.wasm',
-      'multi-thread/wllama.worker.mjs': '/wllama/multi-thread/wllama.worker.mjs'
-    };
 
+  const file = uploadedModel;
+
+  
+  useEffect(() => {
+    if (!file) {
+      setLoading(false);
+      return;
+    }
     try {
       const instance = new Wllama(config);
-      await instance.loadModel([file], { n_ctx: 2048 });
+      instance.loadModel([file], { n_ctx: 2048 });
       setWllama(instance);
       console.log("model loaded..");
     } catch (err) {
@@ -28,7 +32,8 @@ export function WllamaChat() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [uploadedModel])
+
 
   const runAI = async () => {
     if (!wllama) return;
@@ -40,7 +45,7 @@ export function WllamaChat() {
         { role: 'user', content: 'Explain React in 10 words.' }
       ]);
 
-      
+
       console.log("AI is thinking...");
       const result = await wllama.createCompletion(prompt, {
         n_predict: 100,
@@ -54,13 +59,5 @@ export function WllamaChat() {
       setLoading(false);
     }
   };
-
-  return (
-    <div>
-      <input type="file" accept=".gguf" onChange={handleFileUpload} />
-      <button onClick={runAI} disabled={!wllama || loading}>
-        {loading ? 'Processing...' : 'Ask AI'}
-      </button>
-    </div>
-  );
+  console.log('startign...')
 }

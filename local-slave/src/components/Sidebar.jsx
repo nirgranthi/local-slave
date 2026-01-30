@@ -6,7 +6,7 @@ import { HistoryTab } from "./sidebar/historyTab/HistoryTab"
 import { ManualUpload } from "./sidebar/modelsTab/ManualUpload"
 
 
-export function Sidebar() {
+export function Sidebar({ uploadedModel, setUploadedModel }) {
   const [selectedTab, setSelectedTab] = useState('models')
   const tabClassname = (modelsTab) =>
     modelsTab
@@ -35,7 +35,7 @@ export function Sidebar() {
             <div id="view-models" className="space-y-6">
               {/* CSV Models Section */}
 
-              {selectedTab === 'models' && <ManualUpload />}
+              {selectedTab === 'models' && <ManualUpload uploadedModel={uploadedModel} setUploadedModel={setUploadedModel} />}
             </div>
           </>
         }

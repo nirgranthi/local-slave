@@ -1,7 +1,15 @@
 import { UploadSvg } from "../../svg/UploadSvg"
+import { WllamaChat } from "../../js/wllama/wllama"
 
 
-export function ManualUpload() {
+export function ManualUpload({ uploadedModel, setUploadedModel }) {
+  const handleFile = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setUploadedModel(e.target.files[0])
+      console.log('file uploaded', file.name)
+    }
+  }
   return (
     <div className="border-t border-gray-700 pt-4">
       <div className="text-xs text-gray-400 uppercase font-bold mb-2">Manual Upload</div>
@@ -11,7 +19,13 @@ export function ManualUpload() {
           <UploadSvg />
           <p className="text-[10px] text-gray-400">Tap to Select .gguf</p>
         </div>
-        <input type="file" id="file-upload" accept=".gguf" className="hidden" />
+        <WllamaChat uploadedModel={uploadedModel} />
+        <input
+          type="file"
+          id="file-upload"
+          accept=".gguf"
+          onChange={handleFile}
+          className="hidden" />
       </label>
     </div>
   )
