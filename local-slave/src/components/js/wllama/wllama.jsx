@@ -13,7 +13,7 @@ export function WllamaChat({ uploadedModel }) {
     'multi-thread/wllama.worker.mjs': '/wllama/multi-thread/wllama.worker.mjs'
   };
 
-  
+
   useEffect(() => {
     if (!uploadedModel) {
       setLoading(false);
@@ -21,7 +21,7 @@ export function WllamaChat({ uploadedModel }) {
     }
     try {
       const instance = new Wllama(config);
-      instance.loadModel([uploadedModel], { n_ctx: 2048 });
+      
       setWllama(instance);
       console.log("model loaded..");
     } catch (err) {
@@ -32,29 +32,36 @@ export function WllamaChat({ uploadedModel }) {
   }, [uploadedModel])
 
 
-  const runAI = async () => {
+  useEffect(() => {
     if (!wllama) return;
-    setLoading(true);
+    const runAI = async () => {
+      //console.log('runAi: wllama: ', wllama)
+      await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+      console.log('is model loaded: ', wllama.isModelLoaded())
+      setLoading(true);
 
-    try {
-      const prompt = await wllama.formatChat([
-        { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: 'Explain React in 10 words.' }
-      ]);
+      try {
+        const prompt = await wllama.formatChat([
+          { role: 'system', content: 'You are a helpful assistant.' },
+          { role: 'user', content: 'Explain React in 10 words.' }
+        ]);
+        console.log("AI is thinking...");
+        const result = await wllama.createCompletion(prompt, {
+          n_predict: 100,
+          onToken: (t) => console.log("Token:", t.token),
+        });
 
-
-      console.log("AI is thinking...");
-      const result = await wllama.createCompletion(prompt, {
-        n_predict: 100,
-        onToken: (t) => console.log("Token:", t.token),
-      });
-
-      console.log("Full Reply:", result);
-    } catch (err) {
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  console.log('startign...')
+        console.log("Full Reply:", result);
+      } catch (err) {
+        console.error("Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    runAI()
+  }, [wllama])
 }
+console.log('startign...')
+
+
+
