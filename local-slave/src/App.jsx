@@ -3,10 +3,13 @@ import { ChatArea } from './components/ChatArea'
 import { InputArea } from './components/InputArea'
 import { Sidebar } from './components/Sidebar'
 import { MobileOverlay } from './components/MobileOverlay'
+import { WllamaChat } from "./components/js/wllama/wllama";
 import { useState } from 'react'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [uploadedModel, setUploadedModel] = useState(null)
+  const [userPrompt, setUserPrompt] = useState('')
   
   return (
     <div className='flex h-screen w-full'>
@@ -14,7 +17,7 @@ function App() {
       {isSidebarOpen && <MobileOverlay setIsSidebarOpen={setIsSidebarOpen} />}
 
       {/* SIDEBAR */}
-      {isSidebarOpen && <Sidebar />}
+      {isSidebarOpen && <Sidebar uploadedModel={uploadedModel} setUploadedModel={setUploadedModel} />}
 
       {/* MAIN CHAT */}
       <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">
@@ -25,7 +28,8 @@ function App() {
         <ChatArea />
 
         {/* Input */}
-        <InputArea />
+        <InputArea setUserPrompt={setUserPrompt} />
+        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} />
         
       </div>
     </div>

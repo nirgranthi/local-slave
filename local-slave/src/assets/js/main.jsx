@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { Wllama } from '@wllama/wllama'
-
 export function MainJS() {
+    import { Wllama } from 'https://cdn.jsdelivr.net/npm/@wllama/wllama@1.16.2/esm/index.js';
 
     const CONFIG = {
         'single-thread/wllama.js': 'https://cdn.jsdelivr.net/npm/@wllama/wllama@1.16.2/esm/single-thread/wllama.js',
@@ -11,7 +9,7 @@ export function MainJS() {
     // --- State ---
     const [wllama, setWllama] = useState();
     const [isReady, setIsReady] = useState(false);
-    
+  let sessions = JSON.parse(localStorage.getItem('lai_sessions') || '{}');
     let currentSessionId = null;
     let downloadedModels = JSON.parse(localStorage.getItem('lai_downloaded_models') || '[]');
     let activeModelUrl = null;
@@ -37,8 +35,7 @@ export function MainJS() {
     async function init() {
         try {
             ui.engineState.textContent = "BOOTING";
-            const wllamaInst = new Wllama(CONFIG);
-            setWllama(wllamaInst)
+      wllama = new Wllama(CONFIG);
 
             ui.engineState.textContent = "READY";
             ui.engineState.className = "text-[10px] px-2 py-1 rounded bg-green-900/50 text-green-400 font-mono";
@@ -61,6 +58,72 @@ export function MainJS() {
             console.error(e);
         }
     }
+
+  // --- Session Management ---
+  window.startNewChat = () => {
+    currentSessionId = Date.now().toString();
+    sessions[currentSessionId] = { title: "New Chat", timestamp: Date.now(), messages: [] };
+    saveSessions();
+
+    ui.chatBox.innerHTML = '';
+    ui.chatBox.appendChild(ui.welcome);
+    ui.welcome.classList.remove('hidden');
+    renderHistoryList();
+
+    if (activeModelUrl) {
+      ui.input.disabled = false;
+      ui.btn.disabled = false;
+      ui.input.placeholder = "Type a message...";
+      ui.input.focus();
+    }
+  };
+
+  window.loadSession = (id) => {
+    if (!sessions[id]) return;
+    currentSessionId = id;
+    const session = sessions[id];
+
+    ui.chatBox.innerHTML = '';
+    ui.welcome.classList.add('hidden');
+
+    session.messages.forEach(msg => {
+      addMessage(msg.role, msg.content, false);
+    });
+
+    if (window.innerWidth < 768) closeSidebar();
+
+    if (activeModelUrl) {
+      ui.input.disabled = false;
+      ui.btn.disabled = false;
+    }
+  };
+
+  function saveSessions() {
+    localStorage.setItem('lai_sessions', JSON.stringify(sessions));
+    renderHistoryList();
+  }
+
+  function renderHistoryList() {
+    ui.historyList.innerHTML = '';
+    const sortedIds = Object.keys(sessions).sort((a, b) => sessions[b].timestamp - sessions[a].timestamp);
+
+    sortedIds.forEach(id => {
+      const session = sessions[id];
+      const btn = document.createElement('button');
+      btn.className = `w-full text-left p-3 rounded-lg text-xs truncate transition-colors ${id === currentSessionId ? 'bg-gray-700 text-white' : 'bg-transparent text-gray-400 hover:bg-gray-800'}`;
+      btn.innerText = session.title || "Untitled Chat";
+      btn.onclick = () => loadSession(id);
+      ui.historyList.appendChild(btn);
+    });
+  }
+
+  window.clearAllHistory = () => {
+    if (confirm("Delete ALL chat history?")) {
+      sessions = {};
+      saveSessions();
+      startNewChat();
+    }
+  }
     
     // --- Model Management ---
     window.loadModelList = async () => {
