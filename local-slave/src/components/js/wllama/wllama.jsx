@@ -13,18 +13,15 @@ export function WllamaChat({ uploadedModel }) {
     'multi-thread/wllama.worker.mjs': '/wllama/multi-thread/wllama.worker.mjs'
   };
 
-
-  const file = uploadedModel;
-
   
   useEffect(() => {
-    if (!file) {
+    if (!uploadedModel) {
       setLoading(false);
       return;
     }
     try {
       const instance = new Wllama(config);
-      instance.loadModel([file], { n_ctx: 2048 });
+      instance.loadModel([uploadedModel], { n_ctx: 2048 });
       setWllama(instance);
       console.log("model loaded..");
     } catch (err) {
