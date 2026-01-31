@@ -6,7 +6,7 @@ export function InputArea({ setUserPrompt }) {
   
   const sendMessage = (value) => { console.log(value), setUserPrompt(value) };
   return (
-    <div className="absolute bottom-0 w-full bg-gray-900 pt-4 pb-4 px-4 border-t border-gray-800">
+    <div className="w-full bg-gray-900 pt-4 pb-4 px-4 border-t border-gray-800">
       <div className="max-w-3xl mx-auto relative flex gap-2">
         <input
           id="user-input"
