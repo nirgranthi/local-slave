@@ -48,10 +48,15 @@ export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMess
     const runAi = async () => {
       try {
         const prompt = await wllama.formatChat([
-          { role: 'system', content: 'You are a helpful assistant.' },
-          { role: 'user', content: userPrompt }
-        ]);
-        console.log("AI is thinking...");
+          { content: 'You are a helpful assistant.',
+            role: 'system'
+           },
+          { content: userPrompt,
+            role: 'user'
+           }
+        ], true
+      );
+        console.log("Prompt is: ", prompt);
         const result = await wllama.createCompletion(prompt, {
           n_predict: 100,
           onToken: (t) => console.log("Token:", t.token),
