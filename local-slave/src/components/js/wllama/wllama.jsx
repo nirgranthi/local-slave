@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt }) {
+export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMessages }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
@@ -57,6 +57,17 @@ export function WllamaChat({ uploadedModel, userPrompt }) {
           onToken: (t) => console.log("Token:", t.token),
         });
         console.log("Full Reply:", result);
+        setChatMessages([
+          ...chatMessages, {
+            sender : 'user',
+            message : userPrompt,
+            id : Date()
+          }, {
+            sender : 'ai',
+            message : result,
+            id : Date()
+          }
+        ])
       } catch (err) {
         console.error("Error:", err);
       } finally {

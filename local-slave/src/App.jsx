@@ -10,6 +10,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
+  const [chatMessages, setChatMessages] = useState(null)
   
   return (
     <div className='flex h-screen w-full'>
@@ -25,11 +26,11 @@ function App() {
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Chat Area */}
-        <ChatArea />
+        <ChatArea chatMessages={chatMessages} />
 
         {/* Input */}
         <InputArea setUserPrompt={setUserPrompt} />
-        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} />
+        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} chatMessages={chatMessages} setChatMessages={setChatMessages} />
         
       </div>
     </div>
