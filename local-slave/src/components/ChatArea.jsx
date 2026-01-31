@@ -1,10 +1,18 @@
+import { useEffect,useRef } from "react";
 import { LightningSvg } from "./svg/LightningSvg"
 import { ChatInterface } from "./js/chatInterface"
 
 export function ChatArea({ chatMessages }) {
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages]);
   return (
     <div id="chat-box" className="flex-1 overflow-y-auto p-4 pb-40 space-y-4 h-full">
-      <div id="welcome-message" className="flex flex-col items-center justify-center h-full text-gray-500 space-y-4">
+      <div id="welcome-message" className="flex flex-col items-center h-full text-gray-500 space-y-4">
         {!chatMessages &&
           <>
             <div className="p-4 bg-gray-800 rounded-full animate-bounce">
@@ -20,6 +28,7 @@ export function ChatArea({ chatMessages }) {
             <ChatInterface sender={msg.sender} message={msg.message} key={msg.id}/>
           ))
         }
+        <div ref={scrollRef} />
       </div>
     </div>
   )
