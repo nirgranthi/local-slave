@@ -10,7 +10,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
-  const [chatMessages, setChatMessages] = useState(null)
+  const [chatMessages, setChatMessages] = useState('')
   
   return (
     <div className='flex h-screen w-full'>

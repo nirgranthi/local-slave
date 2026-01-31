@@ -61,13 +61,14 @@ export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMess
           ...chatMessages, {
             sender : 'user',
             message : userPrompt,
-            id : Date()
+            id : crypto.randomUUID()
           }, {
             sender : 'ai',
             message : result,
-            id : Date()
+            id : crypto.randomUUID()
           }
         ])
+        console.log(chatMessages)
       } catch (err) {
         console.error("Error:", err);
       } finally {
