@@ -28,7 +28,7 @@ function App() {
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Chat Area */}
-        <ChatArea chatMessages={chatMessages} liveToken={liveToken} isLiveTokenLive={isLiveTokenLive} />
+        <ChatArea chatMessages={chatMessages} liveToken={liveToken} isLiveTokenLive={isLiveTokenLive} userPrompt={userPrompt} />
 
         {/* Input */}
         <InputArea setUserPrompt={setUserPrompt} />
