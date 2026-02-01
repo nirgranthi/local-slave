@@ -3,7 +3,7 @@ import { SendButton } from "./buttons/SendButton";
 
 export function InputArea({ setUserPrompt }) {
   const [inputValue, setInputValue] = useState('')
-  
+
   const sendMessage = () => { console.log(inputValue), setUserPrompt(inputValue), setInputValue('') };
   return (
     <div className="w-full bg-gray-900 pt-4 pb-4 px-4 border-t border-gray-800">
@@ -16,8 +16,11 @@ export function InputArea({ setUserPrompt }) {
           onKeyDown={(e) => { if (e.key == 'Enter') (sendMessage()) }}
           className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:outline-none focus:border-blue-500 transition-all"
           placeholder="Load a model to start..." />
-          
-        <SendButton inputValue={inputValue} sendMessage={sendMessage} />
+
+        <SendButton
+          inputValue={inputValue}
+          sendMessage={sendMessage}
+        />
       </div>
     </div>
   )
