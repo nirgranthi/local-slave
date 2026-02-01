@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMessages }) {
+export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
@@ -14,7 +14,7 @@ export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMess
 
   useEffect(() => {
     if (!uploadedModel) return;
-    
+
     try {
       const config = {
         'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
@@ -44,33 +44,39 @@ export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMess
     console.log('user prompt is: ', userPrompt)
     console.log('wllama: ', wllama)
     if (!userPrompt || !wllama) return;
+    setIsLiveTokenLive(true)
     console.log('user prompt is: ', userPrompt)
     const runAi = async () => {
       try {
         const prompt = await wllama.formatChat([
-          { content: 'You are a helpful assistant.',
+          {
+            content: 'You are a helpful assistant.',
             role: 'system'
-           },
-          { content: userPrompt,
+          },
+          {
+            content: userPrompt,
             role: 'user'
-           }
+          }
         ], true
-      );
+        );
         console.log("Prompt is: ", prompt);
         const result = await wllama.createCompletion(prompt, {
           n_predict: 100,
-          onToken: (t) => console.log("Token:", t.token),
+          onNewToken: (token, piece, text) => (
+            setLiveToken(text)
+          )
         });
         console.log("Full Reply:", result);
+        setIsLiveTokenLive(false)
         setChatMessages([
           ...chatMessages, {
-            sender : 'user',
-            message : userPrompt,
-            id : crypto.randomUUID()
+            sender: 'user',
+            message: userPrompt,
+            id: crypto.randomUUID()
           }, {
-            sender : 'ai',
-            message : result,
-            id : crypto.randomUUID()
+            sender: 'ai',
+            message: result,
+            id: crypto.randomUUID()
           }
         ])
         console.log(chatMessages)
@@ -83,7 +89,7 @@ export function WllamaChat({ uploadedModel, userPrompt,chatMessages, setChatMess
     runAi()
   }, [wllama, userPrompt])
 }
-    
+
 
 
 

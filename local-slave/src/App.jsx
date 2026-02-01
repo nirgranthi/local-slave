@@ -11,6 +11,8 @@ function App() {
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
   const [chatMessages, setChatMessages] = useState('')
+  const [liveToken, setLiveToken] = useState('')
+  const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
   
   return (
     <div className='flex h-screen w-full'>
@@ -26,11 +28,11 @@ function App() {
         <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Chat Area */}
-        <ChatArea chatMessages={chatMessages} />
+        <ChatArea chatMessages={chatMessages} liveToken={liveToken} isLiveTokenLive={isLiveTokenLive} />
 
         {/* Input */}
         <InputArea setUserPrompt={setUserPrompt} />
-        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} chatMessages={chatMessages} setChatMessages={setChatMessages} />
+        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} chatMessages={chatMessages} setChatMessages={setChatMessages} setLiveToken={setLiveToken} setIsLiveTokenLive={setIsLiveTokenLive} />
         
       </div>
     </div>

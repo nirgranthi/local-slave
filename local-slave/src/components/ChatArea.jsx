@@ -2,7 +2,7 @@ import { useEffect,useRef } from "react";
 import { LightningSvg } from "./svg/LightningSvg"
 import { ChatInterface } from "./js/chatInterface"
 
-export function ChatArea({ chatMessages }) {
+export function ChatArea({ chatMessages, liveToken, isLiveTokenLive }) {
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export function ChatArea({ chatMessages }) {
           </>}
         {chatMessages &&
           chatMessages.map((msg) => (
-            <ChatInterface sender={msg.sender} message={msg.message} key={msg.id}/>
+            <ChatInterface sender={msg.sender} message={msg.message} liveToken={liveToken} isLiveTokenLive={isLiveTokenLive} key={msg.id}/>
           ))
         }
         <div ref={scrollRef} />
