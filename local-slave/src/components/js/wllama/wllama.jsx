@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive }) {
+export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
@@ -22,11 +22,12 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
       };
       const instance = new Wllama(config);
       setWllama(instance);
+      setModelStatus('ONLINE')
       console.log("Model loaded.");
     } catch (err) {
       console.error("Error: ", err);
     }
-  }, [uploadedModel])
+  }, [uploadedModel, setModelStatus])
 
 
   useEffect(() => {

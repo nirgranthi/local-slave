@@ -13,6 +13,7 @@ function App() {
   const [chatMessages, setChatMessages] = useState('')
   const [liveToken, setLiveToken] = useState('')
   const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
+  const [modelStatus, setModelStatus] = useState('OFFLINE')
 
   return (
     <div className='flex h-screen w-full'>
@@ -26,7 +27,8 @@ function App() {
       {isSidebarOpen &&
         <Sidebar
           uploadedModel={uploadedModel}
-          setUploadedModel={setUploadedModel} />
+          setUploadedModel={setUploadedModel}
+        />
       }
 
       {/* MAIN CHAT */}
@@ -34,18 +36,22 @@ function App() {
         {/* Header */}
         <Header
           isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen} />
+          setIsSidebarOpen={setIsSidebarOpen}
+          modelStatus={modelStatus}
+        />
 
         {/* Chat Area */}
         <ChatArea
           chatMessages={chatMessages}
           liveToken={liveToken}
           isLiveTokenLive={isLiveTokenLive}
-          userPrompt={userPrompt} />
+          userPrompt={userPrompt}
+        />
 
         {/* Input */}
         <InputArea
-          setUserPrompt={setUserPrompt} />
+          setUserPrompt={setUserPrompt}
+        />
 
         <WllamaChat
           userPrompt={userPrompt}
@@ -53,7 +59,9 @@ function App() {
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}
           setLiveToken={setLiveToken}
-          setIsLiveTokenLive={setIsLiveTokenLive} />
+          setIsLiveTokenLive={setIsLiveTokenLive}
+          setModelStatus={setModelStatus}
+        />
       </div>
     </div>
   )
