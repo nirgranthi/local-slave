@@ -1,5 +1,5 @@
 import { UploadSvg } from "../../svg/UploadSvg"
-import { WllamaChat } from "../../js/wllama/wllama"
+import { WllamaChat } from "../../js/wllama"
 
 
 export function ManualUpload({ uploadedModel, setUploadedModel }) {

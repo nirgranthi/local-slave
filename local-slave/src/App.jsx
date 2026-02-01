@@ -3,7 +3,7 @@ import { ChatArea } from './components/ChatArea'
 import { InputArea } from './components/InputArea'
 import { Sidebar } from './components/Sidebar'
 import { MobileOverlay } from './components/MobileOverlay'
-import { WllamaChat } from "./components/js/wllama/wllama";
+import { WllamaChat } from "./components/js/wllama";
 import { useState } from 'react'
 
 function App() {
