@@ -1,6 +1,7 @@
 import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton"
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { WllamaChat } from "../../js/wllama"
 
 const getModelName = (url) => {
   return url.split('/').pop()
@@ -13,6 +14,7 @@ const LoadingList = () =>
 
 const LoadedList = ({ csvData }) => {
   const isDownloaded = false
+  const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   return (
     csvData.map((model, index) => (
       <button key={index}
@@ -20,8 +22,10 @@ const LoadedList = ({ csvData }) => {
                 ${isDownloaded
             ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40'
             : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`}
+        onClick={() => (setSelectedModelUrl(model[0]))}
       >
         <div className="flex justify-between items-center">
+          <WllamaChat selectedModelUrl={selectedModelUrl} />
           <div className="flex flex-col min-w-0 flex-1">
             <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
             {isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''}

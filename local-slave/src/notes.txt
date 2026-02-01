@@ -3,6 +3,7 @@ lmao i just noticed the sidebar is actually collasping on small screen. i though
 the ai needs context
 update 'no model loaded' in the header
 for the isDownload variable, we will fetch it from local storage and cross check it using the url
+fix the new chat button
 
 
 ill work on the local storage at last stage

@@ -1,16 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus }) {
+export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
-
-
-  /*use 3 useeffect
-  1. config
-  start with if return to not let them run immediately
-  2. model load, update on upload
-  3.prompt, update on prompt*/
 
   useEffect(() => {
     if (!uploadedModel) return;
@@ -89,6 +82,11 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
     }
     runAi()
   }, [wllama, userPrompt])
+
+  useEffect(() => {
+    if (!selectedModelUrl) return;
+    console.log(selectedModelUrl)
+  },[selectedModelUrl])
 }
 
 
