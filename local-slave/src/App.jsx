@@ -11,27 +11,57 @@ function App() {
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
   const [chatMessages, setChatMessages] = useState('')
-  
+  const [liveToken, setLiveToken] = useState('')
+  const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
+  const [modelStatus, setModelStatus] = useState('OFFLINE')
+
   return (
     <div className='flex h-screen w-full'>
       {/* Mobile Overlay */}
-      {isSidebarOpen && <MobileOverlay setIsSidebarOpen={setIsSidebarOpen} />}
+      {isSidebarOpen &&
+        <MobileOverlay
+          setIsSidebarOpen={setIsSidebarOpen} />
+      }
 
       {/* SIDEBAR */}
-      {isSidebarOpen && <Sidebar uploadedModel={uploadedModel} setUploadedModel={setUploadedModel} />}
+      {isSidebarOpen &&
+        <Sidebar
+          uploadedModel={uploadedModel}
+          setUploadedModel={setUploadedModel}
+        />
+      }
 
       {/* MAIN CHAT */}
       <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">
         {/* Header */}
-        <Header isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <Header
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          modelStatus={modelStatus}
+        />
 
         {/* Chat Area */}
-        <ChatArea chatMessages={chatMessages} />
+        <ChatArea
+          chatMessages={chatMessages}
+          liveToken={liveToken}
+          isLiveTokenLive={isLiveTokenLive}
+          userPrompt={userPrompt}
+        />
 
         {/* Input */}
-        <InputArea setUserPrompt={setUserPrompt} />
-        <WllamaChat userPrompt={userPrompt} uploadedModel={uploadedModel} chatMessages={chatMessages} setChatMessages={setChatMessages} />
-        
+        <InputArea
+          setUserPrompt={setUserPrompt}
+        />
+
+        <WllamaChat
+          userPrompt={userPrompt}
+          uploadedModel={uploadedModel}
+          chatMessages={chatMessages}
+          setChatMessages={setChatMessages}
+          setLiveToken={setLiveToken}
+          setIsLiveTokenLive={setIsLiveTokenLive}
+          setModelStatus={setModelStatus}
+        />
       </div>
     </div>
   )
