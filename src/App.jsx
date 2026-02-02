@@ -1,8 +1,8 @@
-import { Header } from './components/Header'
-import { ChatArea } from './components/ChatArea'
-import { InputArea } from './components/InputArea'
-import { Sidebar } from './components/Sidebar'
-import { MobileOverlay } from './components/MobileOverlay'
+import { Header } from './components/Header.jsx'
+import { ChatArea } from './components/ChatArea.jsx'
+import { InputArea } from './components/InputArea.jsx'
+import { Sidebar } from './components/Sidebar.jsx'
+import { MobileOverlay } from './components/MobileOverlay.jsx'
 import { WllamaChat } from "./components/js/wllama";
 import { useState } from 'react'
 

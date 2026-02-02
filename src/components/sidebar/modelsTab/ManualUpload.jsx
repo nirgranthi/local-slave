@@ -1,4 +1,4 @@
-import { UploadSvg } from "../../svg/UploadSvg"
+import { UploadSvg } from "../../svg/UploadSvg.jsx"
 
 
 export function ManualUpload({ setUploadedModel }) {
