@@ -1,4 +1,4 @@
-import { PlusSvg } from "../svg/PlusSvg"
+import { PlusSvg } from "../svg/PlusSvg.jsx"
 
 export function NewChatButton() {
     return (

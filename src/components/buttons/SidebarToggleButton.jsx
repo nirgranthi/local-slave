@@ -1,4 +1,4 @@
-import { HamburgerSvg } from "../svg/HamburgerSvg";
+import { HamburgerSvg } from "../svg/HamburgerSvg.jsx";
 
 export function SidebarToggleButton({isSidebarOpen, setIsSidebarOpen}) {
     return (

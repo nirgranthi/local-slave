@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SendButton } from "./buttons/SendButton";
+import { SendButton } from "./buttons/SendButton.jsx";
 
 export function InputArea({ setUserPrompt }) {
   const [inputValue, setInputValue] = useState('')

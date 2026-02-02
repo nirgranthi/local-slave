@@ -1,10 +1,10 @@
-import { TabModelsButton } from "./buttons/TabModelsButton"
-import { TabHistoryButton } from "./buttons/TabHistoryButton"
-import { ModelsList } from "./sidebar/modelsTab/ModelsList"
+import { TabModelsButton } from "./buttons/TabModelsButton.jsx"
+import { TabHistoryButton } from "./buttons/TabHistoryButton.jsx"
+import { ModelsList } from "./sidebar/modelsTab/ModelsList.jsx"
 import { useState } from "react"
-import { HistoryTab } from "./sidebar/historyTab/HistoryTab"
-import { ManualUpload } from "./sidebar/modelsTab/ManualUpload"
-import { DownloadProgressBar } from "./sidebar/DownloadProgressBar"
+import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"
+import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
+import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
 
 
 export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl, isModelDownloading }) {
