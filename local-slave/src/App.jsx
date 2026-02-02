@@ -17,6 +17,7 @@ function App() {
   const [dlPercent, setDlPercent] = useState(0)
   const [dlDetails, setDlDetails] = useState('0MB / 0MB')
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
+  const [isModelDownloading, setIsModelDownloading] = useState(null)
 
   return (
     <div className='flex h-screen w-full'>
@@ -33,6 +34,7 @@ function App() {
           dlPercent={dlPercent}
           dlDetails={dlDetails}
           setSelectedModelUrl={setSelectedModelUrl}
+          isModelDownloading={isModelDownloading}
         />
       }
 
@@ -69,6 +71,7 @@ function App() {
           setModelStatus={setModelStatus}
           setDlPercent={setDlPercent}
           setDlDetails={setDlDetails}
+          setIsModelDownloading={setIsModelDownloading}
         />
       </div>
     </div>

@@ -4,14 +4,15 @@ import { Wllama } from '@wllama/wllama';
 export function WllamaChat({
   userPrompt,
   uploadedModel,
-  chatMessages, 
-  setChatMessages, 
-  setLiveToken, 
-  setIsLiveTokenLive, 
-  setModelStatus, 
-  selectedModelUrl, 
+  chatMessages,
+  setChatMessages,
+  setLiveToken,
+  setIsLiveTokenLive,
+  setModelStatus,
+  selectedModelUrl,
   setDlPercent,
-  setDlDetails
+  setDlDetails,
+  setIsModelDownloading
 }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
@@ -24,7 +25,7 @@ export function WllamaChat({
       };
       const instance = new Wllama(config);
       setWllama(instance);
-      
+
     } catch (err) {
       console.error("Error: ", err);
     }
@@ -41,7 +42,7 @@ export function WllamaChat({
       setLoading(true);
     }
     loadModel()
-  }, [wllama, setModelStatus, uploadedModel])
+  }, [wllama, uploadedModel])
 
   useEffect(() => {
     console.log('user prompt is: ', userPrompt)
@@ -94,20 +95,26 @@ export function WllamaChat({
   useEffect(() => {
     if (!selectedModelUrl) return;
     console.log(selectedModelUrl)
+
+    setIsModelDownloading(true)
     const downloadModel = async () => {
-      await wllama.loadModelFromUrl(selectedModelUrl, {
-        useCache: true,
-        progressCallback: ({ loaded, total }) => {
-          const pct = Math.round((loaded / total) * 100);
-          console.log(pct)
-          setDlPercent(pct)
-          console.log(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
-          setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
-        }
-      })
+      try {
+        await wllama.loadModelFromUrl(selectedModelUrl, {
+          useCache: true,
+          progressCallback: ({ loaded, total }) => {
+            const pct = Math.round((loaded / total) * 100);
+            setDlPercent(pct)
+            setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+          }
+        })
+      } finally {
+        setIsModelDownloading(false)
+        setDlPercent(0)
+        setDlDetails('0MB / 0MB')
+      }
     }
     downloadModel()
-  }, [selectedModelUrl, setDlDetails, setDlPercent])
+  }, [selectedModelUrl])
 }
 
 

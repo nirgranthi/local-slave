@@ -7,7 +7,7 @@ import { ManualUpload } from "./sidebar/modelsTab/ManualUpload"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar"
 
 
-export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl }) {
+export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl, isModelDownloading }) {
   const [selectedTab, setSelectedTab] = useState('models')
   const tabClassname = (modelsTab) =>
     modelsTab
@@ -32,7 +32,8 @@ export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedMod
             <div className="space-y-6">
               <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
               <ManualUpload setUploadedModel={setUploadedModel} />
-              <DownloadProgressBar dlPercent={dlPercent} dlDetails={dlDetails} />
+
+              {isModelDownloading && <DownloadProgressBar dlPercent={dlPercent} dlDetails={dlDetails} />}
             </div>
           </>
         }
