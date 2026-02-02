@@ -15,7 +15,6 @@ export function WllamaChat({
   setIsModelDownloading,
   setLoadedModelName
 }) {
-  const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
   /* wllama config */
@@ -40,12 +39,12 @@ export function WllamaChat({
       try {
         await wllama.exit()
         setModelStatus('OFFLINE')
+        setLoadedModelName('No model loaded')
       } catch (error) {
         console.log('Error ocurred while unloading model: ', error)
       }
 
       try {
-        setLoading(true)
         await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
@@ -53,7 +52,6 @@ export function WllamaChat({
       } catch {
         console.log('Model could not be loaded')
         setModelStatus('OFFLINE')
-        setLoading(false)
       }
 
     }
@@ -103,8 +101,6 @@ export function WllamaChat({
         console.log(chatMessages)
       } catch (err) {
         console.error("Error:", err);
-      } finally {
-        setLoading(false);
       }
     }
     runAi()
@@ -121,6 +117,7 @@ export function WllamaChat({
       try {
         await wllama.exit()
         setModelStatus('OFFLINE')
+        setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
@@ -129,10 +126,13 @@ export function WllamaChat({
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
           }
         })
-      } finally {
+        setLoadedModelName(wllama.metadata.meta['general.name'])
+      } catch (error) {
+        console.log('error downloading: ', error)
+      }
+       finally {
         console.log('model downloaded')
         setIsModelDownloading(false)
-        setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus("ONLINE")
         setDlPercent(0)
         setDlDetails('0MB / 0MB')

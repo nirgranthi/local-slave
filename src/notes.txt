@@ -14,6 +14,7 @@ add options to switch between multiple uploaded models
 format the ai reply. idk why it is being deformatted 
 make downloaded models green
 add customising button in the sidebar for customing the model
+add n_ctx to the downloaded models
 
 
 ill work on the local storage at last stage
