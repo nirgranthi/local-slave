@@ -12,11 +12,13 @@ export function WllamaChat({
   selectedModelUrl,
   setDlPercent,
   setDlDetails,
-  setIsModelDownloading
+  setIsModelDownloading,
+  setLoadedModelName
 }) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
+  /* wllama config */
   useEffect(() => {
     try {
       const config = {
@@ -32,10 +34,12 @@ export function WllamaChat({
   }, [])
 
 
+  /* uploaded model */
   useEffect(() => {
     if (!uploadedModel) return;
     const loadModel = async () => {
       await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+      setLoadedModelName(wllama.metadata.meta['general.name'])
       setModelStatus('ONLINE')
       console.log("Model loaded.");
       console.log('is model loaded: ', wllama.isModelLoaded())
@@ -44,9 +48,11 @@ export function WllamaChat({
     loadModel()
   }, [wllama, uploadedModel])
 
+  /* user prompt */
   useEffect(() => {
     console.log('user prompt is: ', userPrompt)
     if (!userPrompt || !wllama) return;
+    console.log('wllama: ', wllama.metadata.meta['general.name'])
     setIsLiveTokenLive(true)
     console.log('user prompt is: ', userPrompt)
     const runAi = async () => {
@@ -92,12 +98,13 @@ export function WllamaChat({
     runAi()
   }, [wllama, userPrompt])
 
+  /* model download */
   useEffect(() => {
     if (!selectedModelUrl) return;
     console.log(selectedModelUrl)
 
     setIsModelDownloading(true)
-    
+
     const downloadModel = async () => {
       try {
         await wllama.loadModelFromUrl(selectedModelUrl, {
@@ -110,6 +117,7 @@ export function WllamaChat({
         })
       } finally {
         setIsModelDownloading(false)
+        setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus("ONLINE")
         setDlPercent(0)
         setDlDetails('0MB / 0MB')
