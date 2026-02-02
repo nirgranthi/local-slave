@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus }) {
+export function WllamaChat({
+  userPrompt,
+  uploadedModel,
+  chatMessages,
+  setChatMessages,
+  setLiveToken,
+  setIsLiveTokenLive,
+  setModelStatus,
+  selectedModelUrl,
+  setDlPercent,
+  setDlDetails,
+  setIsModelDownloading
+}) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
-
-  /*use 3 useeffect
-  1. config
-  start with if return to not let them run immediately
-  2. model load, update on upload
-  3.prompt, update on prompt*/
-
   useEffect(() => {
-    if (!uploadedModel) return;
-
     try {
       const config = {
         'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
@@ -22,19 +25,19 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
       };
       const instance = new Wllama(config);
       setWllama(instance);
-      setModelStatus('ONLINE')
-      console.log("Model loaded.");
+
     } catch (err) {
       console.error("Error: ", err);
     }
-  }, [uploadedModel, setModelStatus])
+  }, [])
 
 
   useEffect(() => {
-    if (!wllama) return;
+    if (!uploadedModel) return;
     const loadModel = async () => {
-      //console.log('runAi: wllama: ', wllama)
       await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+      setModelStatus('ONLINE')
+      console.log("Model loaded.");
       console.log('is model loaded: ', wllama.isModelLoaded())
       setLoading(true);
     }
@@ -43,7 +46,6 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
 
   useEffect(() => {
     console.log('user prompt is: ', userPrompt)
-    console.log('wllama: ', wllama)
     if (!userPrompt || !wllama) return;
     setIsLiveTokenLive(true)
     console.log('user prompt is: ', userPrompt)
@@ -89,6 +91,30 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
     }
     runAi()
   }, [wllama, userPrompt])
+
+  useEffect(() => {
+    if (!selectedModelUrl) return;
+    console.log(selectedModelUrl)
+
+    setIsModelDownloading(true)
+    const downloadModel = async () => {
+      try {
+        await wllama.loadModelFromUrl(selectedModelUrl, {
+          useCache: true,
+          progressCallback: ({ loaded, total }) => {
+            const pct = Math.round((loaded / total) * 100);
+            setDlPercent(pct)
+            setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+          }
+        })
+      } finally {
+        setIsModelDownloading(false)
+        setDlPercent(0)
+        setDlDetails('0MB / 0MB')
+      }
+    }
+    downloadModel()
+  }, [selectedModelUrl])
 }
 
 

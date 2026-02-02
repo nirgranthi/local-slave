@@ -3,17 +3,21 @@ import { ChatArea } from './components/ChatArea'
 import { InputArea } from './components/InputArea'
 import { Sidebar } from './components/Sidebar'
 import { MobileOverlay } from './components/MobileOverlay'
-import { WllamaChat } from "./components/js/wllama/wllama";
+import { WllamaChat } from "./components/js/wllama";
 import { useState } from 'react'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
-  const [chatMessages, setChatMessages] = useState('')
+  const [chatMessages, setChatMessages] = useState([])
   const [liveToken, setLiveToken] = useState('')
   const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
   const [modelStatus, setModelStatus] = useState('OFFLINE')
+  const [dlPercent, setDlPercent] = useState(0)
+  const [dlDetails, setDlDetails] = useState('0MB / 0MB')
+  const [selectedModelUrl, setSelectedModelUrl] = useState(null)
+  const [isModelDownloading, setIsModelDownloading] = useState(null)
 
   return (
     <div className='flex h-screen w-full'>
@@ -26,8 +30,11 @@ function App() {
       {/* SIDEBAR */}
       {isSidebarOpen &&
         <Sidebar
-          uploadedModel={uploadedModel}
           setUploadedModel={setUploadedModel}
+          dlPercent={dlPercent}
+          dlDetails={dlDetails}
+          setSelectedModelUrl={setSelectedModelUrl}
+          isModelDownloading={isModelDownloading}
         />
       }
 
@@ -60,7 +67,11 @@ function App() {
           setChatMessages={setChatMessages}
           setLiveToken={setLiveToken}
           setIsLiveTokenLive={setIsLiveTokenLive}
+          selectedModelUrl={selectedModelUrl}
           setModelStatus={setModelStatus}
+          setDlPercent={setDlPercent}
+          setDlDetails={setDlDetails}
+          setIsModelDownloading={setIsModelDownloading}
         />
       </div>
     </div>

@@ -1,8 +1,7 @@
 import { UploadSvg } from "../../svg/UploadSvg"
-import { WllamaChat } from "../../js/wllama/wllama"
 
 
-export function ManualUpload({ uploadedModel, setUploadedModel }) {
+export function ManualUpload({ setUploadedModel }) {
   const handleFile = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -20,8 +19,6 @@ export function ManualUpload({ uploadedModel, setUploadedModel }) {
           <UploadSvg />
           <p className="text-[10px] text-gray-400">Tap to Select .gguf</p>
         </div>
-
-        <WllamaChat uploadedModel={uploadedModel} />
 
         <input
           type="file"
