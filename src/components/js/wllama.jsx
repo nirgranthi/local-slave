@@ -97,6 +97,7 @@ export function WllamaChat({
     console.log(selectedModelUrl)
 
     setIsModelDownloading(true)
+    
     const downloadModel = async () => {
       try {
         await wllama.loadModelFromUrl(selectedModelUrl, {
@@ -109,6 +110,7 @@ export function WllamaChat({
         })
       } finally {
         setIsModelDownloading(false)
+        setModelStatus("ONLINE")
         setDlPercent(0)
         setDlDetails('0MB / 0MB')
       }
