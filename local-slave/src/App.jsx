@@ -10,10 +10,13 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [uploadedModel, setUploadedModel] = useState(null)
   const [userPrompt, setUserPrompt] = useState('')
-  const [chatMessages, setChatMessages] = useState('')
+  const [chatMessages, setChatMessages] = useState([])
   const [liveToken, setLiveToken] = useState('')
   const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
   const [modelStatus, setModelStatus] = useState('OFFLINE')
+  const [dlPercent, setDlPercent] = useState(0)
+  const [dlDetails, setDlDetails] = useState('0MB / 0MB')
+  const [selectedModelUrl, setSelectedModelUrl] = useState(null)
 
   return (
     <div className='flex h-screen w-full'>
@@ -26,8 +29,10 @@ function App() {
       {/* SIDEBAR */}
       {isSidebarOpen &&
         <Sidebar
-          uploadedModel={uploadedModel}
           setUploadedModel={setUploadedModel}
+          dlPercent={dlPercent}
+          dlDetails={dlDetails}
+          setSelectedModelUrl={setSelectedModelUrl}
         />
       }
 
@@ -60,7 +65,10 @@ function App() {
           setChatMessages={setChatMessages}
           setLiveToken={setLiveToken}
           setIsLiveTokenLive={setIsLiveTokenLive}
+          selectedModelUrl={selectedModelUrl}
           setModelStatus={setModelStatus}
+          setDlPercent={setDlPercent}
+          setDlDetails={setDlDetails}
         />
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { WllamaChat } from "../../js/wllama"
 
 const getModelName = (url) => {
   return url.split('/').pop()
@@ -12,9 +11,8 @@ const LoadingList = () =>
   Loading list...
 </div>)
 
-const LoadedList = ({ csvData }) => {
+const LoadedList = ({ csvData, setSelectedModelUrl }) => {
   const isDownloaded = false
-  const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   return (
     csvData.map((model, index) => (
       <button key={index}
@@ -25,7 +23,6 @@ const LoadedList = ({ csvData }) => {
         onClick={() => (setSelectedModelUrl(model[0]))}
       >
         <div className="flex justify-between items-center">
-          <WllamaChat selectedModelUrl={selectedModelUrl} />
           <div className="flex flex-col min-w-0 flex-1">
             <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
             {isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''}
@@ -37,12 +34,11 @@ const LoadedList = ({ csvData }) => {
   )
 }
 
-export function ModelsList() {
+export function ModelsList({ setSelectedModelUrl }) {
   const [isloadingCsv, setIsLoadingCsv] = useState(true)
   const [csvData, setCsvData] = useState([])
   const [refresh, setRefresh] = useState('refreshed')
 
-  //const [csvError, setCsvError] = useState(null)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,7 +70,7 @@ export function ModelsList() {
       <div id="csv-model-list" className="space-y-2">
         {isloadingCsv && <LoadingList />}
         {!isloadingCsv &&
-          <LoadedList csvData={csvData} />
+          <LoadedList csvData={csvData} setSelectedModelUrl={setSelectedModelUrl} />
         }
       </div>
     </div>

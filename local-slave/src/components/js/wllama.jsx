@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 
-export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl }) {
+export function WllamaChat({
+  userPrompt,
+  uploadedModel,
+  chatMessages, 
+  setChatMessages, 
+  setLiveToken, 
+  setIsLiveTokenLive, 
+  setModelStatus, 
+  selectedModelUrl, 
+  setDlPercent,
+  setDlDetails
+}) {
   const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
   useEffect(() => {
-    if (!uploadedModel) return;
-
     try {
       const config = {
         'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
@@ -15,28 +24,27 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
       };
       const instance = new Wllama(config);
       setWllama(instance);
-      setModelStatus('ONLINE')
-      console.log("Model loaded.");
+      
     } catch (err) {
       console.error("Error: ", err);
     }
-  }, [uploadedModel, setModelStatus])
+  }, [])
 
 
   useEffect(() => {
-    if (!wllama) return;
+    if (!uploadedModel) return;
     const loadModel = async () => {
-      //console.log('runAi: wllama: ', wllama)
       await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+      setModelStatus('ONLINE')
+      console.log("Model loaded.");
       console.log('is model loaded: ', wllama.isModelLoaded())
       setLoading(true);
     }
     loadModel()
-  }, [wllama, uploadedModel])
+  }, [wllama, setModelStatus, uploadedModel])
 
   useEffect(() => {
     console.log('user prompt is: ', userPrompt)
-    console.log('wllama: ', wllama)
     if (!userPrompt || !wllama) return;
     setIsLiveTokenLive(true)
     console.log('user prompt is: ', userPrompt)
@@ -86,7 +94,20 @@ export function WllamaChat({ uploadedModel, userPrompt, chatMessages, setChatMes
   useEffect(() => {
     if (!selectedModelUrl) return;
     console.log(selectedModelUrl)
-  },[selectedModelUrl])
+    const downloadModel = async () => {
+      await wllama.loadModelFromUrl(selectedModelUrl, {
+        useCache: true,
+        progressCallback: ({ loaded, total }) => {
+          const pct = Math.round((loaded / total) * 100);
+          console.log(pct)
+          setDlPercent(pct)
+          console.log(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+          setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+        }
+      })
+    }
+    downloadModel()
+  }, [selectedModelUrl, setDlDetails, setDlPercent])
 }
 
 
