@@ -27,7 +27,6 @@ export function WllamaChat({
       };
       const instance = new Wllama(config);
       setWllama(instance);
-
     } catch (err) {
       console.error("Error: ", err);
     }
@@ -38,12 +37,25 @@ export function WllamaChat({
   useEffect(() => {
     if (!uploadedModel) return;
     const loadModel = async () => {
-      await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
-      setLoadedModelName(wllama.metadata.meta['general.name'])
-      setModelStatus('ONLINE')
-      console.log("Model loaded.");
-      console.log('is model loaded: ', wllama.isModelLoaded())
-      setLoading(true);
+      try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
+      } catch (error) {
+        console.log('Error ocurred while unloading model: ', error)
+      }
+
+      try {
+        setLoading(true)
+        await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+        setLoadedModelName(wllama.metadata.meta['general.name'])
+        setModelStatus('ONLINE')
+        console.log('is model loaded: ', wllama.isModelLoaded())
+      } catch {
+        console.log('Model could not be loaded')
+        setModelStatus('OFFLINE')
+        setLoading(false)
+      }
+
     }
     loadModel()
   }, [wllama, uploadedModel])
@@ -107,6 +119,8 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
@@ -116,6 +130,7 @@ export function WllamaChat({
           }
         })
       } finally {
+        console.log('model downloaded')
         setIsModelDownloading(false)
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus("ONLINE")
