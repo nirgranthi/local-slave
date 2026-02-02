@@ -60,6 +60,7 @@ function App() {
         {/* Input */}
         <InputArea
           setUserPrompt={setUserPrompt}
+          modelStatus={modelStatus}
         />
 
         <WllamaChat
