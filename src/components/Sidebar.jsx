@@ -42,7 +42,7 @@ export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedMod
       </div>
 
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.0.0 Alpha (Moving project to react)
+        v2.2 Beta (Pretty Stable)
       </div>
     </div>
   )

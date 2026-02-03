@@ -18,6 +18,7 @@ function App() {
   const [dlDetails, setDlDetails] = useState('0MB / 0MB')
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   const [isModelDownloading, setIsModelDownloading] = useState(null)
+  const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
 
   return (
     <div className='flex h-screen w-full'>
@@ -45,6 +46,7 @@ function App() {
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
           modelStatus={modelStatus}
+          loadedModelName={loadedModelName}
         />
 
         {/* Chat Area */}
@@ -58,6 +60,7 @@ function App() {
         {/* Input */}
         <InputArea
           setUserPrompt={setUserPrompt}
+          modelStatus={modelStatus}
         />
 
         <WllamaChat
@@ -72,6 +75,7 @@ function App() {
           setDlPercent={setDlPercent}
           setDlDetails={setDlDetails}
           setIsModelDownloading={setIsModelDownloading}
+          setLoadedModelName={setLoadedModelName}
         />
       </div>
     </div>

@@ -14,6 +14,215 @@ add options to switch between multiple uploaded models
 format the ai reply. idk why it is being deformatted 
 make downloaded models green
 add customising button in the sidebar for customing the model
+add n_ctx to the downloaded models
 
 
 ill work on the local storage at last stage
+
+reference wllama config
+{
+    "cacheManager": {},
+    "modelManager": {
+        "cacheManager": {},
+        "params": {
+            "cacheManager": {},
+            "logger": {
+                "memory": {}
+            }
+        },
+        "logger": {
+            "memory": {}
+        }
+    },
+    "proxy": {
+        "logger": {
+            "memory": {}
+        },
+        "suppressNativeLog": false,
+        "taskQueue": [],
+        "taskId": 456,
+        "resultQueue": [],
+        "busy": false,
+        "worker": {},
+        "pathConfig": {
+            "wllama.wasm": "http://localhost:5173/wllama/multi-thread/wllama.wasm"
+        },
+        "multiThread": true,
+        "nbThread": 4
+    },
+    "config": {},
+    "pathConfig": {
+        "single-thread/wllama.wasm": "/wllama/single-thread/wllama.wasm",
+        "multi-thread/wllama.wasm": "/wllama/multi-thread/wllama.wasm"
+    },
+    "useMultiThread": true,
+    "nbThreads": 4,
+    "useEmbeddings": false,
+    "loadedContextInfo": {
+        "_name": "load_res",
+        "success": true,
+        "n_ctx": 1024,
+        "n_batch": 1024,
+        "n_ubatch": 512,
+        "n_vocab": 2048,
+        "n_ctx_train": 512,
+        "n_embd": 128,
+        "n_layer": 2,
+        "metadata_key": [
+            "general.quantization_version",
+            "tokenizer.ggml.add_eos_token",
+            "tokenizer.ggml.unknown_token_id",
+            "tokenizer.ggml.eos_token_id",
+            "llama.rope.dimension_count",
+            "tokenizer.ggml.bos_token_id",
+            "llama.vocab_size",
+            "llama.rope.freq_base",
+            "general.dataset.0.repo_url",
+            "tokenizer.ggml.model",
+            "llama.context_length",
+            "llama.attention.layer_norm_rms_epsilon",
+            "llama.attention.head_count_kv",
+            "llama.attention.head_count",
+            "llama.feed_forward_length",
+            "general.license",
+            "llama.embedding_length",
+            "general.dataset.0.name",
+            "general.basename",
+            "llama.block_count",
+            "general.name",
+            "tokenizer.ggml.padding_token_id",
+            "general.size_label",
+            "general.dataset.0.organization",
+            "general.dataset.count",
+            "general.file_type",
+            "tokenizer.ggml.pre",
+            "tokenizer.ggml.add_bos_token",
+            "general.type",
+            "general.architecture"
+        ],
+        "metadata_val": [
+            "2",
+            "false",
+            "0",
+            "2",
+            "16",
+            "1",
+            "2048",
+            "10000.000000",
+            "https://huggingface.co/raincandy-u/TinyStoriesV2_SpecialTokens",
+            "llama",
+            "512",
+            "0.000001",
+            "4",
+            "8",
+            "384",
+            "apache-2.0",
+            "128",
+            "TinyStoriesV2_SpecialTokens",
+            "raincandy-u-TinyStories",
+            "2",
+            "Raincandy U TinyStories 656K",
+            "0",
+            "656K",
+            "Raincandy U",
+            "1",
+            "12",
+            "default",
+            "true",
+            "model",
+            "llama"
+        ],
+        "token_bos": 1,
+        "token_eos": 2,
+        "token_eot": -1,
+        "list_tokens_eog": [
+            2
+        ],
+        "add_bos_token": true,
+        "add_eos_token": false,
+        "has_encoder": false,
+        "token_decoder_start": -1,
+        "metadata": {
+            "general.quantization_version": "2",
+            "tokenizer.ggml.add_eos_token": "false",
+            "tokenizer.ggml.unknown_token_id": "0",
+            "tokenizer.ggml.eos_token_id": "2",
+            "llama.rope.dimension_count": "16",
+            "tokenizer.ggml.bos_token_id": "1",
+            "llama.vocab_size": "2048",
+            "llama.rope.freq_base": "10000.000000",
+            "general.dataset.0.repo_url": "https://huggingface.co/raincandy-u/TinyStoriesV2_SpecialTokens",
+            "tokenizer.ggml.model": "llama",
+            "llama.context_length": "512",
+            "llama.attention.layer_norm_rms_epsilon": "0.000001",
+            "llama.attention.head_count_kv": "4",
+            "llama.attention.head_count": "8",
+            "llama.feed_forward_length": "384",
+            "general.license": "apache-2.0",
+            "llama.embedding_length": "128",
+            "general.dataset.0.name": "TinyStoriesV2_SpecialTokens",
+            "general.basename": "raincandy-u-TinyStories",
+            "llama.block_count": "2",
+            "general.name": "Raincandy U TinyStories 656K",
+            "tokenizer.ggml.padding_token_id": "0",
+            "general.size_label": "656K",
+            "general.dataset.0.organization": "Raincandy U",
+            "general.dataset.count": "1",
+            "general.file_type": "12",
+            "tokenizer.ggml.pre": "default",
+            "tokenizer.ggml.add_bos_token": "true",
+            "general.type": "model",
+            "general.architecture": "llama"
+        }
+    },
+    "bosToken": 1,
+    "eosToken": 2,
+    "eotToken": -1,
+    "eogTokens": {},
+    "addBosToken": true,
+    "addEosToken": false,
+    "metadata": {
+        "hparams": {
+            "nVocab": 2048,
+            "nCtxTrain": 512,
+            "nEmbd": 128,
+            "nLayer": 2
+        },
+        "meta": {
+            "general.quantization_version": "2",
+            "tokenizer.ggml.add_eos_token": "false",
+            "tokenizer.ggml.unknown_token_id": "0",
+            "tokenizer.ggml.eos_token_id": "2",
+            "llama.rope.dimension_count": "16",
+            "tokenizer.ggml.bos_token_id": "1",
+            "llama.vocab_size": "2048",
+            "llama.rope.freq_base": "10000.000000",
+            "general.dataset.0.repo_url": "https://huggingface.co/raincandy-u/TinyStoriesV2_SpecialTokens",
+            "tokenizer.ggml.model": "llama",
+            "llama.context_length": "512",
+            "llama.attention.layer_norm_rms_epsilon": "0.000001",
+            "llama.attention.head_count_kv": "4",
+            "llama.attention.head_count": "8",
+            "llama.feed_forward_length": "384",
+            "general.license": "apache-2.0",
+            "llama.embedding_length": "128",
+            "general.dataset.0.name": "TinyStoriesV2_SpecialTokens",
+            "general.basename": "raincandy-u-TinyStories",
+            "llama.block_count": "2",
+            "general.name": "Raincandy U TinyStories 656K",
+            "tokenizer.ggml.padding_token_id": "0",
+            "general.size_label": "656K",
+            "general.dataset.0.organization": "Raincandy U",
+            "general.dataset.count": "1",
+            "general.file_type": "12",
+            "tokenizer.ggml.pre": "default",
+            "tokenizer.ggml.add_bos_token": "true",
+            "general.type": "model",
+            "general.architecture": "llama"
+        }
+    },
+    "samplingConfig": {},
+    "hasEncoder": false,
+    "decoderStartToken": -1,
+    "nCachedTokens": 203
+}

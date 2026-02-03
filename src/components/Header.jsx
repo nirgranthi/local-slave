@@ -1,7 +1,7 @@
 import { SidebarToggleButton } from "./buttons/SidebarToggleButton.jsx";
 import { NewChatButton } from "./buttons/NewChatButton.jsx";
 
-export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus }) {
+export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName }) {
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
@@ -15,7 +15,7 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus }) {
           </span>
           
           <span id="active-model-name" className="text-[10px] text-gray-500 truncate max-w-37.5">
-            No Model Loaded
+            {loadedModelName}
           </span>
         </div>
 

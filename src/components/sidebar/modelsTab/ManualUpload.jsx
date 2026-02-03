@@ -1,12 +1,17 @@
+import { useState } from "react"
 import { UploadSvg } from "../../svg/UploadSvg.jsx"
 
 
 export function ManualUpload({ setUploadedModel }) {
+  const [uploadedModelFiles, setUploadedModelFiles] = useState([])
   const handleFile = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setUploadedModel(e.target.files[0])
+      setUploadedModel(file)
       console.log('file uploaded', file.name)
+      if (!uploadedModelFiles.includes(file)) {
+        setUploadedModelFiles(prev => [...prev, file])
+      }
     }
   }
   return (
@@ -26,8 +31,22 @@ export function ManualUpload({ setUploadedModel }) {
           accept=".gguf"
           onChange={handleFile}
           className="hidden" />
-          
+
       </label>
+
+      {uploadedModelFiles.map((file, index) => (
+        <button key={index}
+          className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
+          onClick={() => (setUploadedModel(file))}
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{file.name}</span>
+            </div>
+          </div>
+        </button>
+      ))}
+
     </div>
   )
 }
