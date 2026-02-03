@@ -31,7 +31,6 @@ export function WllamaChat({
     }
   }, [])
 
-
   /* uploaded model */
   useEffect(() => {
     if (!uploadedModel) return;
@@ -60,18 +59,21 @@ export function WllamaChat({
 
   /* user prompt */
   useEffect(() => {
-    console.log('user prompt is: ', userPrompt)
     if (!userPrompt || !wllama) return;
     console.log('wllama: ', wllama.metadata.meta['general.name'])
-    setIsLiveTokenLive(true)
-    console.log('user prompt is: ', userPrompt)
     const runAi = async () => {
       try {
+        const history = chatMessages.map(msg => ({
+          content: msg.message,
+          role: msg.sender === 'ai' ? 'assistant' : 'user'
+        }));
+
         const prompt = await wllama.formatChat([
           {
             content: 'You are a helpful assistant.',
             role: 'system'
           },
+          ...history,
           {
             content: userPrompt,
             role: 'user'
@@ -79,6 +81,8 @@ export function WllamaChat({
         ], true
         );
         console.log("Prompt is: ", prompt);
+        setLiveToken('')
+        setIsLiveTokenLive(true)
         const result = await wllama.createCompletion(prompt, {
           n_predict: 100,
           onNewToken: (token, piece, text) => (
@@ -98,13 +102,12 @@ export function WllamaChat({
             id: crypto.randomUUID()
           }
         ])
-        console.log(chatMessages)
       } catch (err) {
         console.error("Error:", err);
       }
     }
     runAi()
-  }, [wllama, userPrompt])
+  }, [wllama, userPrompt, setChatMessages])
 
   /* model download */
   useEffect(() => {
@@ -131,7 +134,7 @@ export function WllamaChat({
       } catch (error) {
         console.log('error downloading: ', error)
       }
-       finally {
+      finally {
         console.log('model downloaded')
         setIsModelDownloading(false)
         setModelStatus("ONLINE")
@@ -141,7 +144,10 @@ export function WllamaChat({
     }
     downloadModel()
   }, [selectedModelUrl])
+
+  
 }
+
 
 
 
