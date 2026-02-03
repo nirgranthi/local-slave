@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export function UploadedModelList({ setSelectedModelUrl }) {
+export function UploadedModelUrlList({ setSelectedModelUrl }) {
     const [userModelUrl, setUserModelUrl] = useState('')
     const [UploadedModelUrls, setUploadedModelUrls] = useState([])
 

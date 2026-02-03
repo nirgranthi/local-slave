@@ -1,7 +1,7 @@
 import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton.jsx"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { UploadedModelList } from "./UploadedModelList.jsx"
+import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
 
 const getModelName = (url) => {
   return url.split('/').pop()
@@ -74,7 +74,7 @@ export function ModelsList({ setSelectedModelUrl }) {
           <LoadedList csvData={csvData} setSelectedModelUrl={setSelectedModelUrl} />
         }
 
-        <UploadedModelList setSelectedModelUrl={setSelectedModelUrl} />
+        <UploadedModelUrlList setSelectedModelUrl={setSelectedModelUrl} />
 
       </div>
     </div>
