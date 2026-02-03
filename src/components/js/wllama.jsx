@@ -124,7 +124,8 @@ export function WllamaChat({
             const pct = Math.round((loaded / total) * 100);
             setDlPercent(pct)
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
-          }
+          },
+          n_ctx: 8192
         })
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {
