@@ -1,6 +1,7 @@
 import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton.jsx"
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
 
 const getModelName = (url) => {
   return url.split('/').pop()
@@ -25,7 +26,7 @@ const LoadedList = ({ csvData, setSelectedModelUrl }) => {
         <div className="flex justify-between items-center">
           <div className="flex flex-col min-w-0 flex-1">
             <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
-            {isDownloaded ? '<span class="text-[9px] text-green-400">Available offline</span>' : ''}
+            {isDownloaded ? '<span className="text-[9px] text-green-400">Available offline</span>' : ''}
           </div>
           <span className="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded whitespace-nowrap">{model[1]} MB</span>
         </div>
@@ -72,6 +73,9 @@ export function ModelsList({ setSelectedModelUrl }) {
         {!isloadingCsv &&
           <LoadedList csvData={csvData} setSelectedModelUrl={setSelectedModelUrl} />
         }
+
+        <UploadedModelUrlList setSelectedModelUrl={setSelectedModelUrl} />
+
       </div>
     </div>
   )

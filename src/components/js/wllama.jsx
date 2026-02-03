@@ -15,7 +15,6 @@ export function WllamaChat({
   setIsModelDownloading,
   setLoadedModelName
 }) {
-  const [loading, setLoading] = useState(false);
   const [wllama, setWllama] = useState(null);
 
   /* wllama config */
@@ -27,7 +26,6 @@ export function WllamaChat({
       };
       const instance = new Wllama(config);
       setWllama(instance);
-
     } catch (err) {
       console.error("Error: ", err);
     }
@@ -38,12 +36,24 @@ export function WllamaChat({
   useEffect(() => {
     if (!uploadedModel) return;
     const loadModel = async () => {
-      await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
-      setLoadedModelName(wllama.metadata.meta['general.name'])
-      setModelStatus('ONLINE')
-      console.log("Model loaded.");
-      console.log('is model loaded: ', wllama.isModelLoaded())
-      setLoading(true);
+      try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
+        setLoadedModelName('No model loaded')
+      } catch (error) {
+        console.log('Error ocurred while unloading model: ', error)
+      }
+
+      try {
+        await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+        setLoadedModelName(wllama.metadata.meta['general.name'])
+        setModelStatus('ONLINE')
+        console.log('is model loaded: ', wllama.isModelLoaded())
+      } catch {
+        console.log('Model could not be loaded')
+        setModelStatus('OFFLINE')
+      }
+
     }
     loadModel()
   }, [wllama, uploadedModel])
@@ -91,8 +101,6 @@ export function WllamaChat({
         console.log(chatMessages)
       } catch (err) {
         console.error("Error:", err);
-      } finally {
-        setLoading(false);
       }
     }
     runAi()
@@ -107,17 +115,25 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
+        setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
             const pct = Math.round((loaded / total) * 100);
             setDlPercent(pct)
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
-          }
+          },
+          n_ctx: 8192
         })
-      } finally {
-        setIsModelDownloading(false)
         setLoadedModelName(wllama.metadata.meta['general.name'])
+      } catch (error) {
+        console.log('error downloading: ', error)
+      }
+       finally {
+        console.log('model downloaded')
+        setIsModelDownloading(false)
         setModelStatus("ONLINE")
         setDlPercent(0)
         setDlDetails('0MB / 0MB')
