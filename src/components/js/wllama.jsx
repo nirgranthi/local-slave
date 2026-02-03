@@ -61,7 +61,6 @@ export function WllamaChat({
   useEffect(() => {
     if (!userPrompt || !wllama) return;
     console.log('wllama: ', wllama.metadata.meta['general.name'])
-    setIsLiveTokenLive(true)
     const runAi = async () => {
       try {
         const history = chatMessages.map(msg => ({
@@ -82,6 +81,8 @@ export function WllamaChat({
         ], true
         );
         console.log("Prompt is: ", prompt);
+        setLiveToken('')
+        setIsLiveTokenLive(true)
         const result = await wllama.createCompletion(prompt, {
           n_predict: 100,
           onNewToken: (token, piece, text) => (
