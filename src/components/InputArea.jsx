@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SendButton } from "./buttons/SendButton.jsx";
 
-export function InputArea({ setUserPrompt, modelStatus }) {
+export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive }) {
   const [inputValue, setInputValue] = useState('')
 
   const sendMessage = () => { console.log(inputValue), setUserPrompt(inputValue), setInputValue('') };
@@ -22,6 +22,7 @@ export function InputArea({ setUserPrompt, modelStatus }) {
           inputValue={inputValue}
           sendMessage={sendMessage}
           modelStatus={modelStatus}
+          isLiveTokenLive={isLiveTokenLive}
         />
       </div>
     </div>

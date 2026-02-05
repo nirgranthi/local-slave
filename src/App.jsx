@@ -61,6 +61,7 @@ function App() {
         <InputArea
           setUserPrompt={setUserPrompt}
           modelStatus={modelStatus}
+          isLiveTokenLive={isLiveTokenLive}
         />
 
         <WllamaChat
