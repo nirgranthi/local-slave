@@ -46,6 +46,7 @@ export function WllamaChat({
       }
 
       try {
+        setModelStatus('Loading...')
         await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
@@ -123,7 +124,7 @@ export function WllamaChat({
     const downloadModel = async () => {
       try {
         await wllama.exit()
-        setModelStatus('OFFLINE')
+        setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
