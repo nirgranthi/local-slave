@@ -13,7 +13,8 @@ export function WllamaChat({
   setDlPercent,
   setDlDetails,
   setIsModelDownloading,
-  setLoadedModelName
+  setLoadedModelName,
+  stopModelReplyRef
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -61,6 +62,7 @@ export function WllamaChat({
   useEffect(() => {
     if (!userPrompt || !wllama) return;
     console.log('wllama: ', wllama.metadata.meta['general.name'])
+    stopModelReplyRef.current = new AbortController
     const runAi = async () => {
       try {
         const history = chatMessages.map(msg => ({
@@ -84,15 +86,16 @@ export function WllamaChat({
         setLiveToken('')
         setIsLiveTokenLive(true)
         const result = await wllama.createCompletion(prompt, {
-          n_predict: 100,
-          onNewToken: (token, piece, text) => (
-            setLiveToken(text)
-          )
+          abortSignal: stopModelReplyRef.current.signal,
+          n_predict: 500,
+          onNewToken: (token, piece, text) => {
+            setLiveToken(text);
+            }
         });
         console.log("Full Reply:", result);
         setIsLiveTokenLive(false)
-        setChatMessages([
-          ...chatMessages, {
+        setChatMessages(prev => [
+          ...prev, {
             sender: 'user',
             message: userPrompt,
             id: crypto.randomUUID()
