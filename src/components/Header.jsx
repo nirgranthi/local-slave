@@ -14,7 +14,7 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
             Local AI
           </span>
           
-          <span id="active-model-name" className="text-[10px] text-gray-500 truncate max-w-37.5">
+          <span id="active-model-name" className="text-[10px] text-gray-500 max-w-50">
             {loadedModelName}
           </span>
         </div>
