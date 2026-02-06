@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
+import systemPrompt from './systemPrompt.txt?raw';
 
 export function WllamaChat({
   userPrompt,
@@ -72,7 +73,7 @@ export function WllamaChat({
 
         const prompt = await wllama.formatChat([
           {
-            content: 'You are a helpful assistant.',
+            content: systemPrompt,
             role: 'system'
           },
           ...history,
