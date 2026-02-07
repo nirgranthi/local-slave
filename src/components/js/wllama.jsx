@@ -15,7 +15,8 @@ export function WllamaChat({
   setDlDetails,
   setIsModelDownloading,
   setLoadedModelName,
-  stopModelReplyRef
+  stopModelReplyRef,
+  setUserPrompt
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -73,15 +74,9 @@ export function WllamaChat({
         }));
 
         const prompt = await wllama.formatChat([
-          {
-            content: systemPrompt,
-            role: 'system'
-          },
+          { content: systemPrompt, role: 'system' },
           ...history,
-          {
-            content: userPrompt,
-            role: 'user'
-          }
+          { content: userPrompt, role: 'user' }
         ], true
         );
         console.log("Prompt is: ", prompt);
@@ -92,23 +87,19 @@ export function WllamaChat({
           n_predict: 500,
           onNewToken: (token, piece, text) => {
             setLiveToken(text);
-            }
+          }
         });
         console.log("Full Reply:", result);
         setIsLiveTokenLive(false)
         setChatMessages(prev => [
-          ...prev, {
-            sender: 'user',
-            message: userPrompt,
-            id: crypto.randomUUID()
-          }, {
-            sender: 'ai',
-            message: result,
-            id: crypto.randomUUID()
-          }
+          ...prev,
+          { sender: 'user', message: userPrompt, id: crypto.randomUUID() },
+          { sender: 'ai', message: result, id: crypto.randomUUID() }
         ])
       } catch (err) {
         console.error("Error:", err);
+      } finally {
+        setUserPrompt('')
       }
     }
     runAi()
@@ -149,8 +140,6 @@ export function WllamaChat({
     }
     downloadModel()
   }, [selectedModelUrl])
-
-  
 }
 
 

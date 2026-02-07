@@ -80,6 +80,7 @@ function App() {
           setIsModelDownloading={setIsModelDownloading}
           setLoadedModelName={setLoadedModelName}
           stopModelReplyRef={stopModelReplyRef}
+          setUserPrompt={setUserPrompt}
         />
       </div>
     </div>
