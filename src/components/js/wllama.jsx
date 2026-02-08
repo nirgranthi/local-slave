@@ -53,8 +53,8 @@ export function WllamaChat({
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
-      } catch {
-        console.log('Model could not be loaded')
+      } catch (error) {
+        console.log('Model could not be loaded', error)
         setModelStatus('OFFLINE')
       } finally {
         setUploadedModel(null)
