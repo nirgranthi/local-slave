@@ -81,6 +81,7 @@ function App() {
           setLoadedModelName={setLoadedModelName}
           stopModelReplyRef={stopModelReplyRef}
           setUserPrompt={setUserPrompt}
+          setUploadedModel={setUploadedModel}
         />
       </div>
     </div>
