@@ -5,6 +5,8 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
   const [inputValue, setInputValue] = useState('')
 
   const sendMessage = () => {
+    if (inputValue.trim() === '') return;
+
     if (!isLiveTokenLive) {
       setUserPrompt(inputValue)
       setInputValue('')
@@ -16,7 +18,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
   return (
     <div className="w-full bg-gray-900 pt-4 pb-4 px-4 border-t border-gray-800">
       <div className="max-w-3xl mx-auto relative flex gap-2">
-        <input
+        <textarea
           id="user-input"
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
