@@ -4,6 +4,13 @@ import { SendButton } from "./buttons/SendButton.jsx";
 export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef }) {
   const [inputValue, setInputValue] = useState('')
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+
   const sendMessage = () => {
     if (inputValue.trim() === '') return;
 
@@ -23,7 +30,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
-          onKeyDown={(e) => { if (e.key == 'Enter') (sendMessage()) }}
+          onKeyDown={handleKeyDown}
           disabled={modelStatus === 'OFFLINE'}
           className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:outline-none focus:border-blue-500 transition-all"
           placeholder="Load a model to start..." />
