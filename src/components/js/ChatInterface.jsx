@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks';
 
 export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
     return (
@@ -13,7 +14,7 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                     } prose prose-invert prose-sm`}
                 >
                     <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
+                        remarkPlugins={[remarkGfm, remarkBreaks]}
                         components={{
                             code({ inline, className, children, node, ...props }) {
                                 const match = /language-(\w+)/.exec(className || '');
