@@ -15,7 +15,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      sendMessage()
+      if (!isLiveTokenLive) sendMessage()
     }
   }
 
