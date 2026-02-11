@@ -2,13 +2,14 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks';
+import { LoadingAnimation } from './LoadingAnimation';
 
 export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
     return (
         <>
             <div className={`flex w-full ${sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[60%] px-4 py-2 rounded-2xl text-sm shadow-md
-                ${sender === 'user'
+                    ${sender === 'user'
                         ? 'bg-blue-600 text-white rounded-tr-none'
                         : 'bg-gray-800 text-gray-200 rounded-tl-none border border-gray-700'
                     } prose prose-invert prose-sm`}
@@ -28,13 +29,13 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                             }
                         }}
                     >
-                        {isLiveTokenLive
-                            ? (liveToken || '...')
-                            : message
-                        }
                     </ReactMarkdown>
+                    {isLiveTokenLive
+                        ? (liveToken || <LoadingAnimation />)
+                        : message
+                    }
                 </div>
-            </div >
+            </div>
         </>
     )
 }
