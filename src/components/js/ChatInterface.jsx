@@ -14,25 +14,34 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                         : 'bg-gray-800 text-gray-200 rounded-tl-none border border-gray-700'
                     } prose prose-invert prose-sm`}
                 >
-                    <ReactMarkdown
-                        remarkPlugins={[remarkGfm, remarkBreaks]}
-                        components={{
-                            code({ inline, className, children, node, ...props }) {
-                                const match = /language-(\w+)/.exec(className || '');
-                                return !inline ? (
-                                    <CodeBlock language={match ? match[1] : ''} value={String(children).replace(/\n$/, '')} {...props} />
-                                ) : (
-                                    <code className="bg-black/30 px-1 rounded text-pink-400" {...props}>
-                                        {children}
-                                    </code>
-                                )
-                            }
-                        }}
-                    >
-                    </ReactMarkdown>
-                    {isLiveTokenLive
-                        ? (liveToken || <LoadingAnimation />)
-                        : message
+                    {isLiveTokenLive && !liveToken
+                        ? <LoadingAnimation />
+                        : (
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm, remarkBreaks]}
+                                components={{
+                                    code({ className, children, node, ...props }) {
+                                        const match = /language-(\w+)/.exec(className || '');
+
+                                        if (match) {
+                                            return (
+                                                <CodeBlock language={match ? match[1] : ''} value={String(children).replace(/\n$/, '')} {...props} />
+                                            )
+                                        }
+                                        return (
+                                            <code className="bg-black/30 px-1 rounded text-pink-400" {...props}>
+                                                {children}
+                                            </code>
+                                        )
+                                    }
+                                }}
+                            >
+                                {isLiveTokenLive
+                                    ? liveToken
+                                    : message
+                                }
+                            </ReactMarkdown>
+                        )
                     }
                 </div>
             </div>
@@ -47,7 +56,7 @@ function CodeBlock({ language, value }) {
         navigator.clipboard.writeText(value)
         console.log('code block copied')
         setCopied(true)
-        setTimeout(() => { setCopied(true), 2000 })
+        setTimeout(() => setCopied(false), 2000 )
     }
 
     return (
