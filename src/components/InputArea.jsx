@@ -20,9 +20,8 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
   }
 
   const sendMessage = () => {
-    if (inputValue.trim() === '') return;
-
     if (!isLiveTokenLive) {
+      if (inputValue.trim() === '') return;
       setUserPrompt(inputValue)
       setInputValue('')
     } else {
