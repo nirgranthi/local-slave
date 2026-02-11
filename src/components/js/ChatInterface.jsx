@@ -12,7 +12,7 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                     ${sender === 'user'
                         ? 'bg-blue-600 text-white rounded-tr-none'
                         : 'bg-gray-800 text-gray-200 rounded-tl-none border border-gray-700'
-                    } prose prose-invert prose-sm`}
+                    }`}
                 >
                     {isLiveTokenLive && !liveToken
                         ? <LoadingAnimation />
@@ -33,7 +33,39 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                                                 {children}
                                             </code>
                                         )
-                                    }
+                                    },
+
+                                    table: ({ children }) => (
+                                        <div>
+                                            <table>
+                                                {children}
+                                            </table>
+                                        </div>
+                                    ),
+
+                                    thead: ({ children }) => (
+                                        <thead className='bg-gray-900/80 border-b border-gray-700' >
+                                            {children}
+                                        </thead>
+                                    ),
+
+                                    th: ({ children }) => (
+                                        <th className='px-4 py-2 text-left font-semibold text-gray-100 border-r border-gray-700 last:border-r-0' >
+                                            {children}
+                                        </th>
+                                    ),
+
+                                    td: ({ children }) => (
+                                        <td className="px-4 py-2 border-t border-r border-gray-700 text-gray-300 last:border-r-0" >
+                                            {children}
+                                        </td>
+                                    ),
+
+                                    tr: ({ children }) => (
+                                        <tr className="even:bg-gray-800/30" >
+                                            {children}
+                                        </tr>
+                                    )
                                 }}
                             >
                                 {isLiveTokenLive
@@ -56,7 +88,7 @@ function CodeBlock({ language, value }) {
         navigator.clipboard.writeText(value)
         console.log('code block copied')
         setCopied(true)
-        setTimeout(() => setCopied(false), 2000 )
+        setTimeout(() => setCopied(false), 2000)
     }
 
     return (
