@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { LightningSvg } from "./svg/LightningSvg.jsx"
-import { ChatInterface } from "./js/ChatInterface.jsx"
+import { ChatInterface } from "./model/ChatInterface.jsx"
 
 export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt }) {
   const scrollRef = useRef(null)
