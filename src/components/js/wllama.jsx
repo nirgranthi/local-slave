@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
+import systemPrompt from './systemPrompt.txt?raw';
 
 export function WllamaChat({
   userPrompt,
@@ -13,7 +14,10 @@ export function WllamaChat({
   setDlPercent,
   setDlDetails,
   setIsModelDownloading,
-  setLoadedModelName
+  setLoadedModelName,
+  stopModelReplyRef,
+  setUserPrompt,
+  setUploadedModel
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -44,13 +48,16 @@ export function WllamaChat({
       }
 
       try {
+        setModelStatus('Loading...')
         await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
-      } catch {
-        console.log('Model could not be loaded')
+      } catch (error) {
+        console.log('Model could not be loaded', error)
         setModelStatus('OFFLINE')
+      } finally {
+        setUploadedModel(null)
       }
 
     }
@@ -61,49 +68,43 @@ export function WllamaChat({
   useEffect(() => {
     if (!userPrompt || !wllama) return;
     console.log('wllama: ', wllama.metadata.meta['general.name'])
+    stopModelReplyRef.current = new AbortController
     const runAi = async () => {
       try {
+        setModelStatus('ONLINE')
         const history = chatMessages.map(msg => ({
           content: msg.message,
           role: msg.sender === 'ai' ? 'assistant' : 'user'
         }));
 
         const prompt = await wllama.formatChat([
-          {
-            content: 'You are a helpful assistant.',
-            role: 'system'
-          },
+          { content: systemPrompt, role: 'system' },
           ...history,
-          {
-            content: userPrompt,
-            role: 'user'
-          }
+          { content: userPrompt, role: 'user' }
         ], true
         );
         console.log("Prompt is: ", prompt);
         setLiveToken('')
         setIsLiveTokenLive(true)
         const result = await wllama.createCompletion(prompt, {
-          n_predict: 100,
-          onNewToken: (token, piece, text) => (
-            setLiveToken(text)
-          )
+          abortSignal: stopModelReplyRef.current.signal,
+          n_predict: 500,
+          onNewToken: (token, piece, text) => {
+            setLiveToken(text);
+          }
         });
         console.log("Full Reply:", result);
-        setIsLiveTokenLive(false)
-        setChatMessages([
-          ...chatMessages, {
-            sender: 'user',
-            message: userPrompt,
-            id: crypto.randomUUID()
-          }, {
-            sender: 'ai',
-            message: result,
-            id: crypto.randomUUID()
-          }
+        setChatMessages(prev => [
+          ...prev,
+          { sender: 'user', message: userPrompt, id: crypto.randomUUID() },
+          { sender: 'ai', message: result, id: crypto.randomUUID() }
         ])
       } catch (err) {
-        console.error("Error:", err);
+        console.error("Error:", err)
+        setModelStatus('ERROR')
+      } finally {
+        setIsLiveTokenLive(false)
+        setUserPrompt('')
       }
     }
     runAi()
@@ -119,7 +120,7 @@ export function WllamaChat({
     const downloadModel = async () => {
       try {
         await wllama.exit()
-        setModelStatus('OFFLINE')
+        setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
@@ -144,8 +145,6 @@ export function WllamaChat({
     }
     downloadModel()
   }, [selectedModelUrl])
-
-  
 }
 
 

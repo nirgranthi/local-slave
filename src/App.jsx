@@ -4,7 +4,7 @@ import { InputArea } from './components/InputArea.jsx'
 import { Sidebar } from './components/Sidebar.jsx'
 import { MobileOverlay } from './components/MobileOverlay.jsx'
 import { WllamaChat } from "./components/js/wllama";
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -19,6 +19,7 @@ function App() {
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   const [isModelDownloading, setIsModelDownloading] = useState(null)
   const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
+  const stopModelReplyRef = useRef(null)
 
   return (
     <div className='flex h-screen w-full'>
@@ -61,6 +62,8 @@ function App() {
         <InputArea
           setUserPrompt={setUserPrompt}
           modelStatus={modelStatus}
+          isLiveTokenLive={isLiveTokenLive}
+          stopModelReplyRef={stopModelReplyRef}
         />
 
         <WllamaChat
@@ -76,6 +79,9 @@ function App() {
           setDlDetails={setDlDetails}
           setIsModelDownloading={setIsModelDownloading}
           setLoadedModelName={setLoadedModelName}
+          stopModelReplyRef={stopModelReplyRef}
+          setUserPrompt={setUserPrompt}
+          setUploadedModel={setUploadedModel}
         />
       </div>
     </div>
