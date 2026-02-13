@@ -7,11 +7,11 @@ export default function ThinkingBlock({children}) {
         <div className="my-2 border-l-2 border-gray-600 pl-4 py-1" >
             <button
                 className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 mb-1"
-                onClick={() => setIsThinkingBlockOpen(true)}
+                onClick={() => setIsThinkingBlockOpen(!isThinkingBlockOpen)}
             >
                 {isThinkingBlockOpen
-                    ? 'Show thinking'
-                    : 'Hide thinking'
+                    ? '▼ Hide thinking'
+                    : '▶ Show thinking'
                 }
             </button>
             {isThinkingBlockOpen &&
