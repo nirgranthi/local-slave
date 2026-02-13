@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 import systemPrompt from './systemPrompt.txt?raw';
+import { configValues } from './configValues';
 
 export function WllamaChat({
   userPrompt,
@@ -20,6 +21,18 @@ export function WllamaChat({
   setUploadedModel
 }) {
   const [wllama, setWllama] = useState(null);
+
+  const modelConfig = {
+    n_ctx : 8192,
+    n_batch : 1024,
+    n_threads : 12,
+    seed : -1,
+    cache_type_k : "f16",
+    cache_type_v : 'f16',
+    flash_attn : false,
+    embeddings : false,
+    offload_kqv : false
+  }
 
   /* wllama config */
   useEffect(() => {
@@ -49,7 +62,8 @@ export function WllamaChat({
 
       try {
         setModelStatus('Loading...')
-        await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+        console.log(wllama)
+        await wllama.loadModel([uploadedModel], modelConfig);
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
@@ -122,6 +136,7 @@ export function WllamaChat({
     const downloadModel = async () => {
       try {
         await wllama.exit()
+        console.log(wllama)
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
@@ -131,7 +146,7 @@ export function WllamaChat({
             setDlPercent(pct)
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
           },
-          n_ctx: 8192
+          ...modelConfig
         })
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {
