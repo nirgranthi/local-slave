@@ -86,6 +86,7 @@ export function WllamaChat({
         console.log("Prompt is: ", prompt);
         setLiveToken('')
         setIsLiveTokenLive(true)
+        setModelStatus('THINKING...')
         const result = await wllama.createCompletion(prompt, {
           abortSignal: stopModelReplyRef.current.signal,
           n_predict: 500,
@@ -104,6 +105,7 @@ export function WllamaChat({
         setModelStatus('ERROR')
       } finally {
         setIsLiveTokenLive(false)
+        setModelStatus('ONLINE')
         setUserPrompt('')
       }
     }

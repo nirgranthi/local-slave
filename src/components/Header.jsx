@@ -13,7 +13,7 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
           <span id="header-status" className="font-bold text-sm text-gray-200">
             Local AI
           </span>
-          
+
           <span id="active-model-name" className="text-[10px] text-gray-500 max-w-50">
             {loadedModelName}
           </span>
@@ -22,8 +22,15 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
       </div>
 
       <div className="flex items-center gap-2">
-        
-        <div className={`text-[10px] px-2 py-1 rounded ${modelStatus==='ONLINE' ? 'bg-green-900/50 text-green-400': 'bg-black/40 text-gray-400'} font-mono`}>
+
+        <div className={`text-[10px] px-2 py-1 rounded 
+          ${modelStatus === 'ONLINE'
+            ? 'bg-green-900/50 text-green-400'
+            : modelStatus === 'THINKING...'
+              ? 'bg-yellow-900/50 text-yellow-400'
+              : 'bg-black/40 text-gray-400'
+          } font-mono`}
+        >
           {modelStatus}
         </div>
         {/*onClick={startNewChat}*/}
