@@ -34,6 +34,27 @@ export function WllamaChat({
     offload_kqv : false
   }
 
+  const promptConfig = {
+    temp : 0.8,
+    dynatemp_range : 0.0,
+    dynatemp_exponent : 1.0,
+    top_p : 0.95,
+    top_k : 40,
+    min_p : 0.05,
+    typical_p : 1.0,
+    penalty_repeat : 1.0,
+    penalty_freq : 0.0,
+    penalty_present : 0.0,
+    penalty_last_n : 64,
+    mirostat : 0,
+    mirostat_tau : 5.0,
+    mirostat_eta : 0.1,
+    grammar : '',
+    logit_bias : [],
+    n_probs : 0,
+    samplers_sequence : 'kfypmt'
+  }
+
   /* wllama config */
   useEffect(() => {
     try {
@@ -104,6 +125,7 @@ export function WllamaChat({
         const result = await wllama.createCompletion(prompt, {
           abortSignal: stopModelReplyRef.current.signal,
           n_predict: 500,
+          sampling: promptConfig,
           onNewToken: (token, piece, text) => {
             setLiveToken(text);
           }

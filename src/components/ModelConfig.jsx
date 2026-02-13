@@ -28,18 +28,20 @@ export function ModelConfig({ setIsModelConfigOpen }) {
                     {/* <p className="text-gray-400 text-sm">Placeholder</p> */}{/* mb reset to default button here and the recommended settings button */}
 
                     <div className="flex border-b border-gray-700">
-                            <TabPromptConfigButton
-                              setSelectedTab={setSelectedTab}
-                              className={tabClassname(selectedTab === 'promptConfig')} />
-                    
-                            <TabModelConfigButton
-                              setSelectedTab={setSelectedTab}
-                              className={tabClassname(selectedTab === 'modelConfig')} />
-                          </div>
+                        <TabPromptConfigButton
+                            setSelectedTab={setSelectedTab}
+                            className={tabClassname(selectedTab === 'promptConfig')} />
 
-                    <div className="h-40 border-2 border-dashed border-gray-700 rounded-xl flex items-center justify-center text-gray-600">
-                        Placeholder for the options
+                        <TabModelConfigButton
+                            setSelectedTab={setSelectedTab}
+                            className={tabClassname(selectedTab === 'modelConfig')} />
                     </div>
+
+                    {selectedTab === 'promptConfig' &&
+                        <div className="h-40 border-2 border-dashed border-gray-700 rounded-xl flex items-center justify-center text-gray-600">
+                            Placeholder for the options
+                        </div>
+                    }
                 </div>
 
                 <button
