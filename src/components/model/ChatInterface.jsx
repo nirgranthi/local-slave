@@ -3,6 +3,8 @@ import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks';
 import { LoadingAnimation } from './LoadingAnimation';
 import CodeBlock from './CodeBlock';
+import rehypeRaw from 'rehype-raw';
+import ThinkingBlock from './ThinkingBlock';
 
 export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
     return (
@@ -19,7 +21,14 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                         : (
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm, remarkBreaks]}
+                                rehypePlugins={[rehypeRaw]}
                                 components={{
+
+                                    think: ({ children }) => (
+                                        <ThinkingBlock>
+                                            {children}
+                                        </ThinkingBlock>
+                                    ),
                                     code({ className, children, node, ...props }) {
                                         const match = /language-(\w+)/.exec(className || '');
 
@@ -66,6 +75,8 @@ export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
                                             {children}
                                         </tr>
                                     )
+
+                                    
                                 }}
                             >
                                 {isLiveTokenLive
