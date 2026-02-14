@@ -1,7 +1,7 @@
 export function TabModelConfigButton({ setSelectedTab, className }) {
     return (
         <button
-            onClick={() => { setSelectedTab('modelConfig') }}
+            onClick={() => { setSelectedTab('modelConfigTab') }}
             className={className}
         >
             Model Configs

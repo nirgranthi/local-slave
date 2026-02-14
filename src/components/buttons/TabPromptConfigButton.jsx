@@ -1,7 +1,7 @@
 export function TabPromptConfigButton({ setSelectedTab, className }) {
     return (
         <button
-            onClick={() => { setSelectedTab('promptConfig') }}
+            onClick={() => { setSelectedTab('promptConfigTab') }}
             className={className}
         >
             Prompt Configs
