@@ -3,8 +3,10 @@ import { ChatArea } from './components/ChatArea.jsx'
 import { InputArea } from './components/InputArea.jsx'
 import { Sidebar } from './components/Sidebar.jsx'
 import { MobileOverlay } from './components/MobileOverlay.jsx'
-import { WllamaChat } from "./components/js/wllama";
-import { useState } from 'react'
+import { WllamaChat } from "./components/model/wllama";
+import { useState, useRef } from 'react'
+import { ModelConfig } from './components/ModelConfig.jsx'
+import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -19,6 +21,10 @@ function App() {
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   const [isModelDownloading, setIsModelDownloading] = useState(null)
   const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
+  const stopModelReplyRef = useRef(null)
+  const [isModelConfigOpen, setIsModelConfigOpen] = useState(false)
+  const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
+  const [modelConfig, setModelConfig] = useState(modelConfigDefault)
 
   return (
     <div className='flex h-screen w-full'>
@@ -36,6 +42,7 @@ function App() {
           dlDetails={dlDetails}
           setSelectedModelUrl={setSelectedModelUrl}
           isModelDownloading={isModelDownloading}
+          setIsModelConfigOpen={setIsModelConfigOpen}
         />
       }
 
@@ -47,6 +54,7 @@ function App() {
           setIsSidebarOpen={setIsSidebarOpen}
           modelStatus={modelStatus}
           loadedModelName={loadedModelName}
+          setChatMessages={setChatMessages}
         />
 
         {/* Chat Area */}
@@ -57,10 +65,23 @@ function App() {
           userPrompt={userPrompt}
         />
 
+        {/* Model Configuration Window */}
+        {isModelConfigOpen &&
+          <ModelConfig
+            setIsModelConfigOpen={setIsModelConfigOpen}
+            setPromptConfig={setPromptConfig}
+            promptConfig={promptConfig}
+            modelConfig={modelConfig}
+            setModelConfig={setModelConfig}
+          />
+        }
+
         {/* Input */}
         <InputArea
           setUserPrompt={setUserPrompt}
           modelStatus={modelStatus}
+          isLiveTokenLive={isLiveTokenLive}
+          stopModelReplyRef={stopModelReplyRef}
         />
 
         <WllamaChat
@@ -76,6 +97,11 @@ function App() {
           setDlDetails={setDlDetails}
           setIsModelDownloading={setIsModelDownloading}
           setLoadedModelName={setLoadedModelName}
+          stopModelReplyRef={stopModelReplyRef}
+          setUserPrompt={setUserPrompt}
+          setUploadedModel={setUploadedModel}
+          promptConfig={promptConfig}
+          modelConfig={modelConfig}
         />
       </div>
     </div>

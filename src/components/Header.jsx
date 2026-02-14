@@ -1,7 +1,7 @@
 import { SidebarToggleButton } from "./buttons/SidebarToggleButton.jsx";
 import { NewChatButton } from "./buttons/NewChatButton.jsx";
 
-export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName }) {
+export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages }) {
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
@@ -13,8 +13,8 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
           <span id="header-status" className="font-bold text-sm text-gray-200">
             Local AI
           </span>
-          
-          <span id="active-model-name" className="text-[10px] text-gray-500 truncate max-w-37.5">
+
+          <span id="active-model-name" className="text-[10px] text-gray-500 max-w-50">
             {loadedModelName}
           </span>
         </div>
@@ -22,12 +22,19 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
       </div>
 
       <div className="flex items-center gap-2">
-        
-        <div className={`text-[10px] px-2 py-1 rounded ${modelStatus==='OFFLINE' ? 'bg-black/40 text-gray-400': 'bg-green-900/50 text-green-400'} font-mono hidden md:block`}>
+
+        <div className={`text-[10px] px-2 py-1 rounded 
+          ${modelStatus === 'ONLINE'
+            ? 'bg-green-900/50 text-green-400'
+            : modelStatus === 'THINKING...'
+              ? 'bg-yellow-900/50 text-yellow-400'
+              : 'bg-black/40 text-gray-400'
+          } font-mono`}
+        >
           {modelStatus}
         </div>
         {/*onClick={startNewChat}*/}
-        <NewChatButton />
+        <NewChatButton setChatMessages={setChatMessages} />
       </div>
     </div>
   )
