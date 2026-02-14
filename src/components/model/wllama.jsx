@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 import systemPrompt from './systemPrompt.txt?raw';
-import { modelConfigDefault } from './configValues';
 
 export function WllamaChat({
   userPrompt,
@@ -19,7 +18,8 @@ export function WllamaChat({
   stopModelReplyRef,
   setUserPrompt,
   setUploadedModel,
-  promptConfig
+  promptConfig,
+  modelConfig
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -52,7 +52,7 @@ export function WllamaChat({
       try {
         setModelStatus('Loading...')
         console.log(wllama)
-        await wllama.loadModel([uploadedModel], modelConfigDefault);
+        await wllama.loadModel([uploadedModel], modelConfig);
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
@@ -136,7 +136,7 @@ export function WllamaChat({
             setDlPercent(pct)
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
           },
-          ...modelConfigDefault
+          ...modelConfig
         })
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {

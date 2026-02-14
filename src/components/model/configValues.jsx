@@ -45,18 +45,20 @@ function promptConfigCPF (config) {
 ]
 return promptConfigControlPanel
 }
-
-
-const modelConfigControlPanel = [
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
-    { id: '', label: '', type: '', value: '', min: '', max: '' },
+function modelConfigCPF (config) {
+    const modelConfigControlPanel = [
+    { id: 'n_ctx', label: 'Context length', type: 'range', value: config.n_ctx, min: 0.0, max: 1024000.0 },
+    { id: 'n_batch', label: 'n_batch', type: 'range', value: config.n_batch, min: 0.0, max: 1024000.0 },
+    { id: 'n_threads', label: 'n_threads', type: 'range', value: config.n_threads, min: 1, max: 32 },
+    { id: 'seed', label: 'seed', type: 'range', value: config.seed, min: -1, max: 999999999 },
+    { id: 'cache_type_k', label: 'cache_type_k', type: 'select', value: config.cache_type_k, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
+    { id: 'cache_type_v', label: 'cache_type_v', type: 'select', value: config.cache_type_v, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
+    { id: 'flash_attn', label: 'flash_attn', type: 'toggle', value: config.flash_attn, min: '', max: '' },
+    { id: 'embedidings', label: 'embeddings', type: 'toggle', value: config.embeddings, min: '', max: '' },
+    { id: 'offload_kqv', label: 'offload_kqv', type: 'toggle', value: config.offload_kqv, min: '', max: '' }
 ]
+return modelConfigControlPanel
+}
 
-export { promptConfigDefault, modelConfigDefault, promptConfigCPF, modelConfigControlPanel }
+
+export { promptConfigDefault, modelConfigDefault, promptConfigCPF, modelConfigCPF }
