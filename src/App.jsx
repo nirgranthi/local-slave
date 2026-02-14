@@ -54,6 +54,7 @@ function App() {
           setIsSidebarOpen={setIsSidebarOpen}
           modelStatus={modelStatus}
           loadedModelName={loadedModelName}
+          setChatMessages={setChatMessages}
         />
 
         {/* Chat Area */}
