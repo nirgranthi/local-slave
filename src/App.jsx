@@ -6,6 +6,7 @@ import { MobileOverlay } from './components/MobileOverlay.jsx'
 import { WllamaChat } from "./components/model/wllama";
 import { useState, useRef } from 'react'
 import { ModelConfig } from './components/ModelConfig.jsx'
+import { promptConfigDefault } from './components/model/configValues.jsx'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -22,6 +23,7 @@ function App() {
   const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
   const stopModelReplyRef = useRef(null)
   const [isModelConfigOpen, setIsModelConfigOpen] = useState(false)
+  const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
 
   return (
     <div className='flex h-screen w-full'>
@@ -61,8 +63,9 @@ function App() {
           userPrompt={userPrompt}
         />
 
+        {/* Model Configuration Window */}
         {isModelConfigOpen &&
-          <ModelConfig setIsModelConfigOpen={setIsModelConfigOpen} />
+          <ModelConfig setIsModelConfigOpen={setIsModelConfigOpen} setPromptConfig={setPromptConfig} promptConfig={promptConfig} />
         }
 
         {/* Input */}
@@ -89,6 +92,7 @@ function App() {
           stopModelReplyRef={stopModelReplyRef}
           setUserPrompt={setUserPrompt}
           setUploadedModel={setUploadedModel}
+          promptConfig={promptConfig}
         />
       </div>
     </div>
