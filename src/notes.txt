@@ -40,7 +40,7 @@ reference wllama config
         },
         "suppressNativeLog": false,
         "taskQueue": [],
-        "taskId": 456,
+        "taskId": 9,
         "resultQueue": [],
         "busy": false,
         "worker": {},
@@ -61,8 +61,8 @@ reference wllama config
     "loadedContextInfo": {
         "_name": "load_res",
         "success": true,
-        "n_ctx": 1024,
-        "n_batch": 1024,
+        "n_ctx": 8192,
+        "n_batch": 2048,
         "n_ubatch": 512,
         "n_vocab": 2048,
         "n_ctx_train": 512,
@@ -224,5 +224,5 @@ reference wllama config
     "samplingConfig": {},
     "hasEncoder": false,
     "decoderStartToken": -1,
-    "nCachedTokens": 203
+    "nCachedTokens": 0
 }

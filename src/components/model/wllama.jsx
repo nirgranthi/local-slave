@@ -17,7 +17,9 @@ export function WllamaChat({
   setLoadedModelName,
   stopModelReplyRef,
   setUserPrompt,
-  setUploadedModel
+  setUploadedModel,
+  promptConfig,
+  modelConfig
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -49,7 +51,8 @@ export function WllamaChat({
 
       try {
         setModelStatus('Loading...')
-        await wllama.loadModel([uploadedModel], { n_ctx: 8192 });
+        console.log(wllama)
+        await wllama.loadModel([uploadedModel], modelConfig);
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
@@ -86,9 +89,11 @@ export function WllamaChat({
         console.log("Prompt is: ", prompt);
         setLiveToken('')
         setIsLiveTokenLive(true)
+        setModelStatus('THINKING...')
         const result = await wllama.createCompletion(prompt, {
           abortSignal: stopModelReplyRef.current.signal,
           n_predict: 500,
+          sampling: promptConfig,
           onNewToken: (token, piece, text) => {
             setLiveToken(text);
           }
@@ -104,6 +109,7 @@ export function WllamaChat({
         setModelStatus('ERROR')
       } finally {
         setIsLiveTokenLive(false)
+        setModelStatus('ONLINE')
         setUserPrompt('')
       }
     }
@@ -120,6 +126,7 @@ export function WllamaChat({
     const downloadModel = async () => {
       try {
         await wllama.exit()
+        console.log(wllama)
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
@@ -129,7 +136,7 @@ export function WllamaChat({
             setDlPercent(pct)
             setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
           },
-          n_ctx: 8192
+          ...modelConfig
         })
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {
