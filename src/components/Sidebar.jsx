@@ -1,5 +1,5 @@
-import { TabModelsButton } from "./buttons/TabModelsButton.jsx"
-import { TabHistoryButton } from "./buttons/TabHistoryButton.jsx"
+import { TabModelsButton } from "./Buttons.jsx"
+import { TabHistoryButton } from "./Buttons.jsx"
 import { ModelsList } from "./sidebar/modelsTab/ModelsList.jsx"
 import { useState } from "react"
 import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"

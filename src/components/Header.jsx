@@ -1,5 +1,5 @@
-import { SidebarToggleButton } from "./buttons/SidebarToggleButton.jsx";
-import { NewChatButton } from "./buttons/NewChatButton.jsx";
+import { SidebarToggleButton } from "./Buttons.jsx";
+import { NewChatButton } from "./Buttons.jsx";
 
 export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages }) {
 

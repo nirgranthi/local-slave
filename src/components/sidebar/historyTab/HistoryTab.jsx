@@ -1,4 +1,4 @@
-import { ClearAllHistoryButton } from '../../buttons/ClearAllHistoryButton.jsx';
+import { ClearAllHistoryButton } from '../../Buttons.jsx';
 
 export function HistoryTab() {
   return (

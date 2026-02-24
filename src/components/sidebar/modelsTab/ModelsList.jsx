@@ -1,4 +1,4 @@
-import { RefreshAvailableModelsButton } from "../../buttons/RefreshAvailableModelsButton.jsx"
+import { RefreshAvailableModelsButton } from "../../Buttons.jsx"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
