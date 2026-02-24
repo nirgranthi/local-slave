@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { LightningSvg } from "./svg/LightningSvg.jsx"
+import { LightningSvg } from "./SVGs.jsx"
 import { ChatInterface } from "./model/ChatInterface.jsx"
 
 export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt }) {

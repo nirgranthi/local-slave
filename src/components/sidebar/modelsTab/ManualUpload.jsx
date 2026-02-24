@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { UploadSvg } from "../../svg/UploadSvg.jsx"
+import { UploadSvg } from "../../SVGs.jsx"
 
 
 export function ManualUpload({ setUploadedModel }) {

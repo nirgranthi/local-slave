@@ -1,5 +1,5 @@
-import { HamburgerSvg } from "./svg/HamburgerSvg.jsx";
-import { PlusSvg } from "./svg/PlusSvg.jsx"
+import { HamburgerSvg } from "./SVGs.jsx";
+import { PlusSvg } from "./SVGs.jsx"
 
 export function ClearAllHistoryButton() {
     return (
