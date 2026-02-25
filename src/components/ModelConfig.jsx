@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { TabModelConfigButton } from "./buttons/TabModelConfigButton";
-import { TabPromptConfigButton } from "./buttons/TabPromptConfigButton"
+import { TabModelConfigButton } from "./Buttons.jsx";
+import { TabPromptConfigButton } from "./Buttons.jsx"
 import { promptConfigCPF, modelConfigCPF } from "./model/configValues";
 
 export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig }) {

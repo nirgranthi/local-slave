@@ -1,5 +1,5 @@
-import { TabModelsButton } from "./buttons/TabModelsButton.jsx"
-import { TabHistoryButton } from "./buttons/TabHistoryButton.jsx"
+import { TabModelsButton } from "./Buttons.jsx"
+import { TabHistoryButton } from "./Buttons.jsx"
 import { ModelsList } from "./sidebar/modelsTab/ModelsList.jsx"
 import { useState } from "react"
 import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"
@@ -7,7 +7,7 @@ import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
 
 
-export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen }) {
+export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads }) {
   const [selectedTab, setSelectedTab] = useState('models')
   const tabClassname = (modelsTab) =>
     modelsTab
@@ -33,12 +33,12 @@ export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedMod
               <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
               <ManualUpload setUploadedModel={setUploadedModel} />
 
-              {isModelDownloading && <DownloadProgressBar dlPercent={dlPercent} dlDetails={dlDetails} />}
+              {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
             </div>
           </>
         }
 
-        {selectedTab === 'history' && <HistoryTab />}
+        {selectedTab === 'history' && <HistoryTab setChatMessages={setChatMessages} />}
       </div>
 
       <div className="p-2 text-center text-[10px] rounded-lg bg-green-900/50 text-green-400 border-t border-gray-700 hover:text-white hover:bg-green-900/60">
@@ -47,7 +47,7 @@ export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedMod
         </button>
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.2.5 (Basically Ready)
+        v2.3.0 (Experimental)
       </div>
     </div>
   )
