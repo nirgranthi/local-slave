@@ -19,7 +19,8 @@ export function WllamaChat({
   setUserPrompt,
   setUploadedModel,
   promptConfig,
-  modelConfig
+  modelConfig,
+  setActiveDownloads
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -65,7 +66,7 @@ export function WllamaChat({
 
     }
     loadModel()
-  }, [wllama, uploadedModel])
+  }, [uploadedModel])
 
   /* user prompt */
   useEffect(() => {
@@ -113,27 +114,31 @@ export function WllamaChat({
       }
     }
     runAi()
-  }, [wllama, userPrompt, setChatMessages])
+  }, [userPrompt, setChatMessages])
 
   /* model download */
   useEffect(() => {
     if (!selectedModelUrl) return;
-    console.log(selectedModelUrl)
+    /* console.log(selectedModelUrl) */
 
     setIsModelDownloading(true)
 
     const downloadModel = async () => {
       try {
-        await wllama.exit()
         console.log(wllama)
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
-            const pct = Math.round((loaded / total) * 100);
+            const pct = Math.round((loaded / total) * 100)
+            const details = `${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`
+            setActiveDownloads(prev => ({
+              ...prev,
+              [selectedModelUrl]: { progress: pct, detail: details }
+            }))
             setDlPercent(pct)
-            setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+            setDlDetails(details)
           },
           ...modelConfig
         })
@@ -145,6 +150,11 @@ export function WllamaChat({
         console.log('model downloaded')
         setIsModelDownloading(false)
         setModelStatus("ONLINE")
+        setActiveDownloads(prev => {
+          const newState = { ...prev }
+          delete newState[selectedModelUrl]
+          return newState
+        })
         setDlPercent(0)
         setDlDetails('0MB / 0MB')
       }

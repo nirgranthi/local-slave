@@ -25,6 +25,7 @@ function App() {
   const [isModelConfigOpen, setIsModelConfigOpen] = useState(false)
   const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
   const [modelConfig, setModelConfig] = useState(modelConfigDefault)
+  const [activeDownloads, setActiveDownloads] = useState({})
 
   return (
     <div className='flex h-screen w-full'>
@@ -44,6 +45,7 @@ function App() {
           isModelDownloading={isModelDownloading}
           setIsModelConfigOpen={setIsModelConfigOpen}
           setChatMessages={setChatMessages}
+          activeDownloads={activeDownloads}
         />
       }
 
@@ -104,6 +106,7 @@ function App() {
           setUploadedModel={setUploadedModel}
           promptConfig={promptConfig}
           modelConfig={modelConfig}
+          setActiveDownloads={setActiveDownloads}
         />
       </div>
     </div>
