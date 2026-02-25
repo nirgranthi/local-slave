@@ -12,7 +12,7 @@ const LoadingList = () =>
   Loading list...
 </div>)
 
-const downloadedModelList = localStorage.getItem('downloadedModels')
+const downloadedModelList = localStorage.getItem('downloadedModels') || '[]'
 
 function checkIfDownloaded(url) {
   if (downloadedModelList.includes(url)) return true
