@@ -43,6 +43,7 @@ function App() {
           setSelectedModelUrl={setSelectedModelUrl}
           isModelDownloading={isModelDownloading}
           setIsModelConfigOpen={setIsModelConfigOpen}
+          setChatMessages={setChatMessages}
         />
       }
 

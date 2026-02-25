@@ -7,7 +7,7 @@ import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
 
 
-export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen }) {
+export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages }) {
   const [selectedTab, setSelectedTab] = useState('models')
   const tabClassname = (modelsTab) =>
     modelsTab
@@ -38,7 +38,7 @@ export function Sidebar({ setUploadedModel, dlPercent, dlDetails, setSelectedMod
           </>
         }
 
-        {selectedTab === 'history' && <HistoryTab />}
+        {selectedTab === 'history' && <HistoryTab setChatMessages={setChatMessages} />}
       </div>
 
       <div className="p-2 text-center text-[10px] rounded-lg bg-green-900/50 text-green-400 border-t border-gray-700 hover:text-white hover:bg-green-900/60">
