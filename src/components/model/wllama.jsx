@@ -128,7 +128,7 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
-        console.log(wllama)
+        /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
@@ -174,7 +174,6 @@ const syncCacheWithLocalStorage = async () => {
     urls.forEach(url => {
       if (url) newurls.push(url)
     })
-    console.log(newurls)
     localStorage.setItem('downloadedModels', JSON.stringify(newurls))
   } catch (err) {
     console.error('Error:', err)
