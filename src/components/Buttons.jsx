@@ -3,16 +3,28 @@ import { PlusSvg } from "./SVGs.jsx"
 
 export function ClearAllHistoryButton() {
     return (
-        <button onClick={() => {console.log('cleared all history');}} className="text-[10px] text-red-400 hover:underline">
+        <button onClick={() => { console.log('cleared all history'); }} className="text-[10px] text-red-400 hover:underline">
             Clear All
         </button>
     )
 }
 
-export function NewChatButton({setChatMessages}) {
+
+export function NewChatButton({ setChatMessages, chatMessages }) {
+    function handleNewChatButton() {
+        if (chatMessages.length > 0) {
+            let title = chatMessages[0].message
+            let sessionId = Date.now()
+            let currentSession = { title: title, sessionId: sessionId, history: [...chatMessages] }
+            let prevSessions = JSON.parse(localStorage.getItem('sessions'))
+            prevSessions = Array.isArray(prevSessions) ? prevSessions : []
+            localStorage.setItem('sessions', JSON.stringify([currentSession, ...prevSessions]))
+            setChatMessages([])
+        }
+    }
     return (
         <button
-            onClick={() => setChatMessages([])}
+            onClick={() => { handleNewChatButton() }}
             className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
         >
             <PlusSvg />
@@ -21,9 +33,9 @@ export function NewChatButton({setChatMessages}) {
     )
 }
 
-export function RefreshAvailableModelsButton ({ setRefresh }) {
+export function RefreshAvailableModelsButton({ setRefresh }) {
     return (
-        <button onClick={() => {setRefresh('refreshing...')}}
+        <button onClick={() => { setRefresh('refreshing...') }}
             className="text-[10px] text-blue-400 hover:underline">
             Refresh
         </button>
@@ -35,7 +47,7 @@ export function SendButton({ inputValue, sendMessage, modelStatus, isLiveTokenLi
         <button
             id="send-btn"
             onClick={() => sendMessage(inputValue)}
-            disabled={modelStatus==='OFFLINE'}
+            disabled={modelStatus === 'OFFLINE'}
             className={`px-6 rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-colors duration-500
                 ${!isLiveTokenLive
                     ? 'bg-blue-600 hover:bg-blue-700'
@@ -43,16 +55,16 @@ export function SendButton({ inputValue, sendMessage, modelStatus, isLiveTokenLi
                 }`}
         >
             {!isLiveTokenLive
-            ? 'Send'
-            : 'Stop'
-        }
+                ? 'Send'
+                : 'Stop'
+            }
         </button>
     )
 }
 
 
 
-export function SidebarToggleButton({isSidebarOpen, setIsSidebarOpen}) {
+export function SidebarToggleButton({ isSidebarOpen, setIsSidebarOpen }) {
     return (
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-gray-400 p-1 hover:text-white">
             <HamburgerSvg />

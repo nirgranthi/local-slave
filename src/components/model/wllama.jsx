@@ -70,7 +70,7 @@ export function WllamaChat({
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
-    console.log('wllama: ', wllama.metadata.meta['general.name'])
+    /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
     stopModelReplyRef.current = new AbortController
     const runAi = async () => {
       try {
@@ -85,8 +85,7 @@ export function WllamaChat({
           ...history,
           { content: userPrompt, role: 'user' }
         ], true
-        );
-        console.log("Prompt is: ", prompt);
+        )
         setLiveToken('')
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
@@ -98,7 +97,7 @@ export function WllamaChat({
             setLiveToken(text);
           }
         });
-        console.log("Full Reply:", result);
+        /* console.log("Full Reply:", result) */
         setChatMessages(prev => [
           ...prev,
           { sender: 'user', message: userPrompt, id: crypto.randomUUID() },

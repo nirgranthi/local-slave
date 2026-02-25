@@ -55,6 +55,7 @@ function App() {
           modelStatus={modelStatus}
           loadedModelName={loadedModelName}
           setChatMessages={setChatMessages}
+          chatMessages={chatMessages}
         />
 
         {/* Chat Area */}
