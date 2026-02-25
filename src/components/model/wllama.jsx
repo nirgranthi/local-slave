@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
 import { friendlyPrompt } from './systemPrompt.jsx';
 
+/* 
+local storage keys
+sessions, downloadedModels
+*/
+
 export function WllamaChat({
   userPrompt,
   uploadedModel,
@@ -143,7 +148,9 @@ export function WllamaChat({
         console.log('error downloading: ', error)
       }
       finally {
+        syncCacheWithLocalStorage()
         console.log('model downloaded')
+
         setIsModelDownloading(false)
         setModelStatus("ONLINE")
         setActiveDownloads(prev => {
@@ -155,6 +162,24 @@ export function WllamaChat({
     }
     downloadModel()
   }, [selectedModelUrl])
+
+  /* Sync downloaded models with local Storage */
+const syncCacheWithLocalStorage = async () => {
+  if (!wllama) return;
+  try {
+    const models = await wllama.modelManager.getModels()
+    // Extracting primary URL (sharded models ke liye array ka pehla element)
+    const urls = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
+    const newurls = []
+    urls.forEach(url => {
+      if (url) newurls.push(url)
+    })
+    console.log(newurls)
+    localStorage.setItem('downloadedModels', JSON.stringify(newurls))
+  } catch (err) {
+    console.error('Error:', err)
+  }
+};
 }
 
 
