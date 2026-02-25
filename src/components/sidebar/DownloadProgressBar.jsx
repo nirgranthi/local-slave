@@ -1,4 +1,4 @@
-export function DownloadProgressBar({ dlPercent, dlDetails, activeDownloads }) {
+export function DownloadProgressBar({ activeDownloads }) {
   const downloads = Object.entries(activeDownloads)
   return (
     downloads.map((download, i) => (

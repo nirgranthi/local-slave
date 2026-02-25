@@ -16,8 +16,6 @@ function App() {
   const [liveToken, setLiveToken] = useState('')
   const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
   const [modelStatus, setModelStatus] = useState('OFFLINE')
-  const [dlPercent, setDlPercent] = useState(0)
-  const [dlDetails, setDlDetails] = useState('0MB / 0MB')
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   const [isModelDownloading, setIsModelDownloading] = useState(null)
   const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
@@ -39,8 +37,6 @@ function App() {
       {isSidebarOpen &&
         <Sidebar
           setUploadedModel={setUploadedModel}
-          dlPercent={dlPercent}
-          dlDetails={dlDetails}
           setSelectedModelUrl={setSelectedModelUrl}
           isModelDownloading={isModelDownloading}
           setIsModelConfigOpen={setIsModelConfigOpen}
@@ -97,8 +93,6 @@ function App() {
           setIsLiveTokenLive={setIsLiveTokenLive}
           selectedModelUrl={selectedModelUrl}
           setModelStatus={setModelStatus}
-          setDlPercent={setDlPercent}
-          setDlDetails={setDlDetails}
           setIsModelDownloading={setIsModelDownloading}
           setLoadedModelName={setLoadedModelName}
           stopModelReplyRef={stopModelReplyRef}

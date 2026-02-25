@@ -11,8 +11,6 @@ export function WllamaChat({
   setIsLiveTokenLive,
   setModelStatus,
   selectedModelUrl,
-  setDlPercent,
-  setDlDetails,
   setIsModelDownloading,
   setLoadedModelName,
   stopModelReplyRef,
@@ -137,8 +135,6 @@ export function WllamaChat({
               ...prev,
               [selectedModelUrl]: { progress: pct, detail: details }
             }))
-            setDlPercent(pct)
-            setDlDetails(details)
           },
           ...modelConfig
         })
@@ -155,8 +151,6 @@ export function WllamaChat({
           delete newState[selectedModelUrl]
           return newState
         })
-        setDlPercent(0)
-        setDlDetails('0MB / 0MB')
       }
     }
     downloadModel()

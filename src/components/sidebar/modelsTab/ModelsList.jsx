@@ -51,7 +51,7 @@ export function ModelsList({ setSelectedModelUrl }) {
 
         setIsLoadingCsv(false)
         setCsvData(parsedData)
-        console.log(refresh)
+        /* console.log(refresh) */
         setRefresh('refreshed')
       } catch (error) {
         console.log(error)
@@ -68,7 +68,7 @@ export function ModelsList({ setSelectedModelUrl }) {
         </div>
         <RefreshAvailableModelsButton setRefresh={setRefresh} />
       </div>
-      <div id="csv-model-list" className="space-y-2">
+      <div className="space-y-2">
         {isloadingCsv && <LoadingList />}
         {!isloadingCsv &&
           <LoadedList csvData={csvData} setSelectedModelUrl={setSelectedModelUrl} />
