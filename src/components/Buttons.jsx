@@ -3,12 +3,11 @@ import { PlusSvg } from "./SVGs.jsx"
 
 export function ClearAllHistoryButton() {
     return (
-        <button onClick={() => { console.log('cleared all history'); }} className="text-[10px] text-red-400 hover:underline">
+        <button onClick={() => { localStorage.removeItem('sessions') }} className="text-[10px] text-red-400 hover:underline">
             Clear All
         </button>
     )
 }
-
 
 export function NewChatButton({ setChatMessages, chatMessages }) {
     function handleNewChatButton() {
@@ -61,8 +60,6 @@ export function SendButton({ inputValue, sendMessage, modelStatus, isLiveTokenLi
         </button>
     )
 }
-
-
 
 export function SidebarToggleButton({ isSidebarOpen, setIsSidebarOpen }) {
     return (
