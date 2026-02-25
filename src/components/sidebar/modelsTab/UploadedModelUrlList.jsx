@@ -8,14 +8,11 @@ export function UploadedModelUrlList({ setSelectedModelUrl }) {
         if (!userModelUrl.trim()) return;
 
         setSelectedModelUrl(userModelUrl)
-
         if (!UploadedModelUrls.includes(userModelUrl)) {
             setUploadedModelUrls(prev => [...prev, userModelUrl])
         }
-
         setUserModelUrl('')
     }
-
     return (
         <div className="w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40">
             <input
