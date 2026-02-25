@@ -4,7 +4,7 @@ export function DownloadProgressBar({ activeDownloads }) {
     downloads.map((download, i) => (
       <div key={i} className="bg-gray-900 rounded-lg p-3 border border-gray-700 mt-auto" >
         <div className="flex justify-between text-[10px] mb-1">
-          <span className="text-blue-300">Downloading...</span>
+          <span className="text-blue-300 truncate">Downloading... {download[0].split('/').pop()}</span>
           <span className="text-white font-mono">
             {`${download[1].progress}%`}
           </span>
