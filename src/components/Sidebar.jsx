@@ -27,18 +27,16 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
       </div>
 
       <div className="p-4 flex-1 overflow-y-auto space-y-6 no-scrollbar">
-        {selectedTab === 'models' &&
-          <>
-            <div className="space-y-6">
-              <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
-              <ManualUpload setUploadedModel={setUploadedModel} />
+        <div className={`space-y-6 ${selectedTab === 'models' ? '' : 'hidden'}`}>
+          <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
+          <ManualUpload setUploadedModel={setUploadedModel} />
 
-              {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
-            </div>
-          </>
-        }
+          {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
+        </div>
 
-        {selectedTab === 'history' && <HistoryTab setChatMessages={setChatMessages} />}
+        <div className={selectedTab=== 'history' ? '' : 'hidden'} >
+          <HistoryTab setChatMessages={setChatMessages} />
+        </div>
       </div>
 
       <div className="p-2 text-center text-[10px] rounded-lg bg-green-900/50 text-green-400 border-t border-gray-700 hover:text-white hover:bg-green-900/60">
