@@ -8,6 +8,7 @@ sessions, downloadedModels
 */
 
 export function WllamaChat({
+  isRecommended,
   userPrompt,
   uploadedModel,
   chatMessages,
@@ -60,6 +61,7 @@ export function WllamaChat({
         setLoadedModelName(wllama.metadata.meta['general.name'])
         setModelStatus('ONLINE')
         console.log('is model loaded: ', wllama.isModelLoaded())
+        console.log(wllama.metadata.hparams.nCtxTrain)
       } catch (error) {
         console.log('Model could not be loaded', error)
         setModelStatus('OFFLINE')
@@ -74,10 +76,12 @@ export function WllamaChat({
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
+    console.log(isRecommended)
     /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
     stopModelReplyRef.current = new AbortController
     const runAi = async () => {
       try {
+        /* update ctx here */
         setModelStatus('ONLINE')
         const history = chatMessages.map(msg => ({
           content: msg.message,

@@ -24,6 +24,7 @@ function App() {
   const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
   const [modelConfig, setModelConfig] = useState(modelConfigDefault)
   const [activeDownloads, setActiveDownloads] = useState({})
+  const [isRecommended, setIsRecommended] = useState(true)
 
   return (
     <div className='flex h-screen w-full'>
@@ -73,6 +74,7 @@ function App() {
             promptConfig={promptConfig}
             modelConfig={modelConfig}
             setModelConfig={setModelConfig}
+            setIsRecommended={setIsRecommended}
           />
         }
 
@@ -85,6 +87,7 @@ function App() {
         />
 
         <WllamaChat
+          isRecommended={isRecommended}
           userPrompt={userPrompt}
           uploadedModel={uploadedModel}
           chatMessages={chatMessages}
