@@ -104,6 +104,7 @@ function App() {
           promptConfig={promptConfig}
           modelConfig={modelConfig}
           setActiveDownloads={setActiveDownloads}
+          setModelConfig={setModelConfig}
         />
       </div>
     </div>
