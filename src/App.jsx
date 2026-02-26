@@ -34,7 +34,7 @@ function App() {
       }
 
       {/* SIDEBAR */}
-      {isSidebarOpen &&
+      <div className={isSidebarOpen ? '' : 'hidden'} >
         <Sidebar
           setUploadedModel={setUploadedModel}
           setSelectedModelUrl={setSelectedModelUrl}
@@ -43,7 +43,7 @@ function App() {
           setChatMessages={setChatMessages}
           activeDownloads={activeDownloads}
         />
-      }
+      </div>
 
       {/* MAIN CHAT */}
       <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">

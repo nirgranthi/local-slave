@@ -15,7 +15,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
       : "flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300"
 
   return (
-    <div className="fixed inset-y-0 left-0 w-80 bg-gray-800 border-r border-gray-700 z-50 transform md:translate-x-0 md:relative sidebar-transition flex flex-col shadow-2xl shrink-0">
+    <div className="fixed inset-y-0 h-full left-0 w-80 bg-gray-800 border-r border-gray-700 z-50 transform md:translate-x-0 md:relative sidebar-transition flex flex-col shadow-2xl shrink-0">
       <div className="flex border-b border-gray-700">
         <TabModelsButton
           setSelectedTab={setSelectedTab}
