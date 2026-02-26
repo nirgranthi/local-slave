@@ -16,8 +16,6 @@ function App() {
   const [liveToken, setLiveToken] = useState('')
   const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
   const [modelStatus, setModelStatus] = useState('OFFLINE')
-  const [dlPercent, setDlPercent] = useState(0)
-  const [dlDetails, setDlDetails] = useState('0MB / 0MB')
   const [selectedModelUrl, setSelectedModelUrl] = useState(null)
   const [isModelDownloading, setIsModelDownloading] = useState(null)
   const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
@@ -25,6 +23,7 @@ function App() {
   const [isModelConfigOpen, setIsModelConfigOpen] = useState(false)
   const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
   const [modelConfig, setModelConfig] = useState(modelConfigDefault)
+  const [activeDownloads, setActiveDownloads] = useState({})
 
   return (
     <div className='flex h-screen w-full'>
@@ -35,16 +34,16 @@ function App() {
       }
 
       {/* SIDEBAR */}
-      {isSidebarOpen &&
+      <div className={isSidebarOpen ? '' : 'hidden'} >
         <Sidebar
           setUploadedModel={setUploadedModel}
-          dlPercent={dlPercent}
-          dlDetails={dlDetails}
           setSelectedModelUrl={setSelectedModelUrl}
           isModelDownloading={isModelDownloading}
           setIsModelConfigOpen={setIsModelConfigOpen}
+          setChatMessages={setChatMessages}
+          activeDownloads={activeDownloads}
         />
-      }
+      </div>
 
       {/* MAIN CHAT */}
       <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">
@@ -54,6 +53,8 @@ function App() {
           setIsSidebarOpen={setIsSidebarOpen}
           modelStatus={modelStatus}
           loadedModelName={loadedModelName}
+          setChatMessages={setChatMessages}
+          chatMessages={chatMessages}
         />
 
         {/* Chat Area */}
@@ -92,8 +93,6 @@ function App() {
           setIsLiveTokenLive={setIsLiveTokenLive}
           selectedModelUrl={selectedModelUrl}
           setModelStatus={setModelStatus}
-          setDlPercent={setDlPercent}
-          setDlDetails={setDlDetails}
           setIsModelDownloading={setIsModelDownloading}
           setLoadedModelName={setLoadedModelName}
           stopModelReplyRef={stopModelReplyRef}
@@ -101,6 +100,7 @@ function App() {
           setUploadedModel={setUploadedModel}
           promptConfig={promptConfig}
           modelConfig={modelConfig}
+          setActiveDownloads={setActiveDownloads}
         />
       </div>
     </div>

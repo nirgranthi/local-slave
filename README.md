@@ -1,6 +1,37 @@
-# local-slave
-Run small LLMs directly on your device, no cloud computing needed.
+# 🤖 local-slave
 
-* *The bigger the model, the better the performance*
+**No High-End GPU? No problem.** Run powerful LLMs directly in your browser. No cloud, no subscriptions, and 100% privacy.
 
-  [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Start_Here-3b82f6?style=for-the-badge&logo=github&logoColor=white)](https://nirgranthi.github.io/local-slave/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Start_Here-3b82f6?style=for-the-badge&logo=github&logoColor=white)](https://local-slave.nirgranthi.in/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2Fnirgranthi%2Flocal-slave&label=Visitors&icon=github&color=%23198754&message=&style=flat&tz=UTC)
+---
+
+## ✨ Features
+
+- **Local Inference:** Everything runs on your device. No Data ever leaves your device.
+- **Zero Configuration:** No Complex setup. Try models on the go.
+- **Privacy First:** No cloud computing, no tracking.
+- **Performance:** Optimized for small yet capable models. *(The bigger the model, the better the performance)*.
+
+## 🛠️ Tech Stack
+
+- **Framework:** React + Vite
+- **Styling:** Tailwind CSS
+- **AI Engine:** Wllama (Web-based Llama)
+
+## 🚀 Getting Started
+
+1. **Clone the repo:**
+    ```bash
+    git clone https://github.com/nirgranthi/local-slave.git
+    cd local-slave
+    ```
+2. **Install Dependency**
+    ```bash
+    npm install
+    ```
+3. **Run Locally**
+    ```bash
+    npm run dev
+    ```

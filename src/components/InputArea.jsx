@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { SendButton } from "./buttons/SendButton.jsx";
+import { SendButton } from "./Buttons.jsx";
 
 export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef }) {
   const [inputValue, setInputValue] = useState('')

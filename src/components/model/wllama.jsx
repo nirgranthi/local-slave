@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Wllama } from '@wllama/wllama';
-import systemPrompt from './systemPrompt.txt?raw';
+import { friendlyPrompt } from './systemPrompt.jsx';
+
+/* 
+local storage keys
+sessions, downloadedModels
+*/
 
 export function WllamaChat({
   userPrompt,
@@ -11,15 +16,14 @@ export function WllamaChat({
   setIsLiveTokenLive,
   setModelStatus,
   selectedModelUrl,
-  setDlPercent,
-  setDlDetails,
   setIsModelDownloading,
   setLoadedModelName,
   stopModelReplyRef,
   setUserPrompt,
   setUploadedModel,
   promptConfig,
-  modelConfig
+  modelConfig,
+  setActiveDownloads
 }) {
   const [wllama, setWllama] = useState(null);
 
@@ -65,12 +69,12 @@ export function WllamaChat({
 
     }
     loadModel()
-  }, [wllama, uploadedModel])
+  }, [uploadedModel])
 
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
-    console.log('wllama: ', wllama.metadata.meta['general.name'])
+    /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
     stopModelReplyRef.current = new AbortController
     const runAi = async () => {
       try {
@@ -81,12 +85,11 @@ export function WllamaChat({
         }));
 
         const prompt = await wllama.formatChat([
-          { content: systemPrompt, role: 'system' },
+          { content: friendlyPrompt, role: 'system' },
           ...history,
           { content: userPrompt, role: 'user' }
         ], true
-        );
-        console.log("Prompt is: ", prompt);
+        )
         setLiveToken('')
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
@@ -98,7 +101,7 @@ export function WllamaChat({
             setLiveToken(text);
           }
         });
-        console.log("Full Reply:", result);
+        /* console.log("Full Reply:", result) */
         setChatMessages(prev => [
           ...prev,
           { sender: 'user', message: userPrompt, id: crypto.randomUUID() },
@@ -114,27 +117,29 @@ export function WllamaChat({
       }
     }
     runAi()
-  }, [wllama, userPrompt, setChatMessages])
+  }, [userPrompt, setChatMessages])
 
   /* model download */
   useEffect(() => {
     if (!selectedModelUrl) return;
-    console.log(selectedModelUrl)
+    /* console.log(selectedModelUrl) */
 
     setIsModelDownloading(true)
 
     const downloadModel = async () => {
       try {
-        await wllama.exit()
-        console.log(wllama)
+        /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
-            const pct = Math.round((loaded / total) * 100);
-            setDlPercent(pct)
-            setDlDetails(`${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`)
+            const pct = Math.round((loaded / total) * 100)
+            const details = `${(loaded / 1024 / 1024).toFixed(1)}MB / ${(total / 1024 / 1024).toFixed(1)}MB`
+            setActiveDownloads(prev => ({
+              ...prev,
+              [selectedModelUrl]: { progress: pct, detail: details }
+            }))
           },
           ...modelConfig
         })
@@ -143,15 +148,37 @@ export function WllamaChat({
         console.log('error downloading: ', error)
       }
       finally {
+        syncCacheWithLocalStorage()
         console.log('model downloaded')
+
         setIsModelDownloading(false)
         setModelStatus("ONLINE")
-        setDlPercent(0)
-        setDlDetails('0MB / 0MB')
+        setActiveDownloads(prev => {
+          const newState = { ...prev }
+          delete newState[selectedModelUrl]
+          return newState
+        })
       }
     }
     downloadModel()
   }, [selectedModelUrl])
+
+  /* Sync downloaded models with local Storage */
+const syncCacheWithLocalStorage = async () => {
+  if (!wllama) return;
+  try {
+    const models = await wllama.modelManager.getModels()
+    // Extracting primary URL (sharded models ke liye array ka pehla element)
+    const urls = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
+    const newurls = []
+    urls.forEach(url => {
+      if (url) newurls.push(url)
+    })
+    localStorage.setItem('downloadedModels', JSON.stringify(newurls))
+  } catch (err) {
+    console.error('Error:', err)
+  }
+};
 }
 
 
