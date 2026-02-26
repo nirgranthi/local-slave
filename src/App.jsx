@@ -25,6 +25,7 @@ function App() {
   const [modelConfig, setModelConfig] = useState(modelConfigDefault)
   const [activeDownloads, setActiveDownloads] = useState({})
   const [isRecommended, setIsRecommended] = useState(true)
+  const [reloadModel, setReloadModel] = useState(1)
 
   return (
     <div className='flex h-screen w-full'>
@@ -75,6 +76,7 @@ function App() {
             modelConfig={modelConfig}
             setModelConfig={setModelConfig}
             setIsRecommended={setIsRecommended}
+            setReloadModel={setReloadModel}
           />
         }
 
@@ -105,6 +107,7 @@ function App() {
           modelConfig={modelConfig}
           setActiveDownloads={setActiveDownloads}
           setModelConfig={setModelConfig}
+          reloadModel={reloadModel}
         />
       </div>
     </div>

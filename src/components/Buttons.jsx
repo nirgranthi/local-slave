@@ -114,13 +114,25 @@ export function TabPromptConfigButton({ setSelectedTab, className }) {
     )
 }
 
-export function ModelConfigDoneButton({ setIsModelConfigOpen }) {
+export function ModelConfigDoneButton({ selectedTab, setIsModelConfigOpen, setReloadModel }) {
+    /* modelConfigTab, promptConfigTab */
+    function handleClick () {
+        if (selectedTab==='promptConfigTab') {setIsModelConfigOpen(false)}
+        if (selectedTab==='modelConfigTab') {setReloadModel(prev => prev+1); setIsModelConfigOpen(false)}
+    }
     return (
         <button
-            onClick={() => setIsModelConfigOpen(false)}
-            className="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-lg font-semibold transition-colors"
+            onClick={handleClick}
+            className={`w-full mt-6 text-white py-2 rounded-lg font-semibold transition-colors
+                ${selectedTab === 'promptConfigTab'
+                    ? 'bg-blue-600 hover:bg-blue-500'
+                    : 'bg-red-600 hover:bg-red-400'
+                }`}
         >
-            Done
+            {selectedTab === 'promptConfigTab'
+                ? "Done"
+                : "Reload Model"
+            }
         </button>
     )
 }

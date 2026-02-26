@@ -5,7 +5,7 @@ import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
 import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
 import { AutoFixSvg } from "./SVGs.jsx";
 
-export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended }) {
+export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended, setReloadModel }) {
     const [selectedTab, setSelectedTab] = useState('promptConfigTab')
 
     const tabClassname = (modelsTab) =>
@@ -16,7 +16,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="bg-gray-800 border border-gray-700 w-full max-w-md p-6 rounded-2xl shadow-2xl relative animate-in fade-in zoom-in duration-200">
-                {/* <ModelConfigCloseButton setIsModelConfigOpen={setIsModelConfigOpen} /> */}
+                <ModelConfigCloseButton setIsModelConfigOpen={setIsModelConfigOpen} />
                 <h2 className="text-xl font-bold text-white mb-4">Configure Your Model</h2>
                 <div className="space-y-4">
                     {/* <p className="text-gray-400 text-sm">Placeholder</p> */}
@@ -37,7 +37,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
                                 type="checkbox"
                                 className="sr-only peer"
                                 onChange={() => setIsRecommended(prev => !prev)}
-                                checked
+                                defaultChecked
                             />
                             <div className="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 rtl:peer-checked:after:-translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-0.5 after:bg-gray-400 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500 peer-checked:after:bg-white"></div>
                         </label>
@@ -64,7 +64,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
                         setModelConfig={setModelConfig}
                     />
                 </div>
-                <ModelConfigDoneButton setIsModelConfigOpen={setIsModelConfigOpen} />
+                <ModelConfigDoneButton selectedTab={selectedTab} setIsModelConfigOpen={setIsModelConfigOpen} setReloadModel={setReloadModel} />
             </div>
         </div>
     );

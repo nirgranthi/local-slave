@@ -7,7 +7,6 @@ export function ModelConfigTab({selectedTab, modelConfig, setModelConfig}) {
             [key]: value
         }))
     }
-    console.log(modelConfig.n_ctx)
     const modelConfigControlPanel = modelConfigCPF(modelConfig)
     return (
         <div className={`h-64 overflow-y-auto pr-2 space-y-3 custom-scrollbar ${selectedTab === 'modelConfigTab' ? '' : 'hidden'}`}>

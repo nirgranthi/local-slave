@@ -25,17 +25,32 @@ export function WllamaChat({
   promptConfig,
   modelConfig,
   setActiveDownloads,
-  setModelConfig
+  setModelConfig,
+  reloadModel
 }) {
   const [wllama, setWllama] = useState(null);
   const [activeModel, setActiveModel] = useState({ type: null, file: null })
   const n_ctx = useRef(null)
 
-  const UpdateModelConfig = (value) => {
+  const UpdateModelConfig = () => {
     setModelConfig(prev => ({
       ...prev,
-      ["n_ctx"]: value
+      ["n_ctx"]: n_ctx.current
     }))
+    console.log(modelConfig)
+  }
+
+  /* this ends up deleting active downloads */
+  async function unloadModel() {
+    if (wllama.isModelLoaded()) {
+      try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
+        setLoadedModelName('No model loaded')
+      } catch (error) {
+        console.log('Error ocurred while unloading model: ', error)
+      }
+    }
   }
 
   /* wllama config */
@@ -111,25 +126,17 @@ export function WllamaChat({
       UpdateModelConfig(ctxLength)
     } */
     const loadModel = async () => {
-      if (wllama.isModelLoaded()) {
-        try {
-          await wllama.exit()
-          setModelStatus('OFFLINE')
-          setLoadedModelName('No model loaded')
-        } catch (error) {
-          console.log('Error ocurred while unloading model: ', error)
-        }
-      }
+      unloadModel()
 
       try {
         setModelStatus('Loading...')
-        setActiveModel({type: 'file', file: uploadedModel})
+        setActiveModel({ type: 'file', file: uploadedModel })
         /* console.log(wllama) */
 
         await wllama.loadModel([uploadedModel], modelConfig)
 
         setLoadedModelName(wllama.metadata.meta['general.name'])
-        n_ctx.current = wllama.metadata.meta["llama.context_length"]
+        n_ctx.current = wllama.metadata.hparams.nCtxTrain
         setModelStatus('ONLINE')
         /* console.log('is model loaded: ', wllama.isModelLoaded())
         console.log(wllama.metadata.hparams.nCtxTrain) */
@@ -151,10 +158,11 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
+        unloadModel()
         /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
-        setActiveModel({type: 'url', file: selectedModelUrl})
+        setActiveModel({ type: 'url', file: selectedModelUrl })
 
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
@@ -169,9 +177,10 @@ export function WllamaChat({
           ...modelConfig
         })
 
-        n_ctx.current = wllama.metadata.meta["llama.context_length"]
+        n_ctx.current = wllama.metadata.hparams.nCtxTrain
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {
+        setModelStatus('OFFLINE')
         console.log('error downloading: ', error)
       }
       finally {
@@ -193,9 +202,10 @@ export function WllamaChat({
   /* reloads model */
   useEffect(() => {
     const reloadModel = async () => {
-      if (!wllama || !activeModel.value) return
-
-      if (n_ctx.current) {UpdateModelConfig(n_ctx.current)}
+      if (!wllama || !activeModel.file) return
+      console.log(wllama)
+      console.log(n_ctx.current)
+      if (n_ctx.current) { UpdateModelConfig() }
 
       try {
         setModelStatus('RELOADING...')
@@ -204,12 +214,12 @@ export function WllamaChat({
         }
 
         if (activeModel.type === 'url') {
-          await wllama.loadModelFromUrl(activeModel.value, {
+          await wllama.loadModelFromUrl(activeModel.file, {
             useCache: true,
             ...modelConfig
           })
         } else if (activeModel.type === 'file') {
-          await wllama.loadModel([activeModel.value], modelConfig)
+          await wllama.loadModel([activeModel.file], modelConfig)
         }
 
         setLoadedModelName(wllama.metadata.meta['general.name']);
@@ -220,7 +230,7 @@ export function WllamaChat({
       }
     }
     reloadModel()
-  }, [])
+  }, [reloadModel])
 
   /* Sync downloaded models with local Storage */
   const syncCacheWithLocalStorage = async () => {
