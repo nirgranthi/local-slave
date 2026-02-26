@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { UploadedModelUrlsButton } from "../../Buttons";
 
 export function UploadedModelUrlList({ setSelectedModelUrl }) {
     const [userModelUrl, setUserModelUrl] = useState('')
@@ -33,16 +34,7 @@ export function UploadedModelUrlList({ setSelectedModelUrl }) {
             </div>
 
             {UploadedModelUrls.map((url, index) => (
-                <button key={index}
-                    className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
-                    onClick={() => (setSelectedModelUrl(url))}
-                >
-                    <div className="flex justify-between items-center">
-                        <div className="flex flex-col min-w-0 flex-1">
-                            <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{url.split('/').pop()}</span>
-                        </div>
-                    </div>
-                </button>
+                <UploadedModelUrlsButton index={index} url={url} setSelectedModelUrl={setSelectedModelUrl} />
             ))}
 
         </div>
