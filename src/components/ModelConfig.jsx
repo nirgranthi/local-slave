@@ -1,29 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ModelConfigCloseButton, ModelConfigDoneButton, TabModelConfigButton } from "./Buttons.jsx";
 import { TabPromptConfigButton } from "./Buttons.jsx"
-import { promptConfigCPF, modelConfigCPF } from "./model/configValues";
 import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
 import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
 
-export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig }) {
+export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended }) {
     const [selectedTab, setSelectedTab] = useState('promptConfigTab')
-    const [promptConfigControlPanel, setPromptConfigControlPanel] = useState([])
-    const [modelConfigControlPanel, setModelConfigControlPanel] = useState([])
 
     const tabClassname = (modelsTab) =>
         modelsTab
             ? "flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50"
             : "flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300"
-
-    useEffect(() => {
-        const inst = promptConfigCPF(promptConfig)
-        setPromptConfigControlPanel(inst)
-    }, [promptConfig])
-
-    useEffect(() => {
-        const inst = modelConfigCPF(modelConfig)
-        setModelConfigControlPanel(inst)
-    }, [modelConfig])
 
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -32,7 +19,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
                 <h2 className="text-xl font-bold text-white mb-4">Configure Your Model</h2>
                 <div className="space-y-4">
                     {/* <p className="text-gray-400 text-sm">Placeholder</p> */}
-                    {/* mb reset to default button here and the recommended settings button */}
+                    {/* recommended settings button */}
 
                     <div className="flex border-b border-gray-700">
                         <TabPromptConfigButton
@@ -46,12 +33,12 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
 
                     <PromptConfigTab
                         selectedTab={selectedTab}
-                        promptConfigControlPanel={promptConfigControlPanel}
+                        promptConfig={promptConfig}
                         setPromptConfig={setPromptConfig}
                     />
                     <ModelConfigTab
                         selectedTab={selectedTab}
-                        modelConfigControlPanel={modelConfigControlPanel}
+                        modelConfig={modelConfig}
                         setModelConfig={setModelConfig}
                     />
                 </div>

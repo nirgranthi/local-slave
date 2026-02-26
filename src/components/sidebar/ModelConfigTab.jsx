@@ -1,12 +1,13 @@
+import { modelConfigCPF } from "../model/configValues"
 
-
-export function ModelConfigTab({selectedTab, modelConfigControlPanel, setModelConfig}) {
+export function ModelConfigTab({selectedTab, modelConfig, setModelConfig}) {
     const handleInputChangeForModel = (key, value) => {
         setModelConfig(prev => ({
             ...prev,
             [key]: value
         }))
     }
+    const modelConfigControlPanel = modelConfigCPF(modelConfig)
     return (
         <div className={`h-64 overflow-y-auto pr-2 space-y-3 custom-scrollbar ${selectedTab === 'modelConfigTab' ? '' : 'hidden'}`}>
             {modelConfigControlPanel.map((values) => (

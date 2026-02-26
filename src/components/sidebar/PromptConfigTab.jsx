@@ -1,11 +1,13 @@
-export function PromptConfigTab({ selectedTab, promptConfigControlPanel, setPromptConfig }) {
+import { promptConfigCPF } from "../model/configValues"
+
+export function PromptConfigTab({ selectedTab, promptConfig, setPromptConfig }) {
     const handleInputChangeForPrompt = (key, value) => {
         setPromptConfig(prev => ({
             ...prev,
             [key]: value
         }))
     }
-    console.log(promptConfigControlPanel)
+    const promptConfigControlPanel = promptConfigCPF(promptConfig)
     return (
         <div className={`h-64 overflow-y-auto pr-2 space-y-3 custom-scrollbar ${selectedTab === 'promptConfigTab' ? '' : 'hidden'}`}>
             {promptConfigControlPanel.map((values) => (
