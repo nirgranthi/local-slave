@@ -1,4 +1,4 @@
-import { TabModelsButton } from "./Buttons.jsx"
+import { ModelConfigMenuButton, TabModelsButton } from "./Buttons.jsx"
 import { TabHistoryButton } from "./Buttons.jsx"
 import { ModelsList } from "./sidebar/modelsTab/ModelsList.jsx"
 import { useState } from "react"
@@ -40,12 +40,10 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
       </div>
 
       <div className="p-2 text-center text-[10px] rounded-lg bg-green-900/50 text-green-400 border-t border-gray-700 hover:text-white hover:bg-green-900/60">
-        <button className="active:scale-95 h-full w-full" onClick={() => setIsModelConfigOpen(true)} >
-          Configure Model
-        </button>
+        <ModelConfigMenuButton setIsModelConfigOpen={setIsModelConfigOpen} />
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.3.0 (Experimental)
+        v2.3.2 (Experimental)
       </div>
     </div>
   )

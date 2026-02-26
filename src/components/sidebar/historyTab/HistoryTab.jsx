@@ -1,4 +1,4 @@
-import { ClearAllHistoryButton } from '../../Buttons.jsx';
+import { ClearAllHistoryButton, RenderHistoryButton } from '../../Buttons.jsx';
 
 export function HistoryTab({ setChatMessages }) {
   let sessions = JSON.parse(localStorage.getItem('sessions'))
@@ -12,14 +12,7 @@ export function HistoryTab({ setChatMessages }) {
       <div className="space-y-1">
         {sessions.length > 0 &&
           sessions.map((session) =>
-          (<button key={session.sessionId}
-            className="w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-gray-700/30 border-gray-700/50 hover:bg-gray-700"
-            onClick={() => (setChatMessages(session.history))}
-          >
-            <div className="flex justify-between items-center">
-              <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{session.title}</span>
-            </div>
-          </button>)
+            (<RenderHistoryButton session={session} setChatMessages={setChatMessages} />)
           )}
       </div>
     </div>
