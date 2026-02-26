@@ -1,46 +1,21 @@
-import { RefreshAvailableModelsButton } from "../../Buttons.jsx"
+import { RefreshAvailableModelsButton, RenderCsvModelsButton } from "../../Buttons.jsx"
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
 
-const getModelName = (url) => {
-  return url.split('/').pop()
-}
+
 
 const LoadingList = () =>
 (<div className="text-xs text-gray-600 italic text-center py-4">
   Loading list...
 </div>)
 
-const downloadedModelList = localStorage.getItem('downloadedModels') || '[]'
 
-function checkIfDownloaded(url) {
-  if (downloadedModelList.includes(url)) return true
-  else return false
-}
 
 const LoadedList = ({ csvData, setSelectedModelUrl }) => {
   return (
     csvData.map((model, index) => (
-      <button key={index}
-        className={`w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
-                ${checkIfDownloaded(model[0])
-            ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40'
-            : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`}
-        onClick={() => (setSelectedModelUrl(model[0]))}
-      >
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
-            {checkIfDownloaded(model[0]) &&
-              <span className="text-[9px] text-green-400">
-                Available offline
-              </span>
-            }
-          </div>
-          <span className="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded whitespace-nowrap">{model[1]} MB</span>
-        </div>
-      </button>
+      <RenderCsvModelsButton index={index} model={model} setSelectedModelUrl={setSelectedModelUrl} />
     ))
   )
 }

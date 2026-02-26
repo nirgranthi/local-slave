@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Wllama } from '@wllama/wllama';
 import { friendlyPrompt } from './systemPrompt.jsx';
 
@@ -8,6 +8,7 @@ sessions, downloadedModels
 */
 
 export function WllamaChat({
+  isRecommended,
   userPrompt,
   uploadedModel,
   chatMessages,
@@ -23,9 +24,34 @@ export function WllamaChat({
   setUploadedModel,
   promptConfig,
   modelConfig,
-  setActiveDownloads
+  setActiveDownloads,
+  setModelConfig,
+  reloadModel
 }) {
   const [wllama, setWllama] = useState(null);
+  const [activeModel, setActiveModel] = useState({ type: null, file: null })
+  const n_ctx = useRef(null)
+
+  const UpdateModelConfig = () => {
+    setModelConfig(prev => ({
+      ...prev,
+      ["n_ctx"]: n_ctx.current
+    }))
+    console.log(modelConfig)
+  }
+
+  /* this ends up deleting active downloads */
+  async function unloadModel() {
+    if (wllama.isModelLoaded()) {
+      try {
+        await wllama.exit()
+        setModelStatus('OFFLINE')
+        setLoadedModelName('No model loaded')
+      } catch (error) {
+        console.log('Error ocurred while unloading model: ', error)
+      }
+    }
+  }
 
   /* wllama config */
   useEffect(() => {
@@ -41,39 +67,10 @@ export function WllamaChat({
     }
   }, [])
 
-  /* uploaded model */
-  useEffect(() => {
-    if (!uploadedModel) return;
-    const loadModel = async () => {
-      try {
-        await wllama.exit()
-        setModelStatus('OFFLINE')
-        setLoadedModelName('No model loaded')
-      } catch (error) {
-        console.log('Error ocurred while unloading model: ', error)
-      }
-
-      try {
-        setModelStatus('Loading...')
-        console.log(wllama)
-        await wllama.loadModel([uploadedModel], modelConfig);
-        setLoadedModelName(wllama.metadata.meta['general.name'])
-        setModelStatus('ONLINE')
-        console.log('is model loaded: ', wllama.isModelLoaded())
-      } catch (error) {
-        console.log('Model could not be loaded', error)
-        setModelStatus('OFFLINE')
-      } finally {
-        setUploadedModel(null)
-      }
-
-    }
-    loadModel()
-  }, [uploadedModel])
-
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
+    console.log(isRecommended)
     /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
     stopModelReplyRef.current = new AbortController
     const runAi = async () => {
@@ -119,18 +116,54 @@ export function WllamaChat({
     runAi()
   }, [userPrompt, setChatMessages])
 
+  /* uploaded model */
+  useEffect(() => {
+    if (!uploadedModel) return;
+    /* update ctx here */
+    /* if (isRecommended) {
+      console.log(wllama)
+      const ctxLength = wllama.metadata.meta["llama.context_length"] || 16384
+      UpdateModelConfig(ctxLength)
+    } */
+    const loadModel = async () => {
+      unloadModel()
+
+      try {
+        setModelStatus('Loading...')
+        setActiveModel({ type: 'file', file: uploadedModel })
+        /* console.log(wllama) */
+
+        await wllama.loadModel([uploadedModel], modelConfig)
+
+        setLoadedModelName(wllama.metadata.meta['general.name'])
+        n_ctx.current = wllama.metadata.hparams.nCtxTrain
+        setModelStatus('ONLINE')
+        /* console.log('is model loaded: ', wllama.isModelLoaded())
+        console.log(wllama.metadata.hparams.nCtxTrain) */
+      } catch (error) {
+        console.log('Model could not be loaded', error)
+        setModelStatus('OFFLINE')
+      } finally {
+        setUploadedModel(null)
+      }
+    }
+    loadModel()
+  }, [uploadedModel])
+
   /* model download */
   useEffect(() => {
     if (!selectedModelUrl) return;
     /* console.log(selectedModelUrl) */
-
     setIsModelDownloading(true)
 
     const downloadModel = async () => {
       try {
+        unloadModel()
         /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
+        setActiveModel({ type: 'url', file: selectedModelUrl })
+
         await wllama.loadModelFromUrl(selectedModelUrl, {
           useCache: true,
           progressCallback: ({ loaded, total }) => {
@@ -143,8 +176,11 @@ export function WllamaChat({
           },
           ...modelConfig
         })
+
+        n_ctx.current = wllama.metadata.hparams.nCtxTrain
         setLoadedModelName(wllama.metadata.meta['general.name'])
       } catch (error) {
+        setModelStatus('OFFLINE')
         console.log('error downloading: ', error)
       }
       finally {
@@ -163,22 +199,55 @@ export function WllamaChat({
     downloadModel()
   }, [selectedModelUrl])
 
+  /* reloads model */
+  useEffect(() => {
+    const reloadModel = async () => {
+      if (!wllama || !activeModel.file) return
+      console.log(wllama)
+      console.log(n_ctx.current)
+      if (n_ctx.current) { UpdateModelConfig() }
+
+      try {
+        setModelStatus('RELOADING...')
+        if (wllama.isModelLoaded()) {
+          await wllama.exit()
+        }
+
+        if (activeModel.type === 'url') {
+          await wllama.loadModelFromUrl(activeModel.file, {
+            useCache: true,
+            ...modelConfig
+          })
+        } else if (activeModel.type === 'file') {
+          await wllama.loadModel([activeModel.file], modelConfig)
+        }
+
+        setLoadedModelName(wllama.metadata.meta['general.name']);
+        setModelStatus('ONLINE')
+      } catch (error) {
+        console.error("Reloading failed:", error)
+        setModelStatus('ERROR')
+      }
+    }
+    reloadModel()
+  }, [reloadModel])
+
   /* Sync downloaded models with local Storage */
-const syncCacheWithLocalStorage = async () => {
-  if (!wllama) return;
-  try {
-    const models = await wllama.modelManager.getModels()
-    // Extracting primary URL (sharded models ke liye array ka pehla element)
-    const urls = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
-    const newurls = []
-    urls.forEach(url => {
-      if (url) newurls.push(url)
-    })
-    localStorage.setItem('downloadedModels', JSON.stringify(newurls))
-  } catch (err) {
-    console.error('Error:', err)
-  }
-};
+  const syncCacheWithLocalStorage = async () => {
+    if (!wllama) return;
+    try {
+      const models = await wllama.modelManager.getModels()
+      // Extracting primary URL (sharded models ke liye array ka pehla element)
+      const urls = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
+      const newurls = []
+      urls.forEach(url => {
+        if (url) newurls.push(url)
+      })
+      localStorage.setItem('downloadedModels', JSON.stringify(newurls))
+    } catch (err) {
+      console.error('Error:', err)
+    }
+  };
 }
 
 

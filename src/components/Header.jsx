@@ -5,16 +5,16 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
 
         <SidebarToggleButton isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-        <div className="flex flex-col">
-          <span id="header-status" className="font-bold text-sm text-gray-200">
+        <div className="flex flex-col min-w-31">
+          <span className="font-bold text-sm text-gray-200">
             Local AI
           </span>
 
-          <span id="active-model-name" className="text-[10px] text-gray-500 max-w-50">
+          <span className="text-[10px] text-gray-500 truncate">
             {loadedModelName}
           </span>
         </div>
@@ -33,7 +33,6 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
         >
           {modelStatus}
         </div>
-        {/*onClick={startNewChat}*/}
         <NewChatButton setChatMessages={setChatMessages} chatMessages={chatMessages} />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { UploadSvg } from "../../SVGs.jsx"
+import { UploadedModelFilesButton } from "../../Buttons.jsx"
 
 
 export function ManualUpload({ setUploadedModel }) {
@@ -35,16 +36,7 @@ export function ManualUpload({ setUploadedModel }) {
       </label>
 
       {uploadedModelFiles.map((file, index) => (
-        <button key={index}
-          className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
-          onClick={() => (setUploadedModel(file))}
-        >
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col min-w-0 flex-1">
-              <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{file.name}</span>
-            </div>
-          </div>
-        </button>
+        <UploadedModelFilesButton index={index} setUploadedModel={setUploadedModel} file={file} />
       ))}
 
     </div>
