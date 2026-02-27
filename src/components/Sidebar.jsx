@@ -74,8 +74,9 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
             />
             <button 
               onClick={() => {
-                setSystemPrompt(customPrompt);
-                console.log('Saved custom prompt:', customPrompt);
+                setSystemPrompt(customPrompt)
+                /* console.log('Saved prompt:', customPrompt) */
+                setSystemPromptType('')
               }}
               className="w-full p-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition-all active:scale-95"
             >
