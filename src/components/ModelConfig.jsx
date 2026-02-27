@@ -29,6 +29,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
                             className={tabClassname(selectedTab === 'modelConfigTab')} />
                     </div>
 
+                    {/* watch out for the hints, they easily get out the window */}
                     <PromptConfigTab
                         selectedTab={selectedTab}
                         promptConfig={promptConfig}

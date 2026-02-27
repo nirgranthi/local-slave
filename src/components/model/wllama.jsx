@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
 import { Wllama } from '@wllama/wllama';
-import { friendlyPrompt } from './systemPrompt.jsx';
 
 /* 
 local storage keys
@@ -9,6 +8,7 @@ sessions, downloadedModels
 */
 
 export function WllamaChat({
+  systemPrompt,
   isRecommended,
   setIsRecommended,
   userPrompt,
@@ -43,7 +43,7 @@ export function WllamaChat({
     console.log(modelConfig)
   }
 
-  /* this ends up deleting active downloads */
+  /* this ends up deleting active downloads, i think it will be fixed if i use a different wllama instance for downloading models */
   async function unloadModel() {
     if (wllama.isModelLoaded()) {
       try {
@@ -73,7 +73,8 @@ export function WllamaChat({
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
-    console.log(isRecommended)
+    /* console.log(systemPrompt)
+    console.log(isRecommended) */
     /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
     stopModelReplyRef.current = new AbortController
     const runAi = async () => {
@@ -85,11 +86,12 @@ export function WllamaChat({
         }));
 
         const prompt = await wllama.formatChat([
-          { content: friendlyPrompt, role: 'system' },
+          { content: systemPrompt, role: 'system' },
           ...history,
           { content: userPrompt, role: 'user' }
         ], true
         )
+        /* console.log(history) */
         setLiveToken('')
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
@@ -112,6 +114,7 @@ export function WllamaChat({
         setModelStatus('ERROR')
       } finally {
         setIsLiveTokenLive(false)
+        /* console.log(chatMessages) */
         setModelStatus('ONLINE')
         setUserPrompt('')
       }
@@ -161,7 +164,7 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
-        unloadModel()
+        await unloadModel()
         /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')

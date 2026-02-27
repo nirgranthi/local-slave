@@ -150,8 +150,11 @@ export function ModelConfigCloseButton({ setIsModelConfigOpen }) {
 
 export function ModelConfigMenuButton({ setIsModelConfigOpen }) {
     return (
-        <button className="active:scale-95 h-full w-full" onClick={() => setIsModelConfigOpen(true)} >
-            Configure Model
+        <button
+            className="flex-1 p-2 bg-gray-800 hover:bg-gray-700 text-blue-400 rounded-lg text-xs font-bold border border-gray-700 transition-all active:scale-95"
+            onClick={() => setIsModelConfigOpen(true)}
+        >
+            ⚙️ Configure
         </button>
     )
 }
