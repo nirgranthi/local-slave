@@ -161,7 +161,7 @@ export function WllamaChat({
 
     const downloadModel = async () => {
       try {
-        unloadModel()
+        await unloadModel()
         /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
