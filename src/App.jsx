@@ -24,7 +24,7 @@ function App() {
   const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
   const [modelConfig, setModelConfig] = useState(modelConfigDefault)
   const [activeDownloads, setActiveDownloads] = useState({})
-  const [isRecommended, setIsRecommended] = useState(true)
+  const [isRecommended, setIsRecommended] = useState(false)
   const [reloadModel, setReloadModel] = useState(1)
 
   return (
@@ -90,6 +90,7 @@ function App() {
 
         <WllamaChat
           isRecommended={isRecommended}
+          setIsRecommended={setIsRecommended}
           userPrompt={userPrompt}
           uploadedModel={uploadedModel}
           chatMessages={chatMessages}
@@ -108,6 +109,7 @@ function App() {
           setActiveDownloads={setActiveDownloads}
           setModelConfig={setModelConfig}
           reloadModel={reloadModel}
+          setIsModelConfigOpen={setIsModelConfigOpen}
         />
       </div>
     </div>

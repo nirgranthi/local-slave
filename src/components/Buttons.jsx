@@ -118,7 +118,7 @@ export function ModelConfigDoneButton({ selectedTab, setIsModelConfigOpen, setRe
     /* modelConfigTab, promptConfigTab */
     function handleClick () {
         if (selectedTab==='promptConfigTab') {setIsModelConfigOpen(false)}
-        if (selectedTab==='modelConfigTab') {setReloadModel(prev => prev+1); setIsModelConfigOpen(false)}
+        if (selectedTab==='modelConfigTab') {setReloadModel(prev => prev+1)}
     }
     return (
         <button

@@ -9,6 +9,7 @@ sessions, downloadedModels
 
 export function WllamaChat({
   isRecommended,
+  setIsRecommended,
   userPrompt,
   uploadedModel,
   chatMessages,
@@ -26,7 +27,8 @@ export function WllamaChat({
   modelConfig,
   setActiveDownloads,
   setModelConfig,
-  reloadModel
+  reloadModel,
+  setIsModelConfigOpen
 }) {
   const [wllama, setWllama] = useState(null);
   const [activeModel, setActiveModel] = useState({ type: null, file: null })
@@ -126,7 +128,7 @@ export function WllamaChat({
       UpdateModelConfig(ctxLength)
     } */
     const loadModel = async () => {
-      unloadModel()
+      await unloadModel()
 
       try {
         setModelStatus('Loading...')
@@ -203,9 +205,11 @@ export function WllamaChat({
   useEffect(() => {
     const reloadModel = async () => {
       if (!wllama || !activeModel.file) return
-      console.log(wllama)
+      /* console.log(wllama) */
       console.log(n_ctx.current)
-      if (n_ctx.current) { UpdateModelConfig() }
+      if (isRecommended) { UpdateModelConfig() }
+      setIsRecommended(false)
+      setIsModelConfigOpen(false)
 
       try {
         setModelStatus('RELOADING...')
@@ -230,7 +234,7 @@ export function WllamaChat({
       }
     }
     reloadModel()
-  }, [reloadModel])
+  }, [reloadModel, isRecommended])
 
   /* Sync downloaded models with local Storage */
   const syncCacheWithLocalStorage = async () => {
