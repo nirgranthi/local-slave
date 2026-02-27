@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { ModelConfigCloseButton, ModelConfigDoneButton, TabModelConfigButton } from "./Buttons.jsx";
+import { ModelConfigCloseButton, ModelConfigDoneButton, RecommendedButton, TabModelConfigButton } from "./Buttons.jsx";
 import { TabPromptConfigButton } from "./Buttons.jsx"
 import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
 import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
-import { AutoFixSvg } from "./SVGs.jsx";
 
 export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended, setReloadModel }) {
     const [selectedTab, setSelectedTab] = useState('promptConfigTab')
@@ -19,23 +18,7 @@ export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfi
                 <ModelConfigCloseButton setIsModelConfigOpen={setIsModelConfigOpen} />
                 <h2 className="text-xl font-bold text-white mb-4">Configure Your Model</h2>
                 <div className="space-y-4">
-                    {/* <p className="text-gray-400 text-sm">Placeholder</p> */}
-                    {/* recommended settings button */}
-                    <button
-                        className="flex w-full cursor-pointer items-center justify-between p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl group hover:border-blue-500/30 transition-all duration-300"
-                        onClick={() => setIsRecommended(true)}
-                    >
-                        <div className="flex items-center space-x-3">
-                            <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform duration-300">
-                                <AutoFixSvg />
-                            </div>
-                            <div>
-                                <h4 className="text-xs font-bold text-white leading-none">Recommended Mode</h4>
-                                <p className="text-[10px] text-gray-500 mt-1 pl-6">For Most optimal Context Length</p>
-                            </div>
-                        </div>
-                    </button>
-
+                    <RecommendedButton setIsRecommended={setIsRecommended} />
                     <div className="flex border-b border-gray-700">
                         <TabPromptConfigButton
                             setSelectedTab={setSelectedTab}

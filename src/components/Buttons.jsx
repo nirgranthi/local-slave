@@ -1,4 +1,4 @@
-import { HamburgerSvg } from "./SVGs.jsx";
+import { AutoFixSvg, HamburgerSvg } from "./SVGs.jsx";
 import { PlusSvg } from "./SVGs.jsx"
 import { useState } from "react";
 
@@ -116,9 +116,9 @@ export function TabPromptConfigButton({ setSelectedTab, className }) {
 
 export function ModelConfigDoneButton({ selectedTab, setIsModelConfigOpen, setReloadModel }) {
     /* modelConfigTab, promptConfigTab */
-    function handleClick () {
-        if (selectedTab==='promptConfigTab') {setIsModelConfigOpen(false)}
-        if (selectedTab==='modelConfigTab') {setReloadModel(prev => prev+1)}
+    function handleClick() {
+        if (selectedTab === 'promptConfigTab') { setIsModelConfigOpen(false) }
+        if (selectedTab === 'modelConfigTab') { setReloadModel(prev => prev + 1) }
     }
     return (
         <button
@@ -264,6 +264,25 @@ export function RenderCsvModelsButton({ index, model, setSelectedModelUrl }) {
                     }
                 </div>
                 <span className="text-[10px] text-gray-500 bg-black/20 px-1.5 py-0.5 rounded whitespace-nowrap">{model[1]} MB</span>
+            </div>
+        </button>
+    )
+}
+
+export function RecommendedButton({ setIsRecommended }) {
+    return (
+        <button
+            className="flex w-full cursor-pointer items-center justify-between p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl group hover:border-blue-500/30 transition-all duration-300"
+            onClick={() => setIsRecommended(true)}
+        >
+            <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                    <AutoFixSvg />
+                </div>
+                <div>
+                    <h4 className="text-xs font-bold text-white leading-none">Recommended Mode</h4>
+                    <p className="text-[10px] text-gray-500 mt-1 pl-6">For Most optimal Context Length</p>
+                </div>
             </div>
         </button>
     )
