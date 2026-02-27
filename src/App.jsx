@@ -7,6 +7,7 @@ import { WllamaChat } from "./components/model/wllama";
 import { useState, useRef } from 'react'
 import { ModelConfig } from './components/ModelConfig.jsx'
 import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
+import  friendlyPrompt  from '/systemPrompts/friendlyPrompt.txt?raw'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -26,6 +27,7 @@ function App() {
   const [activeDownloads, setActiveDownloads] = useState({})
   const [isRecommended, setIsRecommended] = useState(false)
   const [reloadModel, setReloadModel] = useState(1)
+  const [systemPrompt, setSystemPrompt] = useState(friendlyPrompt)
 
   return (
     <div className='flex h-screen w-full'>
@@ -44,6 +46,7 @@ function App() {
           setIsModelConfigOpen={setIsModelConfigOpen}
           setChatMessages={setChatMessages}
           activeDownloads={activeDownloads}
+          setSystemPrompt={setSystemPrompt}
         />
       </div>
 
@@ -89,6 +92,7 @@ function App() {
         />
 
         <WllamaChat
+        systemPrompt={systemPrompt}
           isRecommended={isRecommended}
           setIsRecommended={setIsRecommended}
           userPrompt={userPrompt}
