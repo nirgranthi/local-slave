@@ -16,7 +16,7 @@ const promptConfigDefault = {
 }
 
 const modelConfigDefault = {
-    n_ctx: 8192,
+    n_ctx: 65536,
     n_batch: 1024,
     n_threads: 15,
     seed: -1,
