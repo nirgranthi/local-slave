@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
 import { Wllama } from '@wllama/wllama';
 import { friendlyPrompt } from './systemPrompt.jsx';
