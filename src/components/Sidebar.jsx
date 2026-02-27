@@ -43,7 +43,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         <ModelConfigMenuButton setIsModelConfigOpen={setIsModelConfigOpen} />
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.3.2 (Experimental)
+        v2.3.3 (Experimental)
       </div>
     </div>
   )

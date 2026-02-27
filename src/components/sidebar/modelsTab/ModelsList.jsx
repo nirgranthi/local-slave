@@ -15,7 +15,7 @@ const LoadingList = () =>
 const LoadedList = ({ csvData, setSelectedModelUrl }) => {
   return (
     csvData.map((model, index) => (
-      <RenderCsvModelsButton index={index} model={model} setSelectedModelUrl={setSelectedModelUrl} />
+      <RenderCsvModelsButton key={index} model={model} setSelectedModelUrl={setSelectedModelUrl} />
     ))
   )
 }

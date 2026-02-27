@@ -36,7 +36,7 @@ export function ManualUpload({ setUploadedModel }) {
       </label>
 
       {uploadedModelFiles.map((file, index) => (
-        <UploadedModelFilesButton index={index} setUploadedModel={setUploadedModel} file={file} />
+        <UploadedModelFilesButton key={index} setUploadedModel={setUploadedModel} file={file} />
       ))}
 
     </div>
