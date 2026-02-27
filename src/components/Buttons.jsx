@@ -272,7 +272,7 @@ export function RenderCsvModelsButton({ index, model, setSelectedModelUrl }) {
 export function RecommendedButton({ setIsRecommended }) {
     return (
         <button
-            className="flex w-full cursor-pointer items-center justify-between p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl group hover:border-blue-500/30 transition-all duration-300"
+            className="flex w-full items-center justify-between p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl group hover:border-blue-500/30 transition-all duration-300"
             onClick={() => setIsRecommended(true)}
         >
             <div className="flex items-center space-x-3">

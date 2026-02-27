@@ -5,6 +5,10 @@
   display: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
