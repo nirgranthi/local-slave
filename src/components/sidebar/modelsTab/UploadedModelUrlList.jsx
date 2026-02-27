@@ -34,7 +34,7 @@ export function UploadedModelUrlList({ setSelectedModelUrl }) {
             </div>
 
             {UploadedModelUrls.map((url, index) => (
-                <UploadedModelUrlsButton index={index} url={url} setSelectedModelUrl={setSelectedModelUrl} />
+                <UploadedModelUrlsButton key={index} url={url} setSelectedModelUrl={setSelectedModelUrl} />
             ))}
 
         </div>

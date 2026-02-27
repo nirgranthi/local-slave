@@ -194,8 +194,9 @@ export function ShowThinkingButton({ setIsThinkingBlockOpen, isThinkingBlockOpen
 }
 
 export function RenderHistoryButton({ session, setChatMessages }) {
+    /* key={session.sessionId} */
     return (
-        <button key={session.sessionId}
+        <button
             className="w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-gray-700/30 border-gray-700/50 hover:bg-gray-700"
             onClick={() => (setChatMessages(session.history))}
         >
@@ -206,9 +207,9 @@ export function RenderHistoryButton({ session, setChatMessages }) {
     )
 }
 
-export function UploadedModelFilesButton({ index, setUploadedModel, file }) {
+export function UploadedModelFilesButton({ setUploadedModel, file }) {
     return (
-        <button key={index}
+        <button
             className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
             onClick={() => (setUploadedModel(file))}
         >
@@ -221,9 +222,9 @@ export function UploadedModelFilesButton({ index, setUploadedModel, file }) {
     )
 }
 
-export function UploadedModelUrlsButton({ index, url, setSelectedModelUrl }) {
+export function UploadedModelUrlsButton({ url, setSelectedModelUrl }) {
     return (
-        <button key={index}
+        <button
             className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
             onClick={() => (setSelectedModelUrl(url))}
         >
@@ -236,7 +237,7 @@ export function UploadedModelUrlsButton({ index, url, setSelectedModelUrl }) {
     )
 }
 
-export function RenderCsvModelsButton({ index, model, setSelectedModelUrl }) {
+export function RenderCsvModelsButton({ model, setSelectedModelUrl }) {
     const getModelName = (url) => {
         return url.split('/').pop()
     }
@@ -247,7 +248,7 @@ export function RenderCsvModelsButton({ index, model, setSelectedModelUrl }) {
         else return false
     }
     return (
-        <button key={index}
+        <button
             className={`w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
                 ${checkIfDownloaded(model[0])
                     ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40'

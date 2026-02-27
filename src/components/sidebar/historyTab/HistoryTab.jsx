@@ -11,8 +11,8 @@ export function HistoryTab({ setChatMessages }) {
       </div>
       <div className="space-y-1">
         {sessions.length > 0 &&
-          sessions.map((session) =>
-            (<RenderHistoryButton session={session} setChatMessages={setChatMessages} />)
+          sessions.map((session, i) =>
+            (<RenderHistoryButton key={i} session={session} setChatMessages={setChatMessages} />)
           )}
       </div>
     </div>
