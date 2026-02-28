@@ -1,6 +1,6 @@
 import { ClearAllHistoryButton, RenderHistoryButton } from '../../Buttons.jsx';
 
-export function HistoryTab({ setChatMessages }) {
+export function HistoryTab({ setCurrentSessionId, setChatMessages }) {
   let sessions = JSON.parse(localStorage.getItem('sessions'))
   sessions = sessions ? sessions : []
   return (
@@ -12,7 +12,7 @@ export function HistoryTab({ setChatMessages }) {
       <div className="space-y-1">
         {sessions.length > 0 &&
           sessions.map((session, i) =>
-            (<RenderHistoryButton key={i} session={session} setChatMessages={setChatMessages} />)
+            (<RenderHistoryButton key={i} setCurrentSessionId={setCurrentSessionId} session={session} setChatMessages={setChatMessages} />)
           )}
       </div>
     </div>

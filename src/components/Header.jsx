@@ -1,7 +1,7 @@
 import { SidebarToggleButton } from "./Buttons.jsx";
 import { NewChatButton } from "./Buttons.jsx";
 
-export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages, chatMessages }) {
+export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages, setCurrentSessionId }) {
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
@@ -33,7 +33,7 @@ export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedMod
         >
           {modelStatus}
         </div>
-        <NewChatButton setChatMessages={setChatMessages} chatMessages={chatMessages} />
+        <NewChatButton setCurrentSessionId={setCurrentSessionId} setChatMessages={setChatMessages} />
       </div>
     </div>
   )
