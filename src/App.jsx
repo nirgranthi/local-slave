@@ -4,10 +4,10 @@ import { InputArea } from './components/InputArea.jsx'
 import { Sidebar } from './components/Sidebar.jsx'
 import { MobileOverlay } from './components/MobileOverlay.jsx'
 import { WllamaChat } from "./components/model/wllama";
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ModelConfig } from './components/ModelConfig.jsx'
 import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
-import  friendlyPrompt  from '/systemPrompts/friendlyPrompt.txt?raw'
+import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -28,6 +28,36 @@ function App() {
   const [isRecommended, setIsRecommended] = useState(false)
   const [reloadModel, setReloadModel] = useState(1)
   const [systemPrompt, setSystemPrompt] = useState(friendlyPrompt)
+  const [currentSessionId, setCurrentSessionId] = useState(null)
+
+  useEffect(() => {
+    if (chatMessages.length === 0) {
+      setCurrentSessionId(null)
+      return
+    }
+
+    let sessions = JSON.parse(localStorage.getItem('sessions')) || []
+    let sessionId = currentSessionId
+
+    if (!sessionId) {
+      sessionId = Date.now()
+      setCurrentSessionId(sessionId)
+      const newSession = {
+        title: chatMessages[0].message,
+        sessionId: sessionId,
+        history: chatMessages
+      }
+      localStorage.setItem('sessions', JSON.stringify([newSession, ...sessions]))
+    } else {
+      const updatedSessions = sessions.map(session =>
+        session.sessionId === sessionId
+          ? { ...session, history: chatMessages, title: chatMessages[0].message }
+          : session
+      )
+      localStorage.setItem('sessions', JSON.stringify(updatedSessions))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatMessages])
 
   return (
     <div className='flex h-screen w-full'>
@@ -47,6 +77,7 @@ function App() {
           setChatMessages={setChatMessages}
           activeDownloads={activeDownloads}
           setSystemPrompt={setSystemPrompt}
+          setCurrentSessionId={setCurrentSessionId}
         />
       </div>
 
@@ -59,7 +90,7 @@ function App() {
           modelStatus={modelStatus}
           loadedModelName={loadedModelName}
           setChatMessages={setChatMessages}
-          chatMessages={chatMessages}
+          setCurrentSessionId={setCurrentSessionId}
         />
 
         {/* Chat Area */}
@@ -92,7 +123,7 @@ function App() {
         />
 
         <WllamaChat
-        systemPrompt={systemPrompt}
+          systemPrompt={systemPrompt}
           isRecommended={isRecommended}
           setIsRecommended={setIsRecommended}
           userPrompt={userPrompt}

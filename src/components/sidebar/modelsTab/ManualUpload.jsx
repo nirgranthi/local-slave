@@ -9,7 +9,7 @@ export function ManualUpload({ setUploadedModel }) {
     const file = e.target.files[0]
     if (file) {
       setUploadedModel(file)
-      console.log('file uploaded', file.name)
+      /* console.log('file uploaded', file.name) */
       if (!uploadedModelFiles.includes(file)) {
         setUploadedModelFiles(prev => [...prev, file])
       }
@@ -19,7 +19,7 @@ export function ManualUpload({ setUploadedModel }) {
     <div className="border-t border-gray-700 pt-4">
       <div className="text-xs text-gray-400 uppercase font-bold mb-2">Manual Upload</div>
       <label
-        className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:border-blue-500 transition-colors bg-gray-800/50">
+        className="flex flex-col mb-1 items-center justify-center w-full h-24 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 hover:border-blue-500 transition-colors bg-gray-800/50">
 
         <div className="flex flex-col items-center justify-center pt-2 pb-3">
           <UploadSvg />

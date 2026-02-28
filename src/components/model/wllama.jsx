@@ -40,7 +40,7 @@ export function WllamaChat({
       ...prev,
       ["n_ctx"]: n_ctx.current
     }))
-    console.log(modelConfig)
+    /* console.log(modelConfig) */
   }
 
   /* this ends up deleting active downloads, i think it will be fixed if i use a different wllama instance for downloading models */
@@ -191,7 +191,7 @@ export function WllamaChat({
       }
       finally {
         syncCacheWithLocalStorage()
-        console.log('model downloaded')
+        /* console.log('model downloaded') */
 
         setIsModelDownloading(false)
         setModelStatus("ONLINE")
@@ -210,7 +210,7 @@ export function WllamaChat({
     const reloadModel = async () => {
       if (!wllama || !activeModel.file) return
       /* console.log(wllama) */
-      console.log(n_ctx.current)
+      /* console.log(n_ctx.current) */
       if (isRecommended) { UpdateModelConfig() }
       setIsRecommended(false)
       setIsModelConfigOpen(false)

@@ -10,21 +10,13 @@ export function ClearAllHistoryButton() {
     )
 }
 
-export function NewChatButton({ setChatMessages, chatMessages }) {
-    function handleNewChatButton() {
-        if (chatMessages.length > 0) {
-            let title = chatMessages[0].message
-            let sessionId = Date.now()
-            let currentSession = { title: title, sessionId: sessionId, history: [...chatMessages] }
-            let prevSessions = JSON.parse(localStorage.getItem('sessions'))
-            prevSessions = Array.isArray(prevSessions) ? prevSessions : []
-            localStorage.setItem('sessions', JSON.stringify([currentSession, ...prevSessions]))
-            setChatMessages([])
-        }
-    }
+export function NewChatButton({ setCurrentSessionId, setChatMessages }) {
     return (
         <button
-            onClick={() => { handleNewChatButton() }}
+            onClick={() => {
+                setChatMessages([])
+                setCurrentSessionId(null)
+            }}
             className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
         >
             <PlusSvg />
@@ -141,7 +133,7 @@ export function ModelConfigCloseButton({ setIsModelConfigOpen }) {
     return (
         <button
             onClick={() => setIsModelConfigOpen(false)}
-            className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            className="absolute p-2 top-4 right-4 text-gray-400 hover:text-white"
         >
             X
         </button>
@@ -164,7 +156,7 @@ export function CopyCodeBlockButton({ value }) {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(value)
-        console.log('code block copied')
+        /* console.log('code block copied') */
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
@@ -196,12 +188,15 @@ export function ShowThinkingButton({ setIsThinkingBlockOpen, isThinkingBlockOpen
     )
 }
 
-export function RenderHistoryButton({ session, setChatMessages }) {
+export function RenderHistoryButton({ setCurrentSessionId, session, setChatMessages }) {
     /* key={session.sessionId} */
     return (
         <button
             className="w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-gray-700/30 border-gray-700/50 hover:bg-gray-700"
-            onClick={() => (setChatMessages(session.history))}
+            onClick={() => {
+                setCurrentSessionId(session.sessionId)
+                setChatMessages(session.history)
+            }}
         >
             <div className="flex justify-between items-center">
                 <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{session.title}</span>

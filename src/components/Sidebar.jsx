@@ -9,7 +9,7 @@ import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw" /* import from pu
 import  friendlyPrompt  from "/systemPrompts/friendlyPrompt.txt?raw"
 
 
-export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt }) {
+export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId }) {
   const [selectedTab, setSelectedTab] = useState('models')
   const [systemPromptType, setSystemPromptType] = useState('');
   const [customPrompt, setCustomPrompt] = useState('');
@@ -39,7 +39,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         </div>
 
         <div className={selectedTab === 'history' ? '' : 'hidden'} >
-          <HistoryTab setChatMessages={setChatMessages} />
+          <HistoryTab setCurrentSessionId={setCurrentSessionId} setChatMessages={setChatMessages} />
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.3.4 (Experimental)
+        v2.4 (Stable) 28022026
       </div>
     </div>
   )

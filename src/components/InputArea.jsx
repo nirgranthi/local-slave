@@ -25,7 +25,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
       setUserPrompt(inputValue)
       setInputValue('')
     } else {
-      console.log('Stopping model reply...')
+      /* console.log('Stopping model reply...') */
       stopModelReplyRef.current.abort()
     }
   };
