@@ -16,9 +16,9 @@ const promptConfigDefault = {
 }
 
 const modelConfigDefault = {
-    n_ctx: 65536,
+    n_ctx: 8192,
     n_batch: 1024,
-    n_threads: 15,
+    n_threads: 8,
     seed: -1,
     cache_type_k: "f16",
     cache_type_v: 'f16',
@@ -47,15 +47,15 @@ return promptConfigControlPanel
 }
 function modelConfigCPF (config) {
     const modelConfigControlPanel = [
-    { id: 'n_ctx', label: 'Context length', hint: "The AI's short-term memory. How many total words/tokens the model can 'remember' in a single conversation.", type: 'range', value: config.n_ctx, min: 0.0, max: 1024000.0 },
-    { id: 'n_batch', label: 'Batch size', hint: 'Processing throughput. How many chunks of text the AI swallows at once. Higher = faster processing of long prompts but uses more RAM.', type: 'range', value: config.n_batch, min: 0.0, max: 1024000.0 },
-    { id: 'n_threads', label: 'CPU threads', hint: 'Muscle power. The number of CPU cores dedicated to thinking. Set this to your actual CPU core count for best speed.', type: 'range', value: config.n_threads, min: 1, max: 32 },
-    { id: 'seed', label: 'Random seed', hint: 'The DNA of the answer. Using the same seed with the same settings will give you the exact same response every time. -1 for random.', type: 'range', value: config.seed, min: -1, max: 999999999 },
-    { id: 'cache_type_k', label: 'KV Cache Precision (Keys)', hint: 'Key Memory quality. Higher (f32/f16) means more precision; lower (q4_0/q8_0) saves RAM but might make the AI slightly "forgetful."', type: 'select', value: config.cache_type_k, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
-    { id: 'cache_type_v', label: 'KV Cache Precision (Values)', hint: "Value Memory quality. Same as above. It’s the second half of the AI's 'workspace' memory.", type: 'select', value: config.cache_type_v, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
-    { id: 'flash_attn', label: 'Flash Attention', hint: 'Nitro boost. An optimization that makes the model faster and use less memory during long conversations. Keep it ON if your hardware supports it.', type: 'toggle', value: config.flash_attn, min: '', max: '' },
-    { id: 'embedidings', label: 'Embedding mode', hint: 'Vector mode. Turn this on only if you are using the AI to compare pieces of text or build a search engine. Usually not needed for chatting.', type: 'toggle', value: config.embeddings, min: '', max: '' },
-    { id: 'offload_kqv', label: 'GPU KV Offloading', hint: 'GPU Hand-off. Moves the heaviest math from your CPU to your GPU. Makes things much faster if you have a decent graphics card.', type: 'toggle', value: config.offload_kqv, min: '', max: '' }
+    { id: 'n_ctx', label: 'Context length', hint: "The AI's short-term memory. How many total words/tokens the model can 'remember' in a single conversation.", type: 'range', step: '100', value: config.n_ctx, min: 0.0, max: 1024000.0 },
+    { id: 'n_batch', label: 'Batch size', hint: 'Processing throughput. How many chunks of text the AI swallows at once. Higher = faster processing of long prompts but uses more RAM.', type: 'range', step: '100', value: config.n_batch, min: 0.0, max: 1024000.0 },
+    { id: 'n_threads', label: 'CPU threads', hint: 'Muscle power. The number of CPU cores dedicated to thinking. Set this to your actual CPU core count for best speed.', type: 'range', step: '1', value: config.n_threads, min: 1, max: 16 },
+    { id: 'seed', label: 'Random seed', hint: 'The DNA of the answer. Using the same seed with the same settings will give you the exact same response every time. -1 for random.', type: 'range', step: '1', value: config.seed, min: -1, max: 999999999 },
+    { id: 'cache_type_k', label: 'KV Cache Precision (Keys)', hint: 'Key Memory quality. Higher (f32/f16) means more precision; lower (q4_0/q8_0) saves RAM but might make the AI slightly "forgetful."', type: 'select', step: '1', value: config.cache_type_k, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
+    { id: 'cache_type_v', label: 'KV Cache Precision (Values)', hint: "Value Memory quality. Same as above. It’s the second half of the AI's 'workspace' memory.", type: 'select', step: '1', value: config.cache_type_v, min: '', max: '', options: ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] },
+    { id: 'flash_attn', label: 'Flash Attention', hint: 'Nitro boost. An optimization that makes the model faster and use less memory during long conversations. Keep it ON if your hardware supports it.', type: 'toggle', step: '1', value: config.flash_attn, min: '', max: '' },
+    { id: 'embedidings', label: 'Embedding mode', hint: 'Vector mode. Turn this on only if you are using the AI to compare pieces of text or build a search engine. Usually not needed for chatting.', type: 'toggle', step: '1', value: config.embeddings, min: '', max: '' },
+    { id: 'offload_kqv', label: 'GPU KV Offloading', hint: 'GPU Hand-off. Moves the heaviest math from your CPU to your GPU. Makes things much faster if you have a decent graphics card.', type: 'toggle', step: '1', value: config.offload_kqv, min: '', max: '' }
 ]
 return modelConfigControlPanel
 }
