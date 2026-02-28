@@ -12,13 +12,22 @@
 - **Local Inference:** Everything runs on your device. No Data ever leaves your device.
 - **Zero Configuration:** No Complex setup. Try models on the go.
 - **Privacy First:** No cloud computing, no tracking.
-- **Performance:** Optimized for small yet capable models. *(The bigger the model, the better the performance)*.
+- **Performance:** Optimized for small yet capable models.
+- **Multi Threading:** Boosts performance by utilizing Multi Threading.
 
 ## 🛠️ Tech Stack
 
 - **Framework:** React + Vite
 - **Styling:** Tailwind CSS
 - **AI Engine:** Wllama (Web-based Llama)
+
+## 😎 Know how
+
+- If you're getting magic number error, it is probably because you have set the context length more than the model can handle. To fix this, just lower your context length.
+- I'll recommend not downloading the models from the local slave page, downloading them directly from huggingface is a faster way.
+- The initial context length is 8K, after loading the model, you can click on the recommended mode in the Configure to automatically set the optimal context length according to the model.
+- After tweaking settings in the model configs, you need to reload the model to apply those settings, or you can also tweak those before loading the model.
+- You don't need to reload the model after tweaking prompt configs.
 
 ## 🚀 Getting Started
 

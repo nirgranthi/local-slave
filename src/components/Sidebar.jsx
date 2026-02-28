@@ -86,7 +86,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.3.4 (Experimental)
+        v2.4 (Stable) 28022026
       </div>
     </div>
   )
