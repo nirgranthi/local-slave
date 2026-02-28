@@ -9,7 +9,7 @@ export function ManualUpload({ setUploadedModel }) {
     const file = e.target.files[0]
     if (file) {
       setUploadedModel(file)
-      console.log('file uploaded', file.name)
+      /* console.log('file uploaded', file.name) */
       if (!uploadedModelFiles.includes(file)) {
         setUploadedModelFiles(prev => [...prev, file])
       }

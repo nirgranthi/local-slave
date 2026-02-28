@@ -156,7 +156,7 @@ export function CopyCodeBlockButton({ value }) {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(value)
-        console.log('code block copied')
+        /* console.log('code block copied') */
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
     }
