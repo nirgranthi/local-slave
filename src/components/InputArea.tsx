@@ -34,7 +34,6 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
       <div className="max-w-3xl mx-auto relative flex gap-2">
         <textarea
           ref={textAreaRef}
-          type="text"
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
           onKeyDown={handleKeyDown}

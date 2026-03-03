@@ -36,6 +36,7 @@ export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt 
             <ChatInterface
               sender='user'
               message={userPrompt}
+              liveToken=''
               isLiveTokenLive={false}
             />
 

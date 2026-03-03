@@ -256,10 +256,6 @@ export function WllamaChat({
       console.error('Error:', err)
     }
   };
+
+  return null;
 }
-
-
-
-
-
-

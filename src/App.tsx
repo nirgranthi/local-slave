@@ -36,7 +36,7 @@ function App() {
       return
     }
 
-    let sessions = JSON.parse(localStorage.getItem('sessions')) || []
+    const sessions = JSON.parse(localStorage.getItem('sessions')) || []
     let sessionId = currentSessionId
 
     if (!sessionId) {
@@ -56,7 +56,7 @@ function App() {
       )
       localStorage.setItem('sessions', JSON.stringify(updatedSessions))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatMessages])
 
   return (
