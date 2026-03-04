@@ -9,26 +9,29 @@ import { ModelConfig } from './components/ModelConfig.jsx'
 import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
 import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
 
+import type { chatMessagesProps, progressDetail } from './components/types.js'
+import type { promptConfigDefaultProps, modelConfigDefaultProps } from './components/model/configValues.jsx'
+
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [uploadedModel, setUploadedModel] = useState(null)
-  const [userPrompt, setUserPrompt] = useState('')
-  const [chatMessages, setChatMessages] = useState([])
-  const [liveToken, setLiveToken] = useState('')
-  const [isLiveTokenLive, setIsLiveTokenLive] = useState(false)
-  const [modelStatus, setModelStatus] = useState('OFFLINE')
-  const [selectedModelUrl, setSelectedModelUrl] = useState(null)
-  const [isModelDownloading, setIsModelDownloading] = useState(null)
-  const [loadedModelName, setLoadedModelName] = useState('No Model Loaded')
-  const stopModelReplyRef = useRef(null)
-  const [isModelConfigOpen, setIsModelConfigOpen] = useState(false)
-  const [promptConfig, setPromptConfig] = useState(promptConfigDefault)
-  const [modelConfig, setModelConfig] = useState(modelConfigDefault)
-  const [activeDownloads, setActiveDownloads] = useState({})
-  const [isRecommended, setIsRecommended] = useState(false)
-  const [reloadModel, setReloadModel] = useState(1)
-  const [systemPrompt, setSystemPrompt] = useState(friendlyPrompt)
-  const [currentSessionId, setCurrentSessionId] = useState(null)
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [uploadedModel, setUploadedModel] = useState<File | null>(null)
+  const [userPrompt, setUserPrompt] = useState<string>('')
+  const [chatMessages, setChatMessages] = useState<chatMessagesProps[]>([])
+  const [liveToken, setLiveToken] = useState<string>('')
+  const [isLiveTokenLive, setIsLiveTokenLive] = useState<boolean>(false)
+  const [modelStatus, setModelStatus] = useState<string>('OFFLINE')
+  const [selectedModelUrl, setSelectedModelUrl] = useState<URL | null>(null)
+  const [isModelDownloading, setIsModelDownloading] = useState<boolean>(false)
+  const [loadedModelName, setLoadedModelName] = useState<string>('No Model Loaded')
+  const stopModelReplyRef = useRef<AbortController>(null)
+  const [isModelConfigOpen, setIsModelConfigOpen] = useState<boolean>(false)
+  const [promptConfig, setPromptConfig] = useState<promptConfigDefaultProps>(promptConfigDefault)
+  const [modelConfig, setModelConfig] = useState<modelConfigDefaultProps>(modelConfigDefault)
+  const [activeDownloads, setActiveDownloads] = useState<Record<string, progressDetail>>({})
+  const [isRecommended, setIsRecommended] = useState<boolean>(false)
+  const [reloadModel, setReloadModel] = useState<number>(1)
+  const [systemPrompt, setSystemPrompt] = useState<string>(friendlyPrompt)
+  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null)
 
   useEffect(() => {
     if (chatMessages.length === 0) {
