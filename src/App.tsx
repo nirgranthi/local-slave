@@ -10,7 +10,7 @@ import { promptConfigDefault, modelConfigDefault } from './components/model/conf
 import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
 
 import type { chatMessagesProps, progressDetail } from './components/types.js'
-import type { promptConfigDefaultProps, modelConfigDefaultProps } from './components/model/configValues.jsx'
+import type { modelConfigDefaultProps, promptConfigDefaultProps } from './components/types.js'
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -38,8 +38,8 @@ function App() {
       setCurrentSessionId(null)
       return
     }
-
-    const sessions = JSON.parse(localStorage.getItem('sessions')) || []
+    const data = localStorage.getItem('sessions') || '[]'
+    const sessions = JSON.parse(data)
     let sessionId = currentSessionId
 
     if (!sessionId) {

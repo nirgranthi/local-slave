@@ -3,10 +3,10 @@ import { SendButton } from "./Buttons.jsx";
 
 export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef }) {
   const [inputValue, setInputValue] = useState('')
-  const textAreaRef = useRef(null)
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
-    if (textAreaRef) {
+    if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto'
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
     }
