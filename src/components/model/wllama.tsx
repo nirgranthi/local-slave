@@ -228,12 +228,12 @@ export function WllamaChat({
           await wllama.exit()
         }
 
-        if (activeModel.type === 'url') {
+        if (activeModel.type === 'url' && typeof activeModel.file === 'string') {
           await wllama.loadModelFromUrl(activeModel.file, {
             useCache: true,
             ...modelConfig
           })
-        } else if (activeModel.type === 'file') {
+        } else if (activeModel.type === 'file' && activeModel.file instanceof File) {
           await wllama.loadModel([activeModel.file], modelConfig)
         }
 
@@ -253,7 +253,7 @@ export function WllamaChat({
     try {
       const models = await wllama.modelManager.getModels()
       // Extracting primary URL (sharded models ke liye array ka pehla element)
-      const urls: [string] = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
+      const urls: string[] = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
       const newurls: string[] = []
       urls.forEach(url => {
         if (url) newurls.push(url)
