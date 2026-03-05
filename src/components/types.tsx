@@ -4,6 +4,12 @@ export interface chatMessagesProps {
     sender: string
 };
 
+export interface sessionProps {
+    title: chatMessagesProps['message'],
+    sessionId: number,
+    history: chatMessagesProps[]
+}
+
 export interface progressDetail {
     progress: number,
     detail: string
@@ -41,3 +47,4 @@ export interface modelConfigDefaultProps {
     embeddings: boolean,
     offload_kqv: boolean
 };
+

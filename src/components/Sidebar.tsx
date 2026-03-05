@@ -13,7 +13,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
   const [selectedTab, setSelectedTab] = useState('models')
   const [systemPromptType, setSystemPromptType] = useState('');
   const [customPrompt, setCustomPrompt] = useState('');
-  const tabClassname = (modelsTab) =>
+  const tabClassname = (modelsTab: boolean) =>
     modelsTab
       ? "flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50"
       : "flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300"
