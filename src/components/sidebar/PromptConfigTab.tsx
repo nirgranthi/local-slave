@@ -1,7 +1,9 @@
+import { useStates } from "../Context"
 import { promptConfigCPF } from "../model/configValues"
 
-export function PromptConfigTab({ selectedTab, promptConfig, setPromptConfig }) {
-    const handleInputChangeForPrompt = (key, value) => {
+export function PromptConfigTab({ selectedTab }: {selectedTab: string}) {
+    const { promptConfig, setPromptConfig } = useStates()
+    const handleInputChangeForPrompt = (key: string, value: string) => {
         setPromptConfig(prev => ({
             ...prev,
             [key]: value

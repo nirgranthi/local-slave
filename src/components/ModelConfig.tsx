@@ -6,11 +6,10 @@ import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
 import { useStates } from "./Context.js";
 
 export function ModelConfig() {
-    const { setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended, setReloadModel } = useStates()
 
-    const [selectedTab, setSelectedTab] = useState('promptConfigTab')
+    const [selectedTab, setSelectedTab] = useState<string>('promptConfigTab')
 
-    const tabClassname = (modelsTab) =>
+    const tabClassname = (modelsTab: boolean) =>
         modelsTab
             ? "flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50"
             : "flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300"
@@ -18,10 +17,10 @@ export function ModelConfig() {
     return (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="bg-gray-800 border border-gray-700 w-full max-w-md p-6 rounded-2xl shadow-2xl relative animate-in fade-in zoom-in duration-200">
-                <ModelConfigCloseButton setIsModelConfigOpen={setIsModelConfigOpen} />
+                <ModelConfigCloseButton />
                 <h2 className="text-xl font-bold text-white mb-4">Configure Your Model</h2>
                 <div className="space-y-4">
-                    <RecommendedButton setIsRecommended={setIsRecommended} />
+                    <RecommendedButton />
                     <div className="flex border-b border-gray-700">
                         <TabPromptConfigButton
                             setSelectedTab={setSelectedTab}
@@ -32,19 +31,14 @@ export function ModelConfig() {
                             className={tabClassname(selectedTab === 'modelConfigTab')} />
                     </div>
 
-                    {/* watch out for the hints, they easily get out the window */}
                     <PromptConfigTab
                         selectedTab={selectedTab}
-                        promptConfig={promptConfig}
-                        setPromptConfig={setPromptConfig}
                     />
                     <ModelConfigTab
                         selectedTab={selectedTab}
-                        modelConfig={modelConfig}
-                        setModelConfig={setModelConfig}
                     />
                 </div>
-                <ModelConfigDoneButton selectedTab={selectedTab} setIsModelConfigOpen={setIsModelConfigOpen} setReloadModel={setReloadModel} />
+                <ModelConfigDoneButton selectedTab={selectedTab} />
             </div>
         </div>
     );

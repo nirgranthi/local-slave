@@ -98,7 +98,7 @@ export function TabModelsButton({ setSelectedTab, className }) {
     )
 }
 
-export function TabPromptConfigButton({ setSelectedTab, className }) {
+export function TabPromptConfigButton({ setSelectedTab, className }: { setSelectedTab: React.Dispatch<React.SetStateAction<string>>; className: string; }) {
     return (
         <button
             onClick={() => { setSelectedTab('promptConfigTab') }}
@@ -109,7 +109,8 @@ export function TabPromptConfigButton({ setSelectedTab, className }) {
     )
 }
 
-export function ModelConfigDoneButton({ selectedTab, setIsModelConfigOpen, setReloadModel }) {
+export function ModelConfigDoneButton({ selectedTab }: { selectedTab: string}) {
+    const { setIsModelConfigOpen, setReloadModel } = useStates()
     /* modelConfigTab, promptConfigTab */
     function handleClick() {
         if (selectedTab === 'promptConfigTab') { setIsModelConfigOpen(false) }
@@ -132,7 +133,8 @@ export function ModelConfigDoneButton({ selectedTab, setIsModelConfigOpen, setRe
     )
 }
 
-export function ModelConfigCloseButton({ setIsModelConfigOpen }) {
+export function ModelConfigCloseButton() {
+    const { setIsModelConfigOpen } = useStates()
     return (
         <button
             onClick={() => setIsModelConfigOpen(false)}
@@ -273,7 +275,8 @@ export function RenderCsvModelsButton({ model, setSelectedModelUrl }) {
     )
 }
 
-export function RecommendedButton({ setIsRecommended }) {
+export function RecommendedButton() {
+    const { setIsRecommended } = useStates()
     return (
         <button
             className="flex w-full items-center justify-between p-4 bg-blue-500/5 border border-blue-500/10 rounded-2xl group hover:border-blue-500/30 transition-all duration-300"

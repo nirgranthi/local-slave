@@ -17,7 +17,7 @@ export interface progressDetail {
 
 export const cache_type_options = ['f32', 'f16', 'q8_0', 'q5_1', 'q5_0', 'q4_1', 'q4_0'] as const;
 
-type cacheTypeOptions = typeof cache_type_options[number];
+export type cacheTypeOptions = typeof cache_type_options[number];
 
 export interface promptConfigDefaultProps {
     temp: number,
