@@ -1,9 +1,12 @@
-import { useEffect, useRef } from "react";
+import { ReactHTMLElement, RefObject, useEffect, useRef } from "react";
 import { LightningSvg } from "./SVGs.jsx"
 import { ChatInterface } from "./model/ChatInterface.jsx"
+import { useStates } from "./Context.js";
 
-export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt }) {
-  const scrollRef = useRef(null)
+export function ChatArea() {
+  const { chatMessages, liveToken, isLiveTokenLive, userPrompt } = useStates()
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (scrollRef.current) {

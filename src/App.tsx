@@ -14,7 +14,7 @@ import type { chatMessagesProps, progressDetail } from './components/types.js'
 import type { modelConfigDefaultProps, promptConfigDefaultProps, sessionProps } from './components/types.js'
 
 function App() {
-  const { chatMessages, currentSessionId, setCurrentSessionId, isSidebarOpen } = useStates()
+  const { chatMessages, currentSessionId, setCurrentSessionId, isSidebarOpen, isModelConfigOpen } = useStates()
 
   useEffect(() => {
     if (chatMessages.length === 0) {
@@ -64,24 +64,11 @@ function App() {
           <Header />
 
           {/* Chat Area */}
-          <ChatArea
-            chatMessages={chatMessages}
-            liveToken={liveToken}
-            isLiveTokenLive={isLiveTokenLive}
-            userPrompt={userPrompt}
-          />
+          <ChatArea />
 
           {/* Model Configuration Window */}
           {isModelConfigOpen &&
-            <ModelConfig
-              setIsModelConfigOpen={setIsModelConfigOpen}
-              setPromptConfig={setPromptConfig}
-              promptConfig={promptConfig}
-              modelConfig={modelConfig}
-              setModelConfig={setModelConfig}
-              setIsRecommended={setIsRecommended}
-              setReloadModel={setReloadModel}
-            />
+            <ModelConfig />
           }
 
           {/* Input */}

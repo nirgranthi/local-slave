@@ -3,8 +3,11 @@ import { ModelConfigCloseButton, ModelConfigDoneButton, RecommendedButton, TabMo
 import { TabPromptConfigButton } from "./Buttons.jsx"
 import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
 import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
+import { useStates } from "./Context.js";
 
-export function ModelConfig({ setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended, setReloadModel }) {
+export function ModelConfig() {
+    const { setIsModelConfigOpen, setPromptConfig, promptConfig, modelConfig, setModelConfig, setIsRecommended, setReloadModel } = useStates()
+
     const [selectedTab, setSelectedTab] = useState('promptConfigTab')
 
     const tabClassname = (modelsTab) =>
