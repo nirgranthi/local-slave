@@ -1,7 +1,7 @@
-import { RefreshAvailableModelsButton, RenderCsvModelsButton } from "../../Buttons.jsx"
+import { RefreshAvailableModelsButton, RenderCsvModelsButton } from "../../Buttons.tsx"
 import { useState, useEffect } from "react"
 import axios from "axios"
-import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
+import { UploadedModelUrlList } from "./UploadedModelUrlList.tsx"
 
 
 export function ModelsList() {

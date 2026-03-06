@@ -1,5 +1,5 @@
-import { ClearAllHistoryButton, RenderHistoryButton } from '../../Buttons.jsx';
-import { sessionProps } from '../../types.js';
+import { ClearAllHistoryButton, RenderHistoryButton } from '../../Buttons.tsx';
+import { sessionProps } from '../../types.tsx';
 
 export function HistoryTab() {
   let sessions: Array<sessionProps> = JSON.parse(localStorage.getItem('sessions') || '[]')

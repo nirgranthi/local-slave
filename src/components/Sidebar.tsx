@@ -1,13 +1,13 @@
-import { ModelConfigMenuButton, TabModelsButton } from "./Buttons.jsx"
-import { TabHistoryButton } from "./Buttons.jsx"
-import { ModelsList } from "./sidebar/modelsTab/ModelsList.jsx"
+import { ModelConfigMenuButton, TabModelsButton } from "./Buttons.tsx"
+import { TabHistoryButton } from "./Buttons.tsx"
+import { ModelsList } from "./sidebar/modelsTab/ModelsList.tsx"
 import { useState } from "react"
-import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"
-import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
-import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
+import { HistoryTab } from "./sidebar/historyTab/HistoryTab.tsx"
+import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.tsx"
+import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.tsx"
 import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw"
 import  friendlyPrompt  from "/systemPrompts/friendlyPrompt.txt?raw"
-import { useStates } from "./Context.js"
+import { useStates } from "./Context.tsx"
 
 
 export function Sidebar() {

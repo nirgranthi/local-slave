@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { UploadSvg } from "../../SVGs.jsx"
-import { UploadedModelFilesButton } from "../../Buttons.jsx"
-import { useStates } from "../../Context.js"
+import { UploadSvg } from "../../SVGs.tsx"
+import { UploadedModelFilesButton } from "../../Buttons.tsx"
+import { useStates } from "../../Context.tsx"
 
 
 export function ManualUpload() {
