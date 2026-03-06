@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { UploadedModelUrlsButton } from "../../Buttons";
+import { useStates } from "../../Context";
 
-export function UploadedModelUrlList({ setSelectedModelUrl }) {
-    const [userModelUrl, setUserModelUrl] = useState('')
-    const [UploadedModelUrls, setUploadedModelUrls] = useState([])
+export function UploadedModelUrlList() {
+    const { setSelectedModelUrl } = useStates()
+
+    const [userModelUrl, setUserModelUrl] = useState<string>('')
+    const [UploadedModelUrls, setUploadedModelUrls] = useState<Array<string>>([])
 
     const sendMessage = () => {
         if (!userModelUrl.trim()) return;
@@ -34,7 +37,7 @@ export function UploadedModelUrlList({ setSelectedModelUrl }) {
             </div>
 
             {UploadedModelUrls.map((url, index) => (
-                <UploadedModelUrlsButton key={index} url={url} setSelectedModelUrl={setSelectedModelUrl} />
+                <UploadedModelUrlsButton key={index} url={url} />
             ))}
 
         </div>

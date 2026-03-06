@@ -1,15 +1,20 @@
-import { useState } from "react"
+import { InputEventHandler, useState } from "react"
 import { UploadSvg } from "../../SVGs.jsx"
 import { UploadedModelFilesButton } from "../../Buttons.jsx"
+import { useStates } from "../../Context.js"
 
 
-export function ManualUpload({ setUploadedModel }) {
-  const [uploadedModelFiles, setUploadedModelFiles] = useState([])
-  const handleFile = (e) => {
-    const file = e.target.files[0]
+export function ManualUpload() {
+  const {setUploadedModel } = useStates()
+
+  const [uploadedModelFiles, setUploadedModelFiles] = useState<File[]>([])
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+
+    const file = files[0]
     if (file) {
       setUploadedModel(file)
-      /* console.log('file uploaded', file.name) */
       if (!uploadedModelFiles.includes(file)) {
         setUploadedModelFiles(prev => [...prev, file])
       }
@@ -36,7 +41,7 @@ export function ManualUpload({ setUploadedModel }) {
       </label>
 
       {uploadedModelFiles.map((file, index) => (
-        <UploadedModelFilesButton key={index} setUploadedModel={setUploadedModel} file={file} />
+        <UploadedModelFilesButton key={index} file={file} />
       ))}
 
     </div>

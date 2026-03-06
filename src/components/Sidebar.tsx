@@ -11,11 +11,11 @@ import { useStates } from "./Context.js"
 
 
 export function Sidebar() {
-  const { setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId } = useStates()
+  const { isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId } = useStates()
 
-  const [selectedTab, setSelectedTab] = useState('models')
-  const [systemPromptType, setSystemPromptType] = useState('');
-  const [customPrompt, setCustomPrompt] = useState('');
+  const [selectedTab, setSelectedTab] = useState<string>('models')
+  const [systemPromptType, setSystemPromptType] = useState<string>('');
+  const [customPrompt, setCustomPrompt] = useState<string>('');
   const tabClassname = (modelsTab: boolean) =>
     modelsTab
       ? "flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50"
@@ -35,8 +35,8 @@ export function Sidebar() {
 
       <div className="p-4 flex-1 overflow-y-auto space-y-6 no-scrollbar">
         <div className={`space-y-6 ${selectedTab === 'models' ? '' : 'hidden'}`}>
-          <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
-          <ManualUpload setUploadedModel={setUploadedModel} />
+          <ModelsList />
+          <ManualUpload />
 
           {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
         </div>

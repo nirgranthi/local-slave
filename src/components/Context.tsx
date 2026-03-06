@@ -19,8 +19,8 @@ interface StateContextProps {
     setIsLiveTokenLive: React.Dispatch<React.SetStateAction<boolean>>,
     modelStatus: string,
     setModelStatus: React.Dispatch<React.SetStateAction<string>>,
-    selectedModelUrl: URL | null,
-    setSelectedModelUrl: React.Dispatch<React.SetStateAction<URL | null>>,
+    selectedModelUrl: string | null,
+    setSelectedModelUrl: React.Dispatch<React.SetStateAction<string | null>>,
     isModelDownloading: boolean,
     setIsModelDownloading: React.Dispatch<React.SetStateAction<boolean>>,
     loadedModelName: string,
@@ -54,7 +54,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [liveToken, setLiveToken] = useState<string>('')
     const [isLiveTokenLive, setIsLiveTokenLive] = useState<boolean>(false)
     const [modelStatus, setModelStatus] = useState<string>('OFFLINE')
-    const [selectedModelUrl, setSelectedModelUrl] = useState<URL | null>(null)
+    const [selectedModelUrl, setSelectedModelUrl] = useState<string | null>(null)
     const [isModelDownloading, setIsModelDownloading] = useState<boolean>(false)
     const [loadedModelName, setLoadedModelName] = useState<string>('No Model Loaded')
     const [isModelConfigOpen, setIsModelConfigOpen] = useState<boolean>(false)

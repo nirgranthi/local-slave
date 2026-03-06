@@ -1,3 +1,4 @@
+import { useStates } from "./Context.js";
 import { AutoFixSvg, HamburgerSvg } from "./SVGs.jsx";
 import { PlusSvg } from "./SVGs.jsx"
 import { useState } from "react";
@@ -205,7 +206,8 @@ export function RenderHistoryButton({ setCurrentSessionId, session, setChatMessa
     )
 }
 
-export function UploadedModelFilesButton({ setUploadedModel, file }) {
+export function UploadedModelFilesButton({ file }: {key: number, file: File}) {
+    const {setUploadedModel} = useStates()
     return (
         <button
             className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
@@ -220,7 +222,8 @@ export function UploadedModelFilesButton({ setUploadedModel, file }) {
     )
 }
 
-export function UploadedModelUrlsButton({ url, setSelectedModelUrl }) {
+export function UploadedModelUrlsButton({ url }: { key: number; url: string; }) {
+    const { setSelectedModelUrl } = useStates()
     return (
         <button
             className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
