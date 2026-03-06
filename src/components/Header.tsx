@@ -1,7 +1,9 @@
 import { SidebarToggleButton } from "./Buttons.jsx";
 import { NewChatButton } from "./Buttons.jsx";
+import { useStates } from "./Context.js";
 
-export function Header({ isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages, setCurrentSessionId }) {
+export function Header() {
+  const { isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages, setCurrentSessionId } = useStates()
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">

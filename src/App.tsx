@@ -55,29 +55,13 @@ function App() {
 
         {/* SIDEBAR */}
         <div className={isSidebarOpen ? '' : 'hidden'} >
-          <Sidebar
-            setUploadedModel={setUploadedModel}
-            setSelectedModelUrl={setSelectedModelUrl}
-            isModelDownloading={isModelDownloading}
-            setIsModelConfigOpen={setIsModelConfigOpen}
-            setChatMessages={setChatMessages}
-            activeDownloads={activeDownloads}
-            setSystemPrompt={setSystemPrompt}
-            setCurrentSessionId={setCurrentSessionId}
-          />
+          <Sidebar />
         </div>
 
         {/* MAIN CHAT */}
         <div className="flex-1 flex flex-col relative w-full h-full bg-gray-900 min-w-0">
           {/* Header */}
-          <Header
-            isSidebarOpen={isSidebarOpen}
-            setIsSidebarOpen={setIsSidebarOpen}
-            modelStatus={modelStatus}
-            loadedModelName={loadedModelName}
-            setChatMessages={setChatMessages}
-            setCurrentSessionId={setCurrentSessionId}
-          />
+          <Header />
 
           {/* Chat Area */}
           <ChatArea

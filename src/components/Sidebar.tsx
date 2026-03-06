@@ -5,11 +5,14 @@ import { useState } from "react"
 import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"
 import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
-import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw" /* import from public folder */
+import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw"
 import  friendlyPrompt  from "/systemPrompts/friendlyPrompt.txt?raw"
+import { useStates } from "./Context.js"
 
 
-export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId }) {
+export function Sidebar() {
+  const { setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId } = useStates()
+
   const [selectedTab, setSelectedTab] = useState('models')
   const [systemPromptType, setSystemPromptType] = useState('');
   const [customPrompt, setCustomPrompt] = useState('');
