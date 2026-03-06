@@ -11,7 +11,8 @@ export function ClearAllHistoryButton() {
     )
 }
 
-export function NewChatButton({ setCurrentSessionId, setChatMessages }) {
+export function NewChatButton() {
+    const { setCurrentSessionId, setChatMessages } = useStates()
     return (
         <button
             onClick={() => {
@@ -55,7 +56,8 @@ export function SendButton({ inputValue, sendMessage, modelStatus, isLiveTokenLi
     )
 }
 
-export function SidebarToggleButton({ isSidebarOpen, setIsSidebarOpen }) {
+export function SidebarToggleButton() {
+    const { isSidebarOpen, setIsSidebarOpen } = useStates()
     return (
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-gray-400 p-1 hover:text-white">
             <HamburgerSvg />

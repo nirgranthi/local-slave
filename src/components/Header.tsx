@@ -3,13 +3,13 @@ import { NewChatButton } from "./Buttons.jsx";
 import { useStates } from "./Context.js";
 
 export function Header() {
-  const { isSidebarOpen, setIsSidebarOpen, modelStatus, loadedModelName, setChatMessages, setCurrentSessionId } = useStates()
+  const { modelStatus, loadedModelName } = useStates()
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
       <div className="flex items-center gap-3 min-w-0 flex-1">
 
-        <SidebarToggleButton isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <SidebarToggleButton />
 
         <div className="flex flex-col min-w-31">
           <span className="font-bold text-sm text-gray-200">
@@ -35,7 +35,7 @@ export function Header() {
         >
           {modelStatus}
         </div>
-        <NewChatButton setCurrentSessionId={setCurrentSessionId} setChatMessages={setChatMessages} />
+        <NewChatButton />
       </div>
     </div>
   )
