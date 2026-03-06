@@ -89,7 +89,7 @@ export function Sidebar() {
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.6 (The Great Culling Games) 06032026
+        v3.0 (Stable, with TypeScript) 06032026
       </div>
     </div>
   )
