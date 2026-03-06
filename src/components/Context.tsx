@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, RefObject, useContext, useRef, useState } from "react";
 import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
 
 import type { chatMessagesProps, modelConfigDefaultProps, progressDetail, promptConfigDefaultProps } from "./types";
@@ -41,7 +41,7 @@ interface StateContextProps {
     setSystemPrompt: React.Dispatch<React.SetStateAction<string>>,
     currentSessionId: number | null,
     setCurrentSessionId: React.Dispatch<React.SetStateAction<number | null>>,
-    stopModelReplyRef: AbortController
+    stopModelReplyRef: RefObject<AbortController | null>
 }
 
 const StateContext = createContext<StateContextProps | undefined>(undefined)
@@ -57,7 +57,6 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [selectedModelUrl, setSelectedModelUrl] = useState<URL | null>(null)
     const [isModelDownloading, setIsModelDownloading] = useState<boolean>(false)
     const [loadedModelName, setLoadedModelName] = useState<string>('No Model Loaded')
-    const stopModelReplyRef = useRef<AbortController>(null)
     const [isModelConfigOpen, setIsModelConfigOpen] = useState<boolean>(false)
     const [promptConfig, setPromptConfig] = useState<promptConfigDefaultProps>(promptConfigDefault)
     const [modelConfig, setModelConfig] = useState<modelConfigDefaultProps>(modelConfigDefault)
@@ -66,6 +65,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [reloadModel, setReloadModel] = useState<number>(1)
     const [systemPrompt, setSystemPrompt] = useState<string>(friendlyPrompt)
     const [currentSessionId, setCurrentSessionId] = useState<number | null>(null)
+    const stopModelReplyRef = useRef<AbortController>(null)
 
     return (
         <StateContext.Provider value={{
@@ -110,4 +110,10 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
             {children}
         </StateContext.Provider>
     )
+}
+
+export const useStates = () => {
+    const context = useContext(StateContext)
+    if (!context) throw new Error ("useStates must be used within StateProvider")
+    return context
 }

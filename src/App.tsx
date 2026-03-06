@@ -8,6 +8,7 @@ import { useState, useRef, useEffect } from 'react'
 import { ModelConfig } from './components/ModelConfig.jsx'
 import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
 import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
+import { StateProvider } from './components/Context.js'
 
 import type { chatMessagesProps, progressDetail } from './components/types.js'
 import type { modelConfigDefaultProps, promptConfigDefaultProps, sessionProps } from './components/types.js'
