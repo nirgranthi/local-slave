@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { LightningSvg } from "./SVGs.jsx"
-import { ChatInterface } from "./model/ChatInterface.jsx"
-import { useStates } from "./Context.js";
+import { LightningSvg } from "./SVGs.tsx"
+import { ChatInterface } from "./model/ChatInterface.tsx"
+import { useStates } from "./Context.tsx";
 
 export function ChatArea() {
   const { chatMessages, liveToken, isLiveTokenLive, userPrompt } = useStates()

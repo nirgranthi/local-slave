@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SendButton } from "./Buttons.jsx";
-import { useStates } from "./Context.js";
+import { SendButton } from "./Buttons.tsx";
+import { useStates } from "./Context.tsx";
 
 export function InputArea() {
   const { setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef } = useStates()

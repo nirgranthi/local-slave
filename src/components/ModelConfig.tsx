@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ModelConfigCloseButton, ModelConfigDoneButton, RecommendedButton, TabModelConfigButton } from "./Buttons.jsx";
-import { TabPromptConfigButton } from "./Buttons.jsx"
-import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
-import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
+import { ModelConfigCloseButton, ModelConfigDoneButton, RecommendedButton, TabModelConfigButton } from "./Buttons.tsx";
+import { TabPromptConfigButton } from "./Buttons.tsx"
+import { PromptConfigTab } from "./sidebar/PromptConfigTab.tsx";
+import { ModelConfigTab } from "./sidebar/ModelConfigTab.tsx";
 
 export function ModelConfig() {
     const [selectedTab, setSelectedTab] = useState<string>('promptConfigTab')

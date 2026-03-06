@@ -1,10 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
-import { StateProvider } from './components/Context.js'
+import App from './App.tsx'
+import { StateProvider } from './components/Context.tsx'
 
-createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root')
+if (!rootElement) throw new Error ("root element not found, oonga boonga")
+
+createRoot(rootElement).render(
   <StrictMode>
     <StateProvider>
       <App />

@@ -1,8 +1,8 @@
-import { useStates } from "./Context.js";
-import { AutoFixSvg, HamburgerSvg } from "./SVGs.jsx";
-import { PlusSvg } from "./SVGs.jsx"
+import { useStates } from "./Context.tsx";
+import { AutoFixSvg, HamburgerSvg } from "./SVGs.tsx";
+import { PlusSvg } from "./SVGs.tsx"
 import { useState } from "react";
-import { sessionProps } from "./types.js";
+import { sessionProps } from "./types.tsx";
 
 export function ClearAllHistoryButton() {
     return (<button onClick={() => { localStorage.removeItem('sessions') }} className="text-[10px] text-red-400 hover:underline">

@@ -1,6 +1,6 @@
-import { SidebarToggleButton } from "./Buttons.jsx";
-import { NewChatButton } from "./Buttons.jsx";
-import { useStates } from "./Context.js";
+import { SidebarToggleButton } from "./Buttons.tsx";
+import { NewChatButton } from "./Buttons.tsx";
+import { useStates } from "./Context.tsx";
 
 export function Header() {
   const { modelStatus, loadedModelName } = useStates()

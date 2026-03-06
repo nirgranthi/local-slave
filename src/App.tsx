@@ -1,14 +1,14 @@
-import { Header } from './components/Header.jsx'
-import { ChatArea } from './components/ChatArea.jsx'
-import { InputArea } from './components/InputArea.jsx'
-import { Sidebar } from './components/Sidebar.jsx'
-import { MobileOverlay } from './components/MobileOverlay.jsx'
+import { Header } from './components/Header.tsx'
+import { ChatArea } from './components/ChatArea.tsx'
+import { InputArea } from './components/InputArea.tsx'
+import { Sidebar } from './components/Sidebar.tsx'
+import { MobileOverlay } from './components/MobileOverlay.tsx'
 import { WllamaChat } from "./components/model/wllama";
 import { useEffect } from 'react'
-import { ModelConfig } from './components/ModelConfig.jsx'
-import { useStates } from './components/Context.js'
+import { ModelConfig } from './components/ModelConfig.tsx'
+import { useStates } from './components/Context.tsx'
 
-import type { sessionProps } from './components/types.js'
+import type { sessionProps } from './components/types.tsx'
 
 function App() {
   const { chatMessages, currentSessionId, setCurrentSessionId, isSidebarOpen, isModelConfigOpen } = useStates()

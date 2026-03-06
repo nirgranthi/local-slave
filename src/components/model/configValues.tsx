@@ -59,7 +59,7 @@ function modelConfigCPF (config: modelConfigDefaultProps) {
     { id: 'cache_type_k', label: 'KV Cache Precision (Keys)', hint: 'Key Memory quality. Higher (f32/f16) means more precision; lower (q4_0/q8_0) saves RAM but might make the AI slightly "forgetful."', type: 'select', step: '1', value: config.cache_type_k, min: '', max: '', options: cache_type_options },
     { id: 'cache_type_v', label: 'KV Cache Precision (Values)', hint: "Value Memory quality. Same as above. It’s the second half of the AI's 'workspace' memory.", type: 'select', step: '1', value: config.cache_type_v, min: '', max: '', options: cache_type_options },
     { id: 'flash_attn', label: 'Flash Attention', hint: 'Nitro boost. An optimization that makes the model faster and use less memory during long conversations. Keep it ON if your hardware supports it.', type: 'toggle', step: '1', value: config.flash_attn, min: '', max: '' },
-    { id: 'embedidings', label: 'Embedding mode', hint: 'Vector mode. Turn this on only if you are using the AI to compare pieces of text or build a search engine. Usually not needed for chatting.', type: 'toggle', step: '1', value: config.embeddings, min: '', max: '' },
+    { id: 'embeddings', label: 'Embedding mode', hint: 'Vector mode. Turn this on only if you are using the AI to compare pieces of text or build a search engine. Usually not needed for chatting.', type: 'toggle', step: '1', value: config.embeddings, min: '', max: '' },
     { id: 'offload_kqv', label: 'GPU KV Offloading', hint: 'GPU Hand-off. Moves the heaviest math from your CPU to your GPU. Makes things much faster if you have a decent graphics card.', type: 'toggle', step: '1', value: config.offload_kqv, min: '', max: '' }
 ];
 return modelConfigControlPanel;
