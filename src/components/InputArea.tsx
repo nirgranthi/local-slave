@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { SendButton } from "./Buttons.jsx";
+import { useStates } from "./Context.js";
 
-export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef }) {
+export function InputArea() {
+  const { setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef } = useStates()
+
   const [inputValue, setInputValue] = useState('')
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -26,7 +29,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
       setInputValue('')
     } else {
       /* console.log('Stopping model reply...') */
-      stopModelReplyRef.current.abort()
+      stopModelReplyRef.current?.abort()
     }
   };
   return (

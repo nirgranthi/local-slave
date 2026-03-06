@@ -46,12 +46,9 @@ function App() {
   }, [chatMessages])
 
   return (
-    <StateProvider>
       <div className='flex h-screen w-full'>
         {/* Mobile Overlay */}
-        {isSidebarOpen &&
-          <MobileOverlay />
-        }
+        {isSidebarOpen && <MobileOverlay />}
 
         {/* SIDEBAR */}
         <div className={isSidebarOpen ? '' : 'hidden'} >
@@ -67,45 +64,14 @@ function App() {
           <ChatArea />
 
           {/* Model Configuration Window */}
-          {isModelConfigOpen &&
-            <ModelConfig />
-          }
+          {isModelConfigOpen && <ModelConfig /> }
 
           {/* Input */}
-          <InputArea
-            setUserPrompt={setUserPrompt}
-            modelStatus={modelStatus}
-            isLiveTokenLive={isLiveTokenLive}
-            stopModelReplyRef={stopModelReplyRef}
-          />
+          <InputArea />
 
-          <WllamaChat
-            systemPrompt={systemPrompt}
-            isRecommended={isRecommended}
-            setIsRecommended={setIsRecommended}
-            userPrompt={userPrompt}
-            uploadedModel={uploadedModel}
-            chatMessages={chatMessages}
-            setChatMessages={setChatMessages}
-            setLiveToken={setLiveToken}
-            setIsLiveTokenLive={setIsLiveTokenLive}
-            selectedModelUrl={selectedModelUrl}
-            setModelStatus={setModelStatus}
-            setIsModelDownloading={setIsModelDownloading}
-            setLoadedModelName={setLoadedModelName}
-            stopModelReplyRef={stopModelReplyRef}
-            setUserPrompt={setUserPrompt}
-            setUploadedModel={setUploadedModel}
-            promptConfig={promptConfig}
-            modelConfig={modelConfig}
-            setActiveDownloads={setActiveDownloads}
-            setModelConfig={setModelConfig}
-            reloadModel={reloadModel}
-            setIsModelConfigOpen={setIsModelConfigOpen}
-          />
+          <WllamaChat />
         </div>
       </div>
-    </StateProvider>
   )
 }
 

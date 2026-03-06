@@ -1,39 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
 import { Wllama } from '@wllama/wllama';
+import { useStates } from '../Context';
 /* 
 local storage keys
 sessions, downloadedModels
 */
 
-export function WllamaChat({
-  systemPrompt,
-  isRecommended,
-  setIsRecommended,
-  userPrompt,
-  uploadedModel,
-  chatMessages,
-  setChatMessages,
-  setLiveToken,
-  setIsLiveTokenLive,
-  setModelStatus,
-  selectedModelUrl,
-  setIsModelDownloading,
-  setLoadedModelName,
-  stopModelReplyRef,
-  setUserPrompt,
-  setUploadedModel,
-  promptConfig,
-  modelConfig,
-  setActiveDownloads,
-  setModelConfig,
-  reloadModel,
-  setIsModelConfigOpen
-}) {
+export function WllamaChat() {
+  const { systemPrompt, isRecommended, setIsRecommended, userPrompt, uploadedModel, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl, setIsModelDownloading, setLoadedModelName, stopModelReplyRef, setUserPrompt, setUploadedModel, promptConfig, modelConfig, setActiveDownloads, setModelConfig, reloadModel, setIsModelConfigOpen } = useStates()
+
   const [wllama, setWllama] = useState<Wllama | null>(null);
-  const [activeModel, setActiveModel] = useState<{type: string, file: File | string}>({ type: '', file: '' })
+  const [activeModel, setActiveModel] = useState<{ type: string, file: File | string }>({ type: '', file: '' })
   const n_ctx = useRef<number | undefined>(undefined)
-  console.log(n_ctx)
+  /* console.log(n_ctx) */
 
   const UpdateModelConfig = () => {
     setModelConfig(prev => ({
@@ -57,7 +37,7 @@ export function WllamaChat({
     }
   }
 
-  async function setContextAndModelName () {
+  async function setContextAndModelName() {
     const meta = await wllama?.getModelMetadata()
     n_ctx.current = meta?.hparams.nCtxTrain
     setLoadedModelName(meta?.meta["general.name"])
