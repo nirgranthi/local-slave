@@ -11,7 +11,7 @@ import { useStates } from "./Context.js"
 
 
 export function Sidebar() {
-  const { isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId } = useStates()
+  const { isModelDownloading, setSystemPrompt } = useStates()
 
   const [selectedTab, setSelectedTab] = useState<string>('models')
   const [systemPromptType, setSystemPromptType] = useState<string>('');
@@ -38,17 +38,17 @@ export function Sidebar() {
           <ModelsList />
           <ManualUpload />
 
-          {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
+          {isModelDownloading && <DownloadProgressBar />}
         </div>
 
         <div className={selectedTab === 'history' ? '' : 'hidden'} >
-          <HistoryTab setCurrentSessionId={setCurrentSessionId} setChatMessages={setChatMessages} />
+          <HistoryTab />
         </div>
       </div>
 
       <div className="p-3 bg-gray-900 border-t border-gray-700 flex flex-col gap-2">
         <div className="flex gap-2">
-          <ModelConfigMenuButton setIsModelConfigOpen={setIsModelConfigOpen} />
+          <ModelConfigMenuButton />
 
           <select
             value={systemPromptType}
@@ -89,7 +89,7 @@ export function Sidebar() {
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.5.3 (The Great Era Of Exorcising Prop Drilling) 06032026
+        v2.6 (The Great Culling Games) 06032026
       </div>
     </div>
   )

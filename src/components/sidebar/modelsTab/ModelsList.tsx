@@ -2,24 +2,12 @@ import { RefreshAvailableModelsButton, RenderCsvModelsButton } from "../../Butto
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { UploadedModelUrlList } from "./UploadedModelUrlList.jsx"
-import { useStates } from "../../Context.js"
 
 
 export function ModelsList() {
-  const [isloadingCsv, setIsLoadingCsv] = useState(true)
+  const [isloadingCsv, setIsLoadingCsv] = useState<boolean>(true)
   const [csvData, setCsvData] = useState<string[][]>([])
-  const [refresh, setRefresh] = useState('refreshed')
-
-  const LoadedList = () => {
-    const { setSelectedModelUrl } = useStates()
-    return (
-      csvData.map((model, index) => (
-        <RenderCsvModelsButton key={index} model={model} setSelectedModelUrl={setSelectedModelUrl} />
-      ))
-    )
-  }
-
-  const LoadingList = () => (<div className="text-xs text-gray-600 italic text-center py-4">Loading list...</div>)
+  const [refresh, setRefresh] = useState<string>('refreshed')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,9 +19,7 @@ export function ModelsList() {
           .filter(row => row.length > 1);
 
         setIsLoadingCsv(false)
-        /* console.log(parsedData) */
         setCsvData(parsedData)
-        /* console.log(refresh) */
         setRefresh('refreshed')
       } catch (error) {
         console.log(error)
@@ -49,8 +35,11 @@ export function ModelsList() {
         <RefreshAvailableModelsButton setRefresh={setRefresh} />
       </div>
       <div className="space-y-2">
-        {isloadingCsv && <LoadingList />}
-        {!isloadingCsv && <LoadedList />}
+        {isloadingCsv
+          ? (<div className="text-xs text-gray-600 italic text-center py-4">Loading list...</div>)
+          : (csvData.map((model, index) => (
+            <RenderCsvModelsButton key={index} model={model} />
+          )))}
 
         <UploadedModelUrlList />
 

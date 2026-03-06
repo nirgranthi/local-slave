@@ -2,13 +2,12 @@ import { useStates } from "./Context.js";
 import { AutoFixSvg, HamburgerSvg } from "./SVGs.jsx";
 import { PlusSvg } from "./SVGs.jsx"
 import { useState } from "react";
+import { sessionProps } from "./types.js";
 
 export function ClearAllHistoryButton() {
-    return (
-        <button onClick={() => { localStorage.removeItem('sessions') }} className="text-[10px] text-red-400 hover:underline">
-            Clear All
-        </button>
-    )
+    return (<button onClick={() => { localStorage.removeItem('sessions') }} className="text-[10px] text-red-400 hover:underline">
+        Clear All
+    </button>)
 }
 
 export function NewChatButton() {
@@ -27,7 +26,7 @@ export function NewChatButton() {
     )
 }
 
-export function RefreshAvailableModelsButton({ setRefresh }) {
+export function RefreshAvailableModelsButton({ setRefresh }: { setRefresh: React.Dispatch<React.SetStateAction<string>> }) {
     return (
         <button onClick={() => { setRefresh('refreshing...') }}
             className="text-[10px] text-blue-400 hover:underline">
@@ -36,11 +35,10 @@ export function RefreshAvailableModelsButton({ setRefresh }) {
     )
 }
 
-export function SendButton({ sendMessage }: { sendMessage: () => void}) {
+export function SendButton({ sendMessage }: { sendMessage: () => void }) {
     const { modelStatus, isLiveTokenLive } = useStates()
     return (
         <button
-            id="send-btn"
             onClick={() => sendMessage()}
             disabled={modelStatus === 'OFFLINE'}
             className={`px-6 rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-colors duration-500
@@ -66,7 +64,7 @@ export function SidebarToggleButton() {
     )
 }
 
-export function TabHistoryButton({ setSelectedTab, className }) {
+export function TabHistoryButton({ setSelectedTab, className }: { setSelectedTab: React.Dispatch<React.SetStateAction<string>>; className: string; }) {
     return (
         <button
             onClick={() => { setSelectedTab('history') }}
@@ -77,24 +75,24 @@ export function TabHistoryButton({ setSelectedTab, className }) {
     );
 }
 
-export function TabModelConfigButton({ setSelectedTab, className }) {
-    return (
-        <button
-            onClick={() => { setSelectedTab('modelConfigTab') }}
-            className={className}
-        >
-            Model Configs
-        </button >
-    )
-}
-
-export function TabModelsButton({ setSelectedTab, className }) {
+export function TabModelsButton({ setSelectedTab, className }: { setSelectedTab: React.Dispatch<React.SetStateAction<string>>; className: string; }) {
     return (
         <button
             onClick={() => { setSelectedTab('models') }}
             className={className}
         >
             MODELS
+        </button >
+    )
+}
+
+export function TabModelConfigButton({ setSelectedTab, className }: { setSelectedTab: React.Dispatch<React.SetStateAction<string>>; className: string; }) {
+    return (
+        <button
+            onClick={() => { setSelectedTab('modelConfigTab') }}
+            className={className}
+        >
+            Model Configs
         </button >
     )
 }
@@ -110,7 +108,7 @@ export function TabPromptConfigButton({ setSelectedTab, className }: { setSelect
     )
 }
 
-export function ModelConfigDoneButton({ selectedTab }: { selectedTab: string}) {
+export function ModelConfigDoneButton({ selectedTab }: { selectedTab: string }) {
     const { setIsModelConfigOpen, setReloadModel } = useStates()
     /* modelConfigTab, promptConfigTab */
     function handleClick() {
@@ -146,7 +144,8 @@ export function ModelConfigCloseButton() {
     )
 }
 
-export function ModelConfigMenuButton({ setIsModelConfigOpen }) {
+export function ModelConfigMenuButton() {
+    const { setIsModelConfigOpen } = useStates()
     return (
         <button
             className="flex-1 p-2 bg-gray-800 hover:bg-gray-700 text-blue-400 rounded-lg text-xs font-bold border border-gray-700 transition-all active:scale-95"
@@ -157,7 +156,7 @@ export function ModelConfigMenuButton({ setIsModelConfigOpen }) {
     )
 }
 
-export function CopyCodeBlockButton({ value }) {
+export function CopyCodeBlockButton({ value }: {value: string}) {
     const [copied, setCopied] = useState(false)
 
     const handleCopy = () => {
@@ -180,21 +179,8 @@ export function CopyCodeBlockButton({ value }) {
     )
 }
 
-export function ShowThinkingButton({ setIsThinkingBlockOpen, isThinkingBlockOpen }) {
-    return (
-        <button
-            className="text-xs font-semibold text-gray-400 hover:text-white flex items-center gap-1 mb-1"
-            onClick={() => setIsThinkingBlockOpen(!isThinkingBlockOpen)}
-        >
-            {isThinkingBlockOpen
-                ? '▼ Hide thinking'
-                : '▶ Show thinking'
-            }
-        </button>
-    )
-}
-
-export function RenderHistoryButton({ setCurrentSessionId, session, setChatMessages }) {
+export function RenderHistoryButton({ session }: {session: sessionProps}) {
+    const { setCurrentSessionId, setChatMessages} = useStates()
     /* key={session.sessionId} */
     return (
         <button
@@ -211,8 +197,8 @@ export function RenderHistoryButton({ setCurrentSessionId, session, setChatMessa
     )
 }
 
-export function UploadedModelFilesButton({ file }: {key: number, file: File}) {
-    const {setUploadedModel} = useStates()
+export function UploadedModelFilesButton({ file }: { file: File }) {
+    const { setUploadedModel } = useStates()
     return (
         <button
             className='w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 bg-green-900/20 border-green-800 hover:bg-green-900/40'
@@ -227,7 +213,7 @@ export function UploadedModelFilesButton({ file }: {key: number, file: File}) {
     )
 }
 
-export function UploadedModelUrlsButton({ url }: { key: number; url: string; }) {
+export function UploadedModelUrlsButton({ url }: { url: string; }) {
     const { setSelectedModelUrl } = useStates()
     return (
         <button
@@ -243,28 +229,22 @@ export function UploadedModelUrlsButton({ url }: { key: number; url: string; }) 
     )
 }
 
-export function RenderCsvModelsButton({ model, setSelectedModelUrl }) {
-    const getModelName = (url) => {
-        return url.split('/').pop()
-    }
-    const downloadedModelList = localStorage.getItem('downloadedModels') || '[]'
+export function RenderCsvModelsButton({ model }: { model: string[] }) {
+    const { setSelectedModelUrl } = useStates()
 
-    function checkIfDownloaded(url) {
-        if (downloadedModelList.includes(url)) return true
-        else return false
-    }
+    const downloadedModelList = localStorage.getItem('downloadedModels') || '[]'
     return (
         <button
             className={`w-full text-left p-2.5 rounded-lg border transition-all group relative mb-1 
-                ${checkIfDownloaded(model[0])
+                ${downloadedModelList.includes(model[0])
                     ? 'bg-green-900/20 border-green-800 hover:bg-green-900/40'
                     : 'bg-gray-700/30 border-gray-700/50 hover:bg-gray-700'}`}
             onClick={() => (setSelectedModelUrl(model[0]))}
         >
             <div className="flex justify-between items-center">
                 <div className="flex flex-col min-w-0 flex-1">
-                    <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{getModelName(model[0])}</span>
-                    {checkIfDownloaded(model[0]) &&
+                    <span className="font-medium text-xs text-gray-300 group-hover:text-white truncate">{model[0].split('/').pop()}</span>
+                    {downloadedModelList.includes(model[0]) &&
                         <span className="text-[9px] text-green-400">
                             Available offline
                         </span>

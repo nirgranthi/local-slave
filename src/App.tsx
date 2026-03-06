@@ -4,14 +4,11 @@ import { InputArea } from './components/InputArea.jsx'
 import { Sidebar } from './components/Sidebar.jsx'
 import { MobileOverlay } from './components/MobileOverlay.jsx'
 import { WllamaChat } from "./components/model/wllama";
-import { useState, useRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import { ModelConfig } from './components/ModelConfig.jsx'
-import { promptConfigDefault, modelConfigDefault } from './components/model/configValues.jsx'
-import friendlyPrompt from '/systemPrompts/friendlyPrompt.txt?raw'
-import { StateProvider, useStates } from './components/Context.js'
+import { useStates } from './components/Context.js'
 
-import type { chatMessagesProps, progressDetail } from './components/types.js'
-import type { modelConfigDefaultProps, promptConfigDefaultProps, sessionProps } from './components/types.js'
+import type { sessionProps } from './components/types.js'
 
 function App() {
   const { chatMessages, currentSessionId, setCurrentSessionId, isSidebarOpen, isModelConfigOpen } = useStates()

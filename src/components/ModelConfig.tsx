@@ -3,10 +3,8 @@ import { ModelConfigCloseButton, ModelConfigDoneButton, RecommendedButton, TabMo
 import { TabPromptConfigButton } from "./Buttons.jsx"
 import { PromptConfigTab } from "./sidebar/PromptConfigTab.jsx";
 import { ModelConfigTab } from "./sidebar/ModelConfigTab.jsx";
-import { useStates } from "./Context.js";
 
 export function ModelConfig() {
-
     const [selectedTab, setSelectedTab] = useState<string>('promptConfigTab')
 
     const tabClassname = (modelsTab: boolean) =>
