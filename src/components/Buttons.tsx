@@ -36,11 +36,12 @@ export function RefreshAvailableModelsButton({ setRefresh }) {
     )
 }
 
-export function SendButton({ inputValue, sendMessage, modelStatus, isLiveTokenLive }) {
+export function SendButton({ sendMessage }: { sendMessage: () => void}) {
+    const { modelStatus, isLiveTokenLive } = useStates()
     return (
         <button
             id="send-btn"
-            onClick={() => sendMessage(inputValue)}
+            onClick={() => sendMessage()}
             disabled={modelStatus === 'OFFLINE'}
             className={`px-6 rounded-lg text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-colors duration-500
                 ${!isLiveTokenLive

@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SendButton } from "./Buttons.jsx";
 import { useStates } from "./Context.js";
 
 export function InputArea() {
   const { setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef } = useStates()
 
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState<string>('')
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function InputArea() {
     }
   }, [inputValue])
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       if (!isLiveTokenLive) sendMessage()
@@ -53,10 +53,7 @@ export function InputArea() {
         />
 
         <SendButton
-          inputValue={inputValue}
           sendMessage={sendMessage}
-          modelStatus={modelStatus}
-          isLiveTokenLive={isLiveTokenLive}
         />
       </div>
     </div>

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
-import { Wllama } from '@wllama/wllama';
+import { Wllama, WllamaChatMessage } from '@wllama/wllama';
 import { useStates } from '../Context';
 /* 
 local storage keys
@@ -18,7 +18,7 @@ export function WllamaChat() {
   const UpdateModelConfig = () => {
     setModelConfig(prev => ({
       ...prev,
-      ["n_ctx"]: n_ctx.current
+      ["n_ctx"]: n_ctx.current ?? 8192
     }))
     /* console.log(modelConfig) */
   }
@@ -40,7 +40,7 @@ export function WllamaChat() {
   async function setContextAndModelName() {
     const meta = await wllama?.getModelMetadata()
     n_ctx.current = meta?.hparams.nCtxTrain
-    setLoadedModelName(meta?.meta["general.name"])
+    setLoadedModelName(meta?.meta["general.name"] || '')
   }
 
   /* wllama config */
@@ -60,7 +60,7 @@ export function WllamaChat() {
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
-    console.log(wllama)
+    /* console.log(wllama) */
     /* console.log(systemPrompt)
     console.log(isRecommended) */
     /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
@@ -70,13 +70,13 @@ export function WllamaChat() {
         setModelStatus('ONLINE')
         const history = chatMessages.map(msg => ({
           content: msg.message,
-          role: msg.sender === 'ai' ? 'assistant' : 'user'
+          role: msg.sender === 'ai' ? 'assistant' : 'user' as WllamaChatMessage["role"]
         }));
 
         const prompt = await wllama.formatChat([
           { content: systemPrompt, role: 'system' },
           ...history,
-          { content: userPrompt, role: 'user' }
+          { content: userPrompt, role: "user" }
         ], true
         )
         /* console.log(history) */
@@ -84,7 +84,7 @@ export function WllamaChat() {
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
         const result = await wllama.createCompletion(prompt, {
-          abortSignal: stopModelReplyRef.current.signal,
+          abortSignal: stopModelReplyRef.current?.signal,
           nPredict: 500,
           sampling: promptConfig,
           onNewToken: (token, piece, text) => {
