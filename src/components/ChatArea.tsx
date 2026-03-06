@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
 import { LightningSvg } from "./SVGs.jsx"
 import { ChatInterface } from "./model/ChatInterface.jsx"
+import { useStates } from "./Context.js";
 
-export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt }) {
-  const scrollRef = useRef(null)
+export function ChatArea() {
+  const { chatMessages, liveToken, isLiveTokenLive, userPrompt } = useStates()
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -11,8 +14,8 @@ export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt 
     }
   }, [chatMessages]);
   return (
-    <div id="chat-box" className="flex-1 overflow-y-auto p-4 pb-40 space-y-4 h-full">
-      <div id="welcome-message" className={`flex flex-col items-center ${chatMessages.length === 0 && !isLiveTokenLive ? "justify-center" : ""} h-full text-gray-500 space-y-4`}>
+    <div className="flex-1 overflow-y-auto p-4 pb-40 space-y-4 h-full">
+      <div className={`flex flex-col items-center ${chatMessages.length === 0 && !isLiveTokenLive ? "justify-center" : ""} h-full text-gray-500 space-y-4`}>
         {chatMessages.length === 0 && !isLiveTokenLive
           ? (<>
             <div className="p-4 justify-center bg-gray-800 rounded-full animate-bounce">
@@ -36,6 +39,7 @@ export function ChatArea({ chatMessages, liveToken, isLiveTokenLive, userPrompt 
             <ChatInterface
               sender='user'
               message={userPrompt}
+              liveToken=''
               isLiveTokenLive={false}
             />
 

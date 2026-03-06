@@ -1,18 +1,21 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SendButton } from "./Buttons.jsx";
+import { useStates } from "./Context.js";
 
-export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef }) {
-  const [inputValue, setInputValue] = useState('')
-  const textAreaRef = useRef(null)
+export function InputArea() {
+  const { setUserPrompt, modelStatus, isLiveTokenLive, stopModelReplyRef } = useStates()
+
+  const [inputValue, setInputValue] = useState<string>('')
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
-    if (textAreaRef) {
+    if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto'
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`
     }
   }, [inputValue])
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       if (!isLiveTokenLive) sendMessage()
@@ -26,7 +29,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
       setInputValue('')
     } else {
       /* console.log('Stopping model reply...') */
-      stopModelReplyRef.current.abort()
+      stopModelReplyRef.current?.abort()
     }
   };
   return (
@@ -34,7 +37,6 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
       <div className="max-w-3xl mx-auto relative flex gap-2">
         <textarea
           ref={textAreaRef}
-          type="text"
           onChange={(e) => setInputValue(e.target.value)}
           value={inputValue}
           onKeyDown={handleKeyDown}
@@ -51,10 +53,7 @@ export function InputArea({ setUserPrompt, modelStatus, isLiveTokenLive, stopMod
         />
 
         <SendButton
-          inputValue={inputValue}
           sendMessage={sendMessage}
-          modelStatus={modelStatus}
-          isLiveTokenLive={isLiveTokenLive}
         />
       </div>
     </div>

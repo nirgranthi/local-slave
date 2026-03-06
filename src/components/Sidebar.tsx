@@ -5,15 +5,18 @@ import { useState } from "react"
 import { HistoryTab } from "./sidebar/historyTab/HistoryTab.jsx"
 import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.jsx"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.jsx"
-import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw" /* import from public folder */
+import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw"
 import  friendlyPrompt  from "/systemPrompts/friendlyPrompt.txt?raw"
+import { useStates } from "./Context.js"
 
 
-export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownloading, setIsModelConfigOpen, setChatMessages, activeDownloads, setSystemPrompt, setCurrentSessionId }) {
-  const [selectedTab, setSelectedTab] = useState('models')
-  const [systemPromptType, setSystemPromptType] = useState('');
-  const [customPrompt, setCustomPrompt] = useState('');
-  const tabClassname = (modelsTab) =>
+export function Sidebar() {
+  const { isModelDownloading, setSystemPrompt } = useStates()
+
+  const [selectedTab, setSelectedTab] = useState<string>('models')
+  const [systemPromptType, setSystemPromptType] = useState<string>('');
+  const [customPrompt, setCustomPrompt] = useState<string>('');
+  const tabClassname = (modelsTab: boolean) =>
     modelsTab
       ? "flex-1 py-3 text-xs font-bold text-blue-400 border-b-2 border-blue-400 bg-gray-700/50"
       : "flex-1 py-3 text-xs font-bold text-gray-500 hover:text-gray-300"
@@ -32,20 +35,20 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
 
       <div className="p-4 flex-1 overflow-y-auto space-y-6 no-scrollbar">
         <div className={`space-y-6 ${selectedTab === 'models' ? '' : 'hidden'}`}>
-          <ModelsList setSelectedModelUrl={setSelectedModelUrl} />
-          <ManualUpload setUploadedModel={setUploadedModel} />
+          <ModelsList />
+          <ManualUpload />
 
-          {isModelDownloading && <DownloadProgressBar activeDownloads={activeDownloads} />}
+          {isModelDownloading && <DownloadProgressBar />}
         </div>
 
         <div className={selectedTab === 'history' ? '' : 'hidden'} >
-          <HistoryTab setCurrentSessionId={setCurrentSessionId} setChatMessages={setChatMessages} />
+          <HistoryTab />
         </div>
       </div>
 
       <div className="p-3 bg-gray-900 border-t border-gray-700 flex flex-col gap-2">
         <div className="flex gap-2">
-          <ModelConfigMenuButton setIsModelConfigOpen={setIsModelConfigOpen} />
+          <ModelConfigMenuButton />
 
           <select
             value={systemPromptType}
@@ -86,7 +89,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.4 (Stable) 28022026
+        v3.0 (Stable, with TypeScript) 06032026
       </div>
     </div>
   )

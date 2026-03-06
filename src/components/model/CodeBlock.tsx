@@ -1,7 +1,7 @@
 import { CopyCodeBlockButton } from "../Buttons"
 
 
-export default function CodeBlock({ language, value }) {
+export default function CodeBlock({ language, value }: {language: string, value: string}) {
     
 
     return (

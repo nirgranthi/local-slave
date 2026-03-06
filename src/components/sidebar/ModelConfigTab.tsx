@@ -1,7 +1,10 @@
+import { useStates } from "../Context"
 import { modelConfigCPF } from "../model/configValues"
+import { cacheTypeOptions } from "../types"
 
-export function ModelConfigTab({ selectedTab, modelConfig, setModelConfig }) {
-    const handleInputChangeForModel = (key, value) => {
+export function ModelConfigTab({ selectedTab }: { selectedTab: string }) {
+    const { modelConfig, setModelConfig } = useStates()
+    const handleInputChangeForModel = (key: string, value: number | boolean | cacheTypeOptions) => {
         setModelConfig(prev => ({
             ...prev,
             [key]: value
@@ -18,7 +21,7 @@ export function ModelConfigTab({ selectedTab, modelConfig, setModelConfig }) {
                             {values.hint || "No hint provided, use your brain."}
                         </div>
                         <span> {values.value} </span>
-                        
+
                     </div>
                     {(values.type === 'range') || (values.type === 'number')
                         ? <input
@@ -26,8 +29,8 @@ export function ModelConfigTab({ selectedTab, modelConfig, setModelConfig }) {
                             min={values.min}
                             max={values.max}
                             step={values.step}
-                            value={values.value}
-                            onChange={(e) => handleInputChangeForModel(values.id, e.target.value)}
+                            value={values.value as number}
+                            onChange={(e) => handleInputChangeForModel(values.id, Number(e.target.value))}
                             className="w-full h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
                         />
                         : values.type === 'toggle'
@@ -36,7 +39,7 @@ export function ModelConfigTab({ selectedTab, modelConfig, setModelConfig }) {
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
-                                        checked={values.value}
+                                        checked={values.value as boolean}
                                         onChange={(e) => handleInputChangeForModel(values.id, e.target.checked)}
                                         className="sr-only peer"
                                     />
@@ -44,11 +47,11 @@ export function ModelConfigTab({ selectedTab, modelConfig, setModelConfig }) {
                                 </label>
                             </div>)
                             : <select
-                                value={values.value}
-                                onChange={(e) => handleInputChangeForModel(values.id, e.target.value)}
+                                value={values.value as string}
+                                onChange={(e) => handleInputChangeForModel(values.id, e.target.value as cacheTypeOptions)}
                                 className="w-full bg-gray-900 border border-gray-700 text-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none transition-all"
                             >
-                                {values.options.map((option) => (
+                                {values.options?.map((option) => (
                                     <option key={option} value={option} className="bg-gray-800" >
                                         {option}
                                     </option>

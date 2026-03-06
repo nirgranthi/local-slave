@@ -1,50 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useRef } from 'react';
-import { Wllama } from '@wllama/wllama';
-
+import { Wllama, WllamaChatMessage } from '@wllama/wllama';
+import { useStates } from '../Context';
 /* 
 local storage keys
 sessions, downloadedModels
 */
 
-export function WllamaChat({
-  systemPrompt,
-  isRecommended,
-  setIsRecommended,
-  userPrompt,
-  uploadedModel,
-  chatMessages,
-  setChatMessages,
-  setLiveToken,
-  setIsLiveTokenLive,
-  setModelStatus,
-  selectedModelUrl,
-  setIsModelDownloading,
-  setLoadedModelName,
-  stopModelReplyRef,
-  setUserPrompt,
-  setUploadedModel,
-  promptConfig,
-  modelConfig,
-  setActiveDownloads,
-  setModelConfig,
-  reloadModel,
-  setIsModelConfigOpen
-}) {
-  const [wllama, setWllama] = useState(null);
-  const [activeModel, setActiveModel] = useState({ type: null, file: null })
-  const n_ctx = useRef(null)
+export function WllamaChat() {
+  const { systemPrompt, isRecommended, setIsRecommended, userPrompt, uploadedModel, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl, setIsModelDownloading, setLoadedModelName, stopModelReplyRef, setUserPrompt, setUploadedModel, promptConfig, modelConfig, setActiveDownloads, setModelConfig, reloadModel, setIsModelConfigOpen } = useStates()
+
+  const [wllama, setWllama] = useState<Wllama | null>(null);
+  const [activeModel, setActiveModel] = useState<{ type: string, file: File | string }>({ type: '', file: '' })
+  const n_ctx = useRef<number | undefined>(undefined)
+  /* console.log(n_ctx) */
 
   const UpdateModelConfig = () => {
     setModelConfig(prev => ({
       ...prev,
-      ["n_ctx"]: n_ctx.current
+      ["n_ctx"]: n_ctx.current ?? 8192
     }))
     /* console.log(modelConfig) */
   }
 
   /* this ends up deleting active downloads, i think it will be fixed if i use a different wllama instance for downloading models */
   async function unloadModel() {
+    if (!wllama) return;
     if (wllama.isModelLoaded()) {
       try {
         await wllama.exit()
@@ -56,6 +37,12 @@ export function WllamaChat({
     }
   }
 
+  async function setContextAndModelName() {
+    const meta = await wllama?.getModelMetadata()
+    n_ctx.current = meta?.hparams.nCtxTrain
+    setLoadedModelName(meta?.meta["general.name"] || '')
+  }
+
   /* wllama config */
   useEffect(() => {
     try {
@@ -63,7 +50,7 @@ export function WllamaChat({
         'single-thread/wllama.wasm': '/wllama/single-thread/wllama.wasm',
         'multi-thread/wllama.wasm': '/wllama/multi-thread/wllama.wasm'
       };
-      const instance = new Wllama(config);
+      const instance: Wllama = new Wllama(config);
       setWllama(instance);
     } catch (err) {
       console.error("Error: ", err);
@@ -73,6 +60,7 @@ export function WllamaChat({
   /* user prompt */
   useEffect(() => {
     if (!userPrompt || !wllama) return;
+    /* console.log(wllama) */
     /* console.log(systemPrompt)
     console.log(isRecommended) */
     /* console.log('wllama: ', wllama.metadata.meta['general.name']) */
@@ -82,13 +70,13 @@ export function WllamaChat({
         setModelStatus('ONLINE')
         const history = chatMessages.map(msg => ({
           content: msg.message,
-          role: msg.sender === 'ai' ? 'assistant' : 'user'
+          role: msg.sender === 'ai' ? 'assistant' : 'user' as WllamaChatMessage["role"]
         }));
 
         const prompt = await wllama.formatChat([
           { content: systemPrompt, role: 'system' },
           ...history,
-          { content: userPrompt, role: 'user' }
+          { content: userPrompt, role: "user" }
         ], true
         )
         /* console.log(history) */
@@ -96,8 +84,8 @@ export function WllamaChat({
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
         const result = await wllama.createCompletion(prompt, {
-          abortSignal: stopModelReplyRef.current.signal,
-          n_predict: 500,
+          abortSignal: stopModelReplyRef.current?.signal,
+          nPredict: 500,
           sampling: promptConfig,
           onNewToken: (token, piece, text) => {
             setLiveToken(text);
@@ -135,17 +123,16 @@ export function WllamaChat({
       await unloadModel()
 
       try {
+        if (!wllama) return;
         setModelStatus('Loading...')
         setActiveModel({ type: 'file', file: uploadedModel })
         /* console.log(wllama) */
 
         await wllama.loadModel([uploadedModel], modelConfig)
 
-        setLoadedModelName(wllama.metadata.meta['general.name'])
-        n_ctx.current = wllama.metadata.hparams.nCtxTrain
+        setContextAndModelName()
         setModelStatus('ONLINE')
-        /* console.log('is model loaded: ', wllama.isModelLoaded())
-        console.log(wllama.metadata.hparams.nCtxTrain) */
+
       } catch (error) {
         console.log('Model could not be loaded', error)
         setModelStatus('OFFLINE')
@@ -165,6 +152,7 @@ export function WllamaChat({
     const downloadModel = async () => {
       try {
         await unloadModel()
+        if (!wllama) return;
         /* console.log(wllama) */
         setModelStatus('DOWNLOADING...')
         setLoadedModelName('No model Loaded')
@@ -183,8 +171,7 @@ export function WllamaChat({
           ...modelConfig
         })
 
-        n_ctx.current = wllama.metadata.hparams.nCtxTrain
-        setLoadedModelName(wllama.metadata.meta['general.name'])
+        setContextAndModelName()
       } catch (error) {
         setModelStatus('OFFLINE')
         console.log('error downloading: ', error)
@@ -221,16 +208,16 @@ export function WllamaChat({
           await wllama.exit()
         }
 
-        if (activeModel.type === 'url') {
+        if (activeModel.type === 'url' && typeof activeModel.file === 'string') {
           await wllama.loadModelFromUrl(activeModel.file, {
             useCache: true,
             ...modelConfig
           })
-        } else if (activeModel.type === 'file') {
+        } else if (activeModel.type === 'file' && activeModel.file instanceof File) {
           await wllama.loadModel([activeModel.file], modelConfig)
         }
 
-        setLoadedModelName(wllama.metadata.meta['general.name']);
+        setContextAndModelName()
         setModelStatus('ONLINE')
       } catch (error) {
         console.error("Reloading failed:", error)
@@ -246,8 +233,8 @@ export function WllamaChat({
     try {
       const models = await wllama.modelManager.getModels()
       // Extracting primary URL (sharded models ke liye array ka pehla element)
-      const urls = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
-      const newurls = []
+      const urls: string[] = models.map(model => Array.isArray(model.url) ? model.url[0] : model.url)
+      const newurls: string[] = []
       urls.forEach(url => {
         if (url) newurls.push(url)
       })
@@ -256,10 +243,6 @@ export function WllamaChat({
       console.error('Error:', err)
     }
   };
+
+  return null;
 }
-
-
-
-
-
-

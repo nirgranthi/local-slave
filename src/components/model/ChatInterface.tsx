@@ -5,8 +5,8 @@ import { LoadingAnimation } from './LoadingAnimation';
 import ThinkingBlock from './ThinkingBlock';
 import { customComponents } from './CustomComponentsForMD';
 
-export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }) {
-    const splitThinkingBlock = (content) => {
+export function ChatInterface({ sender, message, liveToken, isLiveTokenLive }: { sender: string; message: string; liveToken: string; isLiveTokenLive: boolean; }) {
+    const splitThinkingBlock = (content: string) => {
         if (!content) return null
 
         const thoughtBlock = content.split(/(<think>[\s\S]*?<\/think>|<think>[\s\S]*?$)/g)

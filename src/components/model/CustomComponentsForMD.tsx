@@ -1,6 +1,7 @@
+import { Components } from "react-markdown";
 import CodeBlock from "./CodeBlock";
 
-export const customComponents = {
+export const customComponents: Components = {
         code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             if (match) {
