@@ -86,7 +86,7 @@ export function Sidebar({ setUploadedModel, setSelectedModelUrl, isModelDownload
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v2.5.2 (Moving to Typescript) 04032026
+        v2.5.3 (The Great Era Of Exorcising Prop Drilling) 06032026
       </div>
     </div>
   )

@@ -1,4 +1,7 @@
-export function MobileOverlay({ setIsSidebarOpen }) {
+import { useStates } from "./Context";
+
+export function MobileOverlay() {
+    const { setIsSidebarOpen } = useStates()
     return (
         <div
             id="backdrop"
