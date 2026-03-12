@@ -41,7 +41,9 @@ interface StateContextProps {
     setSystemPrompt: React.Dispatch<React.SetStateAction<string>>,
     currentSessionId: number | null,
     setCurrentSessionId: React.Dispatch<React.SetStateAction<number | null>>,
-    stopModelReplyRef: RefObject<AbortController | null>
+    stopModelReplyRef: RefObject<AbortController | null>,
+    tps: number | null,
+    setTps: React.Dispatch<React.SetStateAction<number | null>>
 }
 
 const StateContext = createContext<StateContextProps | undefined>(undefined)
@@ -66,6 +68,7 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
     const [systemPrompt, setSystemPrompt] = useState<string>(friendlyPrompt)
     const [currentSessionId, setCurrentSessionId] = useState<number | null>(null)
     const stopModelReplyRef = useRef<AbortController>(null)
+    const [tps, setTps] = useState<number | null>(null)
 
     return (
         <StateContext.Provider value={{
@@ -105,7 +108,9 @@ export const StateProvider = ({ children }: { children: React.ReactNode }) => {
             setSystemPrompt,
             currentSessionId,
             setCurrentSessionId,
-            stopModelReplyRef
+            stopModelReplyRef,
+            tps,
+            setTps
         }}>
             {children}
         </StateContext.Provider>

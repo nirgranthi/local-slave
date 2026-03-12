@@ -3,7 +3,7 @@ import { NewChatButton } from "./Buttons.tsx";
 import { useStates } from "./Context.tsx";
 
 export function Header() {
-  const { modelStatus, loadedModelName } = useStates()
+  const { modelStatus, loadedModelName, tps } = useStates()
 
   return (
     <div className="h-14 border-b border-gray-700 flex items-center px-4 justify-between bg-gray-800 z-10">
@@ -35,6 +35,11 @@ export function Header() {
         >
           {modelStatus}
         </div>
+        {tps !== null && (
+          <div className="text-[10px] px-2 py-1 rounded bg-blue-900/50 text-blue-400 font-mono">
+            {tps} t/s
+          </div>
+        )}
         <NewChatButton />
       </div>
     </div>

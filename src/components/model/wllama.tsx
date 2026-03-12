@@ -8,7 +8,7 @@ sessions, downloadedModels
 */
 
 export function WllamaChat() {
-  const { systemPrompt, isRecommended, setIsRecommended, userPrompt, uploadedModel, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl, setIsModelDownloading, setLoadedModelName, stopModelReplyRef, setUserPrompt, setUploadedModel, promptConfig, modelConfig, setActiveDownloads, setModelConfig, reloadModel, setIsModelConfigOpen } = useStates()
+  const { systemPrompt, isRecommended, setIsRecommended, userPrompt, uploadedModel, chatMessages, setChatMessages, setLiveToken, setIsLiveTokenLive, setModelStatus, selectedModelUrl, setIsModelDownloading, setLoadedModelName, stopModelReplyRef, setUserPrompt, setUploadedModel, promptConfig, modelConfig, setActiveDownloads, setModelConfig, reloadModel, setIsModelConfigOpen, setTps } = useStates()
 
   const [wllama, setWllama] = useState<Wllama | null>(null);
   const [activeModel, setActiveModel] = useState<{ type: string, file: File | string }>({ type: '', file: '' })
@@ -83,14 +83,38 @@ export function WllamaChat() {
         setLiveToken('')
         setIsLiveTokenLive(true)
         setModelStatus('THINKING...')
+
+        let tokenCount = 0;
+        let startTime = 0;
+        setTps(null);
+
         const result = await wllama.createCompletion(prompt, {
           abortSignal: stopModelReplyRef.current?.signal,
           nPredict: 500,
           sampling: promptConfig,
           onNewToken: (token, piece, text) => {
             setLiveToken(text);
+            if (tokenCount === 0) {
+              startTime = performance.now();
+            }
+            tokenCount++;
+
+            if (tokenCount > 1) {
+              const elapsed = (performance.now() - startTime) / 1000;
+              if (elapsed > 0.5) {
+                setTps(parseFloat(((tokenCount - 1) / elapsed).toFixed(1)));
+              }
+            }
           }
         });
+
+        if (tokenCount > 1) {
+          const finalElapsed = (performance.now() - startTime) / 1000;
+          if (finalElapsed > 0) {
+            setTps(parseFloat(((tokenCount - 1) / finalElapsed).toFixed(1)));
+          }
+        }
+
         /* console.log("Full Reply:", result) */
         setChatMessages(prev => [
           ...prev,
