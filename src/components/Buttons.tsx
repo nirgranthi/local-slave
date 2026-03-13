@@ -148,7 +148,7 @@ export function ModelConfigMenuButton() {
     const { setIsModelConfigOpen } = useStates()
     return (
         <button
-            className="flex-1 p-2 bg-gray-800 hover:bg-gray-700 text-blue-400 rounded-lg text-xs font-bold border border-gray-700 transition-all active:scale-95"
+            className="p-2.5 bg-gray-800/40 hover:bg-gray-700/60 text-blue-400 rounded-xl text-[11px] font-bold border border-gray-700/50 transition-all active:scale-95 flex items-center justify-center gap-2"
             onClick={() => setIsModelConfigOpen(true)}
         >
             ⚙️ Configure

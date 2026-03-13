@@ -5,8 +5,8 @@ import { useState } from "react"
 import { HistoryTab } from "./sidebar/historyTab/HistoryTab.tsx"
 import { ManualUpload } from "./sidebar/modelsTab/ManualUpload.tsx"
 import { DownloadProgressBar } from "./sidebar/DownloadProgressBar.tsx"
-import  coderPrompt  from "/systemPrompts/coderPrompt.txt?raw"
-import  friendlyPrompt  from "/systemPrompts/friendlyPrompt.txt?raw"
+import coderPrompt from "/systemPrompts/coderPrompt.txt?raw"
+import friendlyPrompt from "/systemPrompts/friendlyPrompt.txt?raw"
 import { useStates } from "./Context.tsx"
 
 
@@ -46,50 +46,53 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="p-3 bg-gray-900 border-t border-gray-700 flex flex-col gap-2">
-        <div className="flex gap-2">
+      <div className="p-4 bg-gray-900/50 border-t border-gray-700/50 backdrop-blur-md flex flex-col gap-3">
+
+        <div className="grid grid-cols-2 gap-2">
           <ModelConfigMenuButton />
 
-          <select
-            value={systemPromptType}
-            onChange={(e) => {
-              const val = e.target.value;
-              setSystemPromptType(val);
-              if (val === 'friendly') setSystemPrompt(friendlyPrompt);
-              if (val === 'coder') setSystemPrompt(coderPrompt);
-            }}
-            className="flex-1 p-2 bg-gray-800 hover:bg-gray-700 text-purple-400 rounded-lg text-xs font-bold border border-gray-700 outline-none cursor-pointer text-center"
-          >
-            <option value="" disabled>Prompts</option>
-            <option value="friendly">Friendly AI</option>
-            <option value="coder">Coder AI</option>
-            <option value="custom">Custom</option>
-          </select>
+          <div className="relative group">
+            <select
+              value={systemPromptType}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSystemPromptType(val);
+                if (val === 'friendly') setSystemPrompt(friendlyPrompt);
+                if (val === 'coder') setSystemPrompt(coderPrompt);
+              }}
+              className="w-full p-2.5 bg-gray-800/60 hover:bg-gray-700 text-purple-400 rounded-xl text-[11px] font-black border border-gray-700/50 outline-none cursor-pointer transition-all text-center appearance-none"
+            >
+              <option value="" disabled>🎭 Persona</option>
+              <option value="friendly">Friendly</option>
+              <option value="coder">Coder</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
         </div>
 
         {systemPromptType === 'custom' && (
-          <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-            <textarea 
-              className="w-full p-2 bg-gray-800 text-gray-300 rounded-lg text-xs border border-gray-700 outline-none resize-none h-20 focus:border-purple-500 transition-colors"
-              placeholder="Write your custom system prompt here..."
+          <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <textarea
+              className="w-full p-3 bg-gray-800/80 text-gray-300 rounded-xl text-xs border border-gray-700/50 outline-none resize-none h-24 focus:border-purple-500/50 transition-all placeholder:text-gray-600"
+              placeholder="Define the AI's soul here..."
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
             />
-            <button 
+            <button
               onClick={() => {
                 setSystemPrompt(customPrompt)
                 /* console.log('Saved prompt:', customPrompt) */
                 setSystemPromptType('')
               }}
-              className="w-full p-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-bold transition-all active:scale-95"
+              className="w-full p-2.5 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-xl text-[11px] font-black uppercase tracking-tighter transition-all active:scale-95"
             >
-              Save Prompt
+              Deploy Persona
             </button>
           </div>
         )}
       </div>
       <div className="p-2 text-center text-[10px] text-gray-600 bg-gray-800 border-t border-gray-700">
-        v3.0 (Stable, with TypeScript) 06032026
+        v3.0.1 (Stable, with TypeScript) 13032026
       </div>
     </div>
   )
